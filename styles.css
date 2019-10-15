@@ -96,14 +96,16 @@ table.reports tfoot .links a{
 
 h2{
   font-family: Comic Sans MS;
+	text-decoration: underline; 
   color: #1d781d;
   font-size: 40px;
+	
 }
 
 h3{
   font-family: Comic Sans MS;
   color: #1d781d;
-  font-size: 35px;
+  font-size: 32px;
 }
 
 /* Text format for regular text*/ 
