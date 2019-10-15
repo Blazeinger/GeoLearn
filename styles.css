@@ -106,9 +106,15 @@ h3{
   font-size: 35px;
 }
 
+h4{
+  font-family: Comic Sans MS;
+  color: #000000;
+  font-size: 22px;
+}
+
 
 .normal_text{
-	font-family: Sans-Serif; 
-	font-size: 15px; 
-	
+	font-family: Sans-Serif;
+	font-size: 15px;
+
 }
