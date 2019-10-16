@@ -96,28 +96,46 @@ table.reports tfoot .links a{
 
 h2{
   font-family: Comic Sans MS;
-	text-decoration: underline; 
   color: #1d781d;
   font-size: 40px;
-	
 }
 
 h3{
   font-family: Comic Sans MS;
   color: #1d781d;
-  font-size: 32px;
+  font-size: 20px;
 }
 
-/* Text format for regular text*/ 
+h4{
+  font-family: Comic Sans MS;
+  color: #000000;
+  font-size: 22px;
+}
+
+h5{
+  font-family: Comic Sans MS;
+  color: #000000;
+  font-size: 19px;
+}
+
+ul{
+	font-family: Comic Sans MS;
+	color: #000000
+}
+
+p{
+	font-family: Comic Sans MS;
+	color: #000000
+}
+
+a{
+	font-family: Comic Sans MS;
+	color: #000000
+}
+
+
 .normal_text{
 	font-family: Sans-Serif; 
 	font-size: 15px; 
 	
-}
-
-/* Text format for the names of people so they stick out more*/ 
-.person_name{
-	text-decoration: underline; 
-	font-family: Sans-Serif; 
-	font-size: 16px; 
 }
