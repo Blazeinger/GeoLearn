@@ -103,7 +103,7 @@ h2{
 h3{
   font-family: Comic Sans MS;
   color: #1d781d;
-  font-size: 35px;
+  font-size: 20px;
 }
 
 h4{
@@ -112,9 +112,14 @@ h4{
   font-size: 22px;
 }
 
+ul{
+	font-family: Comic Sans MS;
+	color: #000000
+}
+
 
 .normal_text{
-	font-family: Sans-Serif;
-	font-size: 15px;
-
+	font-family: Sans-Serif; 
+	font-size: 15px; 
+	
 }
