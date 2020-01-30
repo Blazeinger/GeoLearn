@@ -1,0 +1,94 @@
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css">
+
+  <div class="topnav-title">
+  <img style="display:inline;" src="Logos/GeoLearn_Logo.png" alt="GeoLearn Logo">
+  <title class="header" style="display:inline; font-size:90px;">GeoLearn</title>
+</div>
+
+<div class="topnav">
+  <a href="index.html">Home</a>
+  <a href="Slides.html">Slides</a>
+ </div>
+</head>
+<body>
+<div class="dropdown">
+  <button onclick="selectedTopic()" class="dropbtn">Topics</button>
+  <div id="topics" class="dropdown-content">
+    <a href="#biodiversity">Biodiversity</a>
+    <a href="#land-use">Land-Use Change</a>
+    <a href="#climate">Climate Change</a>
+	<a href="#fire">Fire</a>
+  </div>
+</div>
+<script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function selectedTopic() {
+  document.getElementById("topics").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+<div class="dropdown">
+  <button onclick="selectedDifficulty()" class="dropbtn">Difficulty</button>
+  <div id="difficulty" class="dropdown-content">
+    <a href="#advance">Advanced</a>
+    <a href="#intermediate">Intermediate</a>
+    <a href="#beginner">Beginner</a>
+  </div>
+</div>
+
+<script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function selectedDifficulty() {
+  document.getElementById("difficulty").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+<form action="">
+  Longitude:<br>
+  <input type="text" name="Longitude">
+  <br>
+  Latitude:<br>
+  <input type="text" name="Latitude">
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<form action="">
+  Google Email:<br>
+  <input type="text" name="email">
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+</body>
+</html>
