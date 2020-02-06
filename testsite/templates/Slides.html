@@ -162,6 +162,10 @@ window.onclick = function(event) {
 	 async defer>
 </script>
 
+<button type='button' onclick="location.href='{% url 'bio_submit' %}'">execute script</button><hr>
+	{% if message %}
+	{{message}}
+	{% endif %}
 
 <form action="">
   Longitude:<br>
@@ -172,6 +176,8 @@ window.onclick = function(event) {
   <br><br>
   <input type="submit" value="Submit">
 </form>
+
+
 
 <form action="">
   Google Email:<br>
