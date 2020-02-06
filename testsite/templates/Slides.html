@@ -1,0 +1,183 @@
+{% load static %}
+<html>
+<head>
+	<link rel="stylesheet" href="{% static 'styles.css' %}">
+
+  <div class="topnav-title">
+  <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
+  <title class="header" style="display:inline; font-size:90px;">GeoLearn</title>
+</div>
+
+<div class="topnav">
+  <a href="/index.html">Home</a>
+  <a href="/Slides.html">Slides</a>
+ </div>
+</head>
+<body>
+<div class="dropdown">
+  <button onclick="selectedTopic()" class="dropbtn">Topics</button>
+  <div id="topics" class="dropdown-content">
+    <a href="#biodiversity">Biodiversity</a>
+    <a href="#land-use">Land-Use Change</a>
+    <a href="#climate">Climate Change</a>
+	<a href="#fire">Fire</a>
+  </div>
+</div>
+<script>
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function selectedTopic() {
+  document.getElementById("topics").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+<div class="dropdown">
+  <button onclick="selectedDifficulty()" class="dropbtn">Difficulty</button>
+  <div id="difficulty" class="dropdown-content">
+    <a href="#advance">Advanced</a>
+    <a href="#intermediate">Intermediate</a>
+    <a href="#beginner">Beginner</a>
+  </div>
+</div>
+
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function selectedDifficulty() {
+  document.getElementById("difficulty").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+<!--Google Maps API for LAT LONG Selection-->
+<input id="pac-input" class="controls" type="text" placeholder="Enter a Location">
+<div id="map"></div>
+<script>
+	// This example adds a search box to a map, using the Google Place Autocomplete
+	// feature. People can enter geographical searches. The search box will return a
+	// pick list containing a mix of places and predicted search terms.
+
+	// This example requires the Places library. Include the libraries=places
+	// parameter when you first load the API. For example:
+	// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+	function initAutocomplete() {
+		var map = new google.maps.Map(document.getElementById('map'), {
+			center: {lat: -33.8688, lng: 151.2195},
+			zoom: 13,
+			mapTypeId: 'roadmap'
+		});
+
+		// Create the search box and link it to the UI element.
+		var input = document.getElementById('pac-input');
+		var searchBox = new google.maps.places.SearchBox(input);
+		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+		// Bias the SearchBox results towards current map's viewport.
+		map.addListener('bounds_changed', function() {
+			searchBox.setBounds(map.getBounds());
+		});
+
+		var markers = [];
+		// Listen for the event fired when the user selects a prediction and retrieve
+		// more details for that place.
+		searchBox.addListener('places_changed', function() {
+			var places = searchBox.getPlaces();
+
+			if (places.length == 0) {
+				return;
+			}
+
+			// Clear out the old markers.
+			markers.forEach(function(marker) {
+				marker.setMap(null);
+			});
+			markers = [];
+
+			// For each place, get the icon, name and location.
+			var bounds = new google.maps.LatLngBounds();
+			places.forEach(function(place) {
+				if (!place.geometry) {
+					console.log("Returned place contains no geometry");
+					return;
+				}
+				var icon = {
+					url: place.icon,
+					size: new google.maps.Size(71, 71),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(17, 34),
+					scaledSize: new google.maps.Size(25, 25)
+				};
+
+				// Create a marker for each place.
+				markers.push(new google.maps.Marker({
+					map: map,
+					icon: icon,
+					title: place.name,
+					position: place.geometry.location
+				}));
+
+				if (place.geometry.viewport) {
+					// Only geocodes have viewport.
+					bounds.union(place.geometry.viewport);
+				} else {
+					bounds.extend(place.geometry.location);
+				}
+			});
+			map.fitBounds(bounds);
+		});
+	}
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_CxX9I-xO4GPEsbXXgjovbbWcxPtNyWo&libraries=places&callback=initAutocomplete"
+	 async defer>
+</script>
+
+
+<form action="">
+  Longitude:<br>
+  <input type="text" name="Longitude" value="">
+  <br>
+  Latitude:<br>
+  <input type="text" name="Latitude" value="">
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<form action="">
+  Google Email:<br>
+  <input type="text" name="email">
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>
