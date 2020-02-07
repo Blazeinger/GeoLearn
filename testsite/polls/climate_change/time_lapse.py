@@ -60,5 +60,5 @@ def time_lapse():
 	process = batch.Task.start(out)
 	print("Video sent to drive...\n")
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 	main()
