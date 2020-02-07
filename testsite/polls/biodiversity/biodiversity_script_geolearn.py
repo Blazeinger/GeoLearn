@@ -1,11 +1,14 @@
 import mysql.connector
 import csv
 import sys
-from PIL import Image
+
+# pip3 install shapely
 from shapely.geometry import Polygon
 from shapely.geometry import MultiPolygon
 from shapely.geometry import Point
 from datetime import datetime
+
+# pip3 install pydrive
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
