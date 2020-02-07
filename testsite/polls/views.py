@@ -15,4 +15,5 @@ def slides( request ):
 def biodiversity_submit( request ):
 	
 	find_animals_script( 35, -111 )
+	output = "find animals script ran successfully" 
 	return render( request, 'Slides.html', {'message': output} )

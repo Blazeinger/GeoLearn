@@ -331,9 +331,31 @@ def create_multi_polygon( currentShape ):
 	multi_polygon = MultiPolygon( listOfPolygons )
 	
 	return multi_polygon
+
+
+'''
+# Helper function that determines if a multi-polygon or polygon object needs to be created
+def create_shape( currentShape ):
+
+	# We only need the first index of our current shape
+	if currentShape[ 0 ] is not None: 
 	
+		# Check if the word, 'multipolygon' is in the boundary description
+		if "MULTIPOLYGON" in currentShape[ 0 ]:
+		
+			# Create the multi-polygon and return it 
+			return create_multi_polygon( currentShape[ 0 ] )
+			
+		# Check if the word, 'polygon' is in the boundary description 
+		elif "POLYGON" in currentShape[ 0 ]:
+		
+			# Create the polygon and return it 
+			return create_polygon( currentShape[ 0 ] )
+			
+	# If there is an issue, return a polygon that is only a point 
+	return Polygon( [(0,0), (0,0), (0,0)] )
 	
-	
+'''
 
 def create_shape( currentShape ):
 
@@ -350,15 +372,13 @@ def create_shape( currentShape ):
 		else:
 			return Polygon( [(0,0), (0,0), (0,0)] )
 			
-			
-			
 
 def send_csv_to_drive( fileName ):
 
 	print( 'begin file upload' )
 	
 	# Create google account authentication objects
-	gauth = GoogleAuth('../../biodiversity/settings.yaml')
+	gauth = GoogleAuth('settings.yaml')
 	
 	print( 'client secrets 1' )
 	
@@ -379,7 +399,7 @@ def send_csv_to_drive( fileName ):
 	
 	print( 'client secrets 2' )
 		
-	gauth.SaveCredentialsFile( 'biodiversity/credentials.txt' )
+	gauth.SaveCredentialsFile( "biodiversity/credentials.txt" )
 
 	
 	drive = GoogleDrive( gauth )

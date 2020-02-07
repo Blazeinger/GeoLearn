@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls',
-	'polls.biodiversity',
+	'biodiversity',
 ]
 
 MIDDLEWARE = [
