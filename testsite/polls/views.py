@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-#from biodiversity import test
+from .biodiversity.biodiversity_script_geolearn import find_animals_script
 
 # Create your views here.
 def index( request ):
@@ -13,6 +13,6 @@ def slides( request ):
 	return render( request, 'Slides.html' )
 
 def biodiversity_submit( request ):
-	output = 'hello world!!!' 
-	print( 'hello world' ) 
+	
+	find_animals_script( 35, -111 )
 	return render( request, 'Slides.html', {'message': output} )

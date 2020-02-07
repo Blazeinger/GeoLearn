@@ -9,7 +9,10 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-def main():
+def main(): 
+	find_animals_main()
+
+def find_animals_main():
 
 	# constant for testing database executions 
 	ROWS_TO_ACCESS = 1
@@ -124,6 +127,64 @@ def main():
 				print( "Please input a valid latitude and longitude or \"Exit\" " )	
 	
 # end main 	
+
+def find_animals_script( latitude, longitude ):
+	# constant for testing database executions 
+	ROWS_TO_ACCESS = 1
+	
+	# The size of the area that we want to search for 
+	# 1 about equals 70 miles  (69.4)
+	SEARCH_RADIUS = 1
+	
+	# Our boolean that maintains the main loop 
+	getting_info = True
+
+	descriptors = []
+	animal_boundaries = []
+	animal_info = []
+	
+	print( "beginning local db read" )
+	
+	with open( "biodiversity_mammal_db.csv" ) as csvFile: 
+		csv.field_size_limit( sys.maxsize )
+		csv_reader = csv.reader( csvFile )
+		
+		index = 0
+		
+		for row in csv_reader: 
+			if index == 0:
+				descriptors = row
+			else:
+				animal_info.append( row )
+				animal_boundaries.append( create_shape(animal_info[ index - 1 ][17]) )
+				
+			index += 1
+			
+			if index % 1000 == 0:
+				print( "read in " + str( index ) + " animals" )
+			
+	print( "finished reading database" )
+
+	animals_within_boundaries = []
+
+	try: 
+			
+		for index in range( 0, len( animal_boundaries ) ):
+					
+			if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
+				animals_within_boundaries.append( animal_info[ index ] )
+								
+		if len( animals_within_boundaries ) == 0:
+			print( "There were no mammals in that area" )
+		else:
+			filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
+			send_csv_to_drive( filename )
+			#display_mammal_information( animals_within_boundaries, descriptors )
+			print( "number of animals" )
+			print( len( animals_within_boundaries ) )
+			
+	except ValueError: 
+		print( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 # Check if an animal's habitat area is within the area we're searching 
 def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius ):
@@ -348,6 +409,7 @@ def send_csv_to_drive( fileName ):
 	
 	print( 'file uploaded' )
 
-main()
+if __name__ == "__main__": 
+	main()
 
 #
