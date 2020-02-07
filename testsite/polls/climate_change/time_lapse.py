@@ -4,8 +4,12 @@ Code for the Time Lapse Creation
 
 '''
 
+# pip3 install googleearth-api
 import ee
 from ee import batch
+
+def main():
+	time_lapse()
 
 def time_lapse():
 	ee.Initialize()
@@ -55,3 +59,6 @@ def time_lapse():
 	# Process the image
 	process = batch.Task.start(out)
 	print("Video sent to drive...\n")
+
+if __name__ = "__main__":
+	main()

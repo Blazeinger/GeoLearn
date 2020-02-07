@@ -1,3 +1,4 @@
+# pip3 install mysql-connector
 import mysql.connector
 import csv
 from shapely.geometry import Polygon
