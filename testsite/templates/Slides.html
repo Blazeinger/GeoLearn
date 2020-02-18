@@ -162,10 +162,15 @@ window.onclick = function(event) {
 	 async defer>
 </script>
 
-<button type='button' onclick="location.href='{% url 'bio_submit' %}'">execute script</button><hr>
-	{% if message %}
-	{{message}}
-	{% endif %}
+<form action="location.href='{% url 'bio_submit' %}'" id="lat_long form">
+  Longitude:<br>
+  <input type="text" name="Longitude" value="">
+  <br>
+  Latitude:<br>
+  <input type="text" name="Latitude" value="">
+  <br><br>
+</form>
+<button type='button' onclick="location.href='{% url 'bio_submit' %}'">biodiversity submit</button><hr>
 
 
 <form action="">

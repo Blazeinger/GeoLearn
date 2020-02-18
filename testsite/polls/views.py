@@ -14,10 +14,14 @@ def slides( request ):
 	return render( request, 'Slides.html' )
 
 def biodiversity_submit( request ):
-	arguments = request.POST.get( 'param' )
-	print( arguments )
-	#find_animals_script( 35, -111 )
-	output = "find animals script ran successfully" 
+	if request.method == 'POST':
+		output = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' 
+	else:
+		output = 'Biodiversity Slideshow submission' 
+	#arguments = request.POST.get( 'param' )
+	#print( arguments )
+	find_animals_script( 35, -111 )
+	#output = arguments 
 	return render( request, 'Slides.html', {'message': output} )
 	
 def climate_submit( request ):
