@@ -4,7 +4,7 @@
 <html>
 <head>
   <link rel="stylesheet" href="{% static 'styles.css' %}">
-
+  
   <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
   <title class="header" style="display:inline; font-size:90px;">GeoLearn</title>
 
@@ -12,59 +12,50 @@
     <a class="active" href="/index.html">Home</a>
     <a href="/Slides.html">Slides</a>
   </div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body style="background-color:powderblue;">
 	<h2>What kind of slides can you create?</h2>
-	<table>
-		<tr>
-			<td>
-				<h3>Biodiversity</h3>
-				<img class="environ-pics" src="{% static 'Images/lion.jpg' %}" alt="Lion" height="200" width="300">
-			</td>
-			<td>
-				<h5>Biodiversity represents the living organisms that live in a certain environment.
+  <div class="slide-container">
+	<span id="slider-image-one"></span>
+	<span id="slider-image-two"></span>
+	<span id="slider-image-three"></span>
+  <div class="image-container">
+	<div class="container">
+		<img src="{% static 'Images/lion.jpg' %}" style="width:840px; height:350px;">
+			<div class="content">
+			
+			<h3 style="color: powderblue; font-family: Trebuchet MS, Helvetica, sans-serif;">Biodiversity</h3>
+				<p style="color: white;">Biodiversity represents the living organisms that live in a certain environment.
 				By choosing to create sides based on biodiversity, you will get slides containing
-				animal information based on the location specified by you.</h5>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h3>Land-Use Change</h3>
-				<img class="land_use" src="{% static 'Images/land_use.png' %}" alt="Land" height="200" width="300">
-			</td>
-			<td>
-				<h5>Land-use change represents the change in the environment based on how humans
-				ustilize the resources around them. Over time the landscape around could have 
-				changed dramatically. By choosing this, your slides will provide information 
-				on how the environment around you has changed in appearance and what might be 
-				the cause of these changes.</h5>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h3>Climate Change</h3>
-				<img class="climate" src="{% static 'Images/climate.jpg' %}" alt="Climate" height="200" width="300">
-			</td>
-			<td>
-				<h5>Climate Change represents the change in global temperature. Over time the world has
-				been heating at an increasing rate, with no real end to it in sight. By choosing this,
-				your slides will discuss information as to what is causing this change, what its been 
-				affecting and possible tips on how to slow it down.</h5>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h3>Wild Fires</h3>
-				<img class="fire" src="{% static 'Images/fire.jpg' %}" alt="Fires" height="200" width="300">
-			</td>
-			<td>
-				<h5>Wild fires represents that change that fires have in the environment. By choosing
-				this, your slides will inform you of the changes fires have created in the environment 
-				around you as well as what was the cause of these fires; the slides would also give tips
-				on what can prevent fires from occuring in the wild.</h5>
-			</td>
-		</tr>
-	</table>
-	<h2>If you are ready to start creating your slides, please push the slides button at the top.</h2>
+				animal information based on the location specified by you.</p>
+			</div>
+	</div>
+	<p></p>
+	<div class="container">
+	<img src="{% static 'Images/land_use.png' %}" alt="Land" style="width:840px; height:350px">
+		<div class="content">
+				<h3 style="color: powderblue; font-family: Trebuchet MS, Helvetica, sans-serif;">Land-Use</h3>
+				<p style="color: white;">Land-Use is essentially how humans use the resources to develpe the 
+				communities around us. These slides will show how the area around you has changed over the years, </p>
+		</div>
+	</div>
+	<p></p>
+	<div class="container">
+	<img src="{% static 'Images/climate.jpg' %}" alt="Climate" style="width:840px; height:350px;">
+		<div class="content">
+				<h3 style="color: powderblue; font-family: Trebuchet MS, Helvetica, sans-serif;">Climate Change</h3>
+				<p style="color: white;">Biodiversity represents the living organisms that live in a certain environment.
+				By choosing to create sides based on biodiversity, you will get slides containing
+				animal information based on the location specified by you.</p>
+		</div>
+	</div>
+	</div>
+   </div>
+   <div class="button-container">
+	<a href="#slider-image-one" class="slider-button"></a>
+	<a href="#slider-image-two" class="slider-button"></a>
+	<a href="#slider-image-three" class="slider-button"></a>
+   </div>
 </body>
 </html>
