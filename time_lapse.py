@@ -6,65 +6,68 @@ Code for the Time Lapse Creation
 
 # pip3 install googleearth-api
 import ee
+import sys
 from ee import batch
 
-def main():
-	time_lapse()
+latitude_val = float(sys.argv[1])
+longitude_val = float(sys.argv[2])
 
-def time_lapse(latitude_val, longitude_val):
-	ee.Initialize()
+manipulated_lat = latitude_val + 0.2
+manipulated_lng = longitude_val + 0.2
 
-	# Define the image collection we will be using
-	collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+ee.Initialize()
 
-	# Creates a polygon which will be used as the bounds of the image
-	# Flagstaff Long: -111.6512, Lat: 35.1982
-	# flagstaff = ee.Geometry.Polygon(
-	#     [[[-111.791491098128,35.150445194872816],
-	#       [-111.49829346629207,35.150445194872816],
-	#       [-111.49829346629207,35.385344417919924],
-	#       [-111.791491098128,35.385344417919924],
-	#       [-111.791491098128,35.150445194872816]]])
+# Define the image collection we will be using
+collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
-	region_polygon = ee.Geometry.Polygon(
-	[[[longitude_val, latitude_val],[longitude_val, latitude_val],
-	[longitude_val, latitude_val],[longitude_val, latitude_val],
-	[longitude_val, latitude_val]]]
-	)
+# Creates a polygon which will be used as the bounds of the image
+# Flagstaff Long: -111.6512, Lat: 35.1982
+# region_polygon = ee.Geometry.Polygon(
+#     [[[-111.791491098128,35.150445194872816],
+#       [-111.49829346629207,35.150445194872816],
+#       [-111.49829346629207,35.385344417919924],
+#       [-111.791491098128,35.385344417919924],
+#       [-111.791491098128,35.150445194872816]]])
 
-	# Define the time range
-	collection_time = collection.filterDate('2013-04-11', '2019-07-01') # YYYY-MM-DD
+region_polygon = ee.Geometry.Polygon(
+[[[longitude_val, latitude_val],
+  [manipulated_lng, latitude_val],
+  [manipulated_lng, manipulated_lat],
+  [longitude_val, manipulated_lat],
+  [longitude_val, latitude_val]]]
+)
 
-	# Select location based on location of tile
-	# path = collection_time.filter(ee.Filter.eq('WRS_PATH', 37))
-	# pathrow = path.filter(ee.Filter.eq('WRS_ROW', 32))
 
-	# Select location based on Geo Location
-	point_geom = ee.Geometry.Point(-111.651302, 35.1982836) # long, lat
-	pathrow = collection_time.filterBounds(point_geom)
+# Define the time range
+collection_time = collection.filterDate('2013-04-11', '2019-07-01') # YYYY-MM-DD
 
-	# Select imagery with less than 5% cloud coverage
-	clouds = pathrow.filter(ee.Filter.lt('CLOUD_COVER', 5))
+# Select location based on location of tile
+# path = collection_time.filter(ee.Filter.eq('WRS_PATH', 37))
+# pathrow = path.filter(ee.Filter.eq('WRS_ROW', 32))
 
-	# Select bands (RGB Respectively)
-	bands = clouds.select(['B4', 'B3', 'B2'])
+# Select location based on Geo Location
+point_geom = ee.Geometry.Point(longitude_val, latitude_val) # long, lat
+pathrow = collection_time.filterBounds(point_geom)
 
-	# Make the data 8 bit
-	def convertBit(image):
-	  return image.multiply(512).uint8()
+# Select imagery with less than 5% cloud coverage
+clouds = pathrow.filter(ee.Filter.lt('CLOUD_COVER', 5))
 
-	# Convert bands to output video
-	outputVideo = bands.map(convertBit)
-	print("Beginning video creation...\n")
+# Select bands (RGB Respectively)
+bands = clouds.select(['B4', 'B3', 'B2'])
 
-	# Export video to Google Drive
-	out = batch.Export.video.toDrive(outputVideo, description='Flagstaff_Timelapse',
-		                         dimensions=720, framesPerSecond = 2,
-		                         region = region_polygon, maxFrames = 10000)
+# Make the data 8 bit
+def convertBit(image):
+  return image.multiply(512).uint8()
 
-	# Process the image
-	process = batch.Task.start(out)
-	print("Video sent to drive...\n")
+# Convert bands to output video
+outputVideo = bands.map(convertBit)
+print("Beginning video creation...\n")
 
-if __name__ == "__main__":
-	main()
+# Export video to Google Drive
+out = batch.Export.video.toDrive(outputVideo, description='Region_Timelapse',
+	                         dimensions=720, framesPerSecond = 2,
+	                         region = region_polygon, maxFrames = 10000)
+
+# Process the image
+process = batch.Task.start(out)
+print("Video sent to drive...\n")
