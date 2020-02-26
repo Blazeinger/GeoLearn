@@ -12,10 +12,6 @@ urlpatterns = [
 	path( 'brother/', views.brother, name='brother' ), 
 	path( 'Slides.html/', views.slides, name='slides' ), 
 	path( 'index.html/', views.index, name='index' ),
-	
-	
 	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
-	
-	
 	path( 'climate_output/', views.climate_submit, name='climate_submit' ), 
 ] 

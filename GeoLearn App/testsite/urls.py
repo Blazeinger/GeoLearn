@@ -19,7 +19,7 @@ from django.urls import include, path
 urlpatterns = [
 	
 	# We want to include a path to our urls.py file in the polls directory
-	path( '', include( 'polls.urls' )), 
+	path( '', include( 'python_scripts.urls' )), 
 	# path( '', include( 'polls.biodiversity.urls' )),
 	path('admin/', admin.site.urls),
 ]
