@@ -52,6 +52,12 @@
   <input type="submit" value="Submit">
 </form>
 
+<!--Example button to show how to link a url python script in the html -->
+<!--In the 'urls.py' script, you can see one of the paths has a parameter, 'name', that is set to 'bio_submit'-->
+<!--Here, inside the brackets, you can see we are referencing this url path-->
+<!--That url path then calls a function from views.py that then runs the biodiversity script-->
+<button onclick="location.href='{% url 'bio_submit' %}' ">example button</button> 
+
 <form action="">
   Google Email:<br>
   <input type="text" name="email">

@@ -25,7 +25,6 @@ def image_scraper( animal_search ):
     # Create our google image search url template 
     search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
 
-
     options = Options()
     options.add_argument( '--headless' )
     
