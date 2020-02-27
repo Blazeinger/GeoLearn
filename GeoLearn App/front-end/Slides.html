@@ -203,6 +203,21 @@
   <input type="submit" value="Submit">
 </form>
 
+<form action="/bio_output/" method="post">
+
+	{% if message %}
+	{{ message }}
+	{% endif %}
+	
+	<label for="Longitude">Longitude: <br></label>
+	<input type="text" id="Longitude" name="long" value="">
+  <br>
+  <label for="Latitude">Latitude: <br></label>
+  <input type="text" id="Latitude" name="lat" value="">
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+
 <form action="">
   Google Email:<br>
   <input type="text" name="email">

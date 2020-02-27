@@ -40,11 +40,11 @@ def biodiversity_submit( request ):
 	lat = request.POST.get( 'lat' )
 	lng = request.POST.get( 'long' )
 	
-	csv_filename = find_animals_script( lat, lng )
+	#csv_filename = find_animals_script( lat, lng )
 	
 	
 	
-	#output = arguments
+	output = lat
 	return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):

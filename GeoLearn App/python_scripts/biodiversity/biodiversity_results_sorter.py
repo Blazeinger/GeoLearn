@@ -8,6 +8,8 @@ def sort_results( csv_name ):
 
     # Find the largest animal
 
+	# Find the second largest animal 
+
     # Find the smallest animal
 
     
