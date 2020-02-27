@@ -227,45 +227,46 @@ def display_mammal_information( listOfMammals, descriptors ):
 # Write our found animals' information to a CSV file 
 def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
 
-	# Variables
-	now = datetime.now() 
-	list_of_mammals_cleaned = []; 
+        # Variables
+        now = datetime.now() 
+        list_of_mammals_cleaned = []; 
 
-	# Create CSV file name 
-	# Add the date and time to ensure that the file names are unique
-	file_wo_extension = "mammal_info_" + now.strftime( "%d-%m-%Y %H-%M-%S" )
-	file_name = file_wo_extension + ".csv"
+        # Create CSV file name 
+        # Add the date and time to ensure that the file names are unique
+        #file_wo_extension = "mammal_info_" + now.strftime( "%d-%m-%Y %H-%M-%S" )
+        file_wo_extension = "mammal_info_" + str( latitude ) + '_' + str( longitude )
+        file_name = file_wo_extension + ".csv"
 	
-	# Create a CSV file to write to 
-	with open( file_name, mode='w' ) as csv_file: 
-		writer = csv.writer( csv_file )
+        # Create a CSV file to write to 
+        with open( file_name, mode='w' ) as csv_file: 
+                writer = csv.writer( csv_file )
 		
-		# Write the latitude and longitude to the CSV
-		writer.writerow( [ latitude, longitude ] )
+                # Write the latitude and longitude to the CSV
+                #writer.writerow( [ latitude, longitude ] )
 		
-		# Delete the 17th column in the descriptors 
-		headers = list( descriptors )
-		headers.pop( 17 )	
+                # Delete the 17th column in the descriptors 
+                headers = list( descriptors )
+                headers.pop( 17 )	
 			
-		# Write the descriptors/headers to the file 
-		writer.writerow( headers )
+                # Write the descriptors/headers to the file 
+                writer.writerow( headers )
 		
-		# Loop through each animal we found 
-		for animal in listOfMammals:
+                # Loop through each animal we found 
+                for animal in listOfMammals:
 			
-			# Create a list of the animal's info 
-			mammal_info = list( animal )
+                        # Create a list of the animal's info 
+                        mammal_info = list( animal )
 			
-			# Delete the 17th index, the shape files 
-			mammal_info.pop( 17 )
+                        # Delete the 17th index, the shape files 
+                        mammal_info.pop( 17 )
 			
-			# Write the information to the row in the CSV
-			writer.writerow( mammal_info )	
+                        # Write the information to the row in the CSV
+                        writer.writerow( mammal_info )	
 			
-	# Print to the user that the CSV file has been printed
-	print( "done writing to CSV file" )
+        # Print to the user that the CSV file has been printed
+        print( "done writing to CSV file" )
 	
-	return file_wo_extension
+        return file_wo_extension
 		
 # Creates a polygon object from our database's shape file parameters
 def create_polygon( currentShape ):

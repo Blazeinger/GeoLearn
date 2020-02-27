@@ -37,14 +37,22 @@ def biodiversity_submit( request ):
 	#print( arguments )
 	#image_scraper( 'fennec fox' )
 	'''
+	# Fetch the longitude and latitude from the form on the slides page 
 	lat = request.POST.get( 'lat' )
 	lng = request.POST.get( 'long' )
 	
-	#csv_filename = find_animals_script( lat, lng )
+	# Feed the lat and long to our find animals script 
+	# Now, we have the filename of the csv that contains the animal data 
+	csv_filename = find_animals_script( lat, lng )
+	
+	# Now, filter the animals to find which pictures we need to find 
+	
+	# Find the pictures and place them inside a folder 
+	
+	# Push the folder to the google drive 
 	
 	
-	
-	output = lat
+	output = "success" 
 	return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):

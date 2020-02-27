@@ -204,11 +204,7 @@
 </form>
 
 <form action="/bio_output/" method="post">
-
-	{% if message %}
-	{{ message }}
-	{% endif %}
-	
+	{% csrf_token %} 	
 	<label for="Longitude">Longitude: <br></label>
 	<input type="text" id="Longitude" name="long" value="">
   <br>
@@ -217,6 +213,10 @@
   <br><br>
   <input type="submit" value="Submit">
 </form>
+	
+{% if message %}
+{{ message }}
+{% endif %}
 
 <form action="">
   Google Email:<br>
