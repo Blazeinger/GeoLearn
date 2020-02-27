@@ -16,13 +16,22 @@ def slides( request ):
 	return render( request, 'Slides.html' )
 
 def biodiversity_submit( request ):
+	'''
 	if request.method == 'POST':
 		output = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 	else:
 		output = 'Biodiversity Slideshow submission'
+	'''
 	#arguments = request.POST.get( 'param' )
 	#print( arguments )
-	find_animals_script( 35, -111 )
+	
+	lat = request.POST.get( 'lat' )
+	lng = request.POST.get( 'long' )
+	
+	csv_filename = find_animals_script( lat, lng )
+	
+	
+	
 	#output = arguments
 	return render( request, 'Slides.html', {'message': output} )
 

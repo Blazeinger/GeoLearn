@@ -186,6 +186,8 @@ def find_animals_script( latitude, longitude ):
 			print( "number of animals" )
 			print( len( animals_within_boundaries ) )
 			
+			return filename + '.csv'
+			
 	except ValueError: 
 		print( "Please input a valid latitude and longitude or \"Exit\" " )	
 

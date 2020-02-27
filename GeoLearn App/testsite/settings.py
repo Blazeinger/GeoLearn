@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'python_scripts',
-	'biodiversity',
+	'biodiversity_db_&_oauth',
 ]
 
 MIDDLEWARE = [
