@@ -2,6 +2,12 @@ from django.urls import path
 from django.conf.urls import url
 from . import views
 
+'''
+The things in this list are urls that are accessible on the website
+Each url is associated with a different function in the 'views' python script
+Each of these urls is given a name. These names are what are referenced in the html
+'''
+
 urlpatterns = [
 	# index is the name of the function in views.py
 	path( '', views.index, name='index' ),
