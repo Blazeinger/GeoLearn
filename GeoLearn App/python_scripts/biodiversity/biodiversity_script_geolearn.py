@@ -329,10 +329,11 @@ def create_multi_polygon( currentShape ):
 	
 	# Get rid of the cruft from the database string 
 	shapeString = currentShape.strip( "'MULTIPOLYGON(((" ).strip( ")'," )
-	listOfPolygons = shapeString.split( "))" )
+	polygonInfo = shapeString.split( "))" )
+	listOfPolygons = []
 		
 	for index in range( 0, len( listOfPolygons ) ):
-		listOfPolygons[ index ] = create_polygon( listOfPolygons[ index ] )
+		listOfPolygons.append( create_polygon( polygonInfo[ index ] ) )
 			
 	multi_polygon = MultiPolygon( listOfPolygons )
 	
