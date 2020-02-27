@@ -368,6 +368,7 @@ def send_csv_to_drive( fileName ):
 	# Create google account authentication objects
 	gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
 	
+	'''
 	print( 'client secrets 1' )
 	
 	if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
@@ -388,7 +389,7 @@ def send_csv_to_drive( fileName ):
 	print( 'client secrets 2' )
 		
 	gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
-
+	'''
 	
 	drive = GoogleDrive( gauth )
 	upload_csv = drive.CreateFile({ fileName: fileName + '.csv' })
