@@ -38,8 +38,8 @@ def biodiversity_submit( request ):
 	#image_scraper( 'fennec fox' )
 	'''
 	# Fetch the longitude and latitude from the form on the slides page 
-	lat = request.POST.get( 'lat' )
-	lng = request.POST.get( 'long' )
+	lat = float( request.POST.get( 'lat' ) )
+	lng = float( request.POST.get( 'long' ) )
 	
 	# Feed the lat and long to our find animals script 
 	# Now, we have the filename of the csv that contains the animal data 
@@ -56,8 +56,8 @@ def biodiversity_submit( request ):
 	return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):
-	lat = request.POST.get('lat')
-	lng = request.POST.get('long')
+	lat = request.POST.get('lat') 
+	lng = request.POST.get('long') 
 
 	out = run([sys.executable,
 	'//mnt//c//Users//Samuel Prasse//Documents//GitHub//GeoLearn//GeoLearn App//GeoLearn-django_website//testsite//polls//climate_change//time_lapse.py', lat, lng], shell=False, stdout=PIPE)
