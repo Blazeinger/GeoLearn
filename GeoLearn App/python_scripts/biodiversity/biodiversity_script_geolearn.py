@@ -1,6 +1,7 @@
 import mysql.connector
 import csv
 import sys
+import os
 
 # pip3 install shapely
 from shapely.geometry import Polygon
@@ -369,7 +370,8 @@ def send_csv_to_drive( fileName ):
 	
 	print( 'client secrets 1' )
 	
-	gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+	if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
+		gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 	
 	if gauth.credentials is None:
 	
