@@ -374,7 +374,6 @@ def send_csv_to_drive( fileName ):
 		gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 	
 	if gauth.credentials is None:
-	
 		print( 'local webserver branch' )
 		gauth.LocalWebserverAuth()
 		
