@@ -52,7 +52,7 @@ def biodiversity_submit( request ):
 	# Push the folder to the google drive 
 	
 	
-	output = "success" 
+	output = csv_filename 
 	return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):
