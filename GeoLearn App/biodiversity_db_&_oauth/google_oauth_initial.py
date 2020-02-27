@@ -3,6 +3,10 @@ import csv
 import sys
 import os
 
+# pip3 install pydrive
+from pydrive.drive import GoogleDrive
+from pydrive.auth import GoogleAuth
+
 def main():
 
 	# Create google account authentication objects
