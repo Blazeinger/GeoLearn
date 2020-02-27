@@ -148,7 +148,7 @@ def find_animals_script( latitude, longitude ):
 	
 	print( "beginning local db read" )
 	
-	with open( "biodiversity/biodiversity_mammal_db.csv" ) as csvFile: 
+	with open( "biodiversity_db_&_oauth/biodiversity_mammal_db.csv" ) as csvFile: 
 		csv.field_size_limit( sys.maxsize )
 		csv_reader = csv.reader( csvFile )
 		
