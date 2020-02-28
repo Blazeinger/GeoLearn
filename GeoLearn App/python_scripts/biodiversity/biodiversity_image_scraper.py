@@ -25,6 +25,7 @@ def image_scraper( animal_search ):
     # Create our google image search url template 
     search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
 
+    # Prevent the actual browser from opening
     options = Options()
     options.add_argument( '--headless' )
     
@@ -57,7 +58,7 @@ def retrieve_image_urls( search_query, webdriver ):
     index = 0
 
     # Scroll down the webpage to load more images
-    scroll_down( webdriver )
+    #scroll_down( webdriver )
 
     # Save all of the html image elements from our google search
     # 'rg_i' is the class name that the images have 
@@ -66,33 +67,74 @@ def retrieve_image_urls( search_query, webdriver ):
     # Check if the directory that we want to put our iamges in already exists
     if not os.path.exists( BASE_DIR + "/biodiversity/" + search_query ):
 
-        # If not, make that directory 
+       # If not, make that directory 
         os.mkdir( BASE_DIR + "/biodiversity/" + search_query )
 
     ''' 
     Loop through the image elements gathered and translate them to 
     URLs and then to actual images 
-    '''    
+    '''
+    found_image_count = 0
+    attempt_count = 0
+    
+    for element in image_elements:
+
+        print( "attempt" + str( attempt_count ) )
+        attempt_count += 1 
+
+        # Check if you've downloaded all the images you want
+        if found_image_count == number_of_images_to_fetch:
+            break
+
+        # Click on the image you want to download 
+        element.click()
+
+        # Give the browser some time to catch up 
+        time.sleep( 0.5 )
+
+        # After clicking on the image, get the larger version 
+        found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
+
+        # find the source of the image, it's url 
+        image_url = found_image.get_attribute( 'src' )
+
+        # Make sure that the image url is a valid source 
+        if 'http' in image_url:
+
+            # Download this image as a BytesIO object 
+            image_file = io.BytesIO( requests.get( image_url ).content )
+
+            # Convert our BytesIO object into an actual image
+            image = Image.open( image_file ).convert( 'RGB' )
+
+            # Create the the name of this image we're downloaded
+            image_name = '/image_' + str( index ) + '.jpg'
+
+            # Save the path that we want to save the image to
+            # The directory will be the same name as the search query 
+            image_path = BASE_DIR + "/biodiversity/" + search_query + image_name
+
+            # Save the image 
+            image.save( image_path, 'JPEG', quality=85 )
+
+            found_image_count += 1
+
+        
+    '''
     for index in range( number_of_images_to_fetch ):
 
+        image_elem = image_elements[ index ]
+
+        image_elem.click()
+
+        time.sleep( 1 )
+
+        actual_image = webdriver.find_element_by_class_name( 'n3VNCb' )
+        
         # Find the url of the image that we want tn download 
-        image_url = image_elements[ index ].get_attribute( 'data-iurl' )
-
-        # Download this image as a BytesIO object 
-        image_file = io.BytesIO( requests.get( image_url ).content )
-
-        # Convert our BytesIO object into an actual image
-        image = Image.open( image_file ).convert( 'RGB' )
-
-        # Create the the name of this image we're downloaded
-        image_name = '/image_' + str( index ) + '.jpg'
-
-        # Save the path that we want to save the image to
-        # The directory will be the same name as the search query 
-        image_path = BASE_DIR + "/biodiversity/" + search_query + image_name
-
-        # Save the image 
-        image.save( image_path, 'JPEG', quality=85 )
+        image_url = actual_image.get_attribute( 'src' )
+    '''
+        
 
 
     # close the web browser
