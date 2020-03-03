@@ -38,7 +38,7 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
 
     # Prevent the actual browser from opening
     options = Options()
-    options.add_argument( '--headless' )
+    #options.add_argument( '--headless' )
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
