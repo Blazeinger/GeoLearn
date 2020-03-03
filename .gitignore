@@ -1,3 +1,4 @@
 testsite/biodiversity/biodiversity_mammal_db.csv
 *.csv
 credentials.txt
+*.jpg

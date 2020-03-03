@@ -19,27 +19,31 @@ def find_animal_images( csv_name ):
         # Sort the list of animals
         sort_results( animal_list )
 
-        for animal in animal_list:
-            print( animal[ MASS ] )
-
         # Create our list that contains exemplary animals 
         exemplary_animals = []
 
         # Find the largest animal
-        #image_scraper( find_largest_animal( animal_reader ) )
-
-        # Reset the csv file to the top of the document
-        csv_file.seek(0)
-        print( "done with largest" )
-
-	# Find the second largest animal
+        exemplary_animals.append( ("largest_animal", animal_list[ 0 ]) )
         
+        # Find the second largest animal 
+        exemplary_animals.append( ("second_largest_animal", animal_list[ 1 ] ) )
 
-	# Find the smallest animal
-        #image_scraper( find_smallest_animal( animal_reader ) )
+        # Find the smallest animal
+        exemplary_animals.append( ("smallest_animal", animal_list[ len( animal_list)-1 ] ) )
 
-        print( "done with smallest" )
+        # Find the second smallest animal
+        exemplary_animals.append( ("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] ) )
 
+        for animal in exemplary_animals:
+
+            image_scraper( animal[1][ BINOMIAL ], "animal_images", animal[0] )
+
+                            
+    
+
+'''
+Sorts the animal list from biggest to smallest
+'''
 def sort_results( animal_list ):
     quick_sort( animal_list, 0, len( animal_list ) - 1 )
 
@@ -117,81 +121,9 @@ def create_list_from_csv( csv_file ):
     return animal_list
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def find_largest_animal( animal_reader ):
+def find_predatory_animal( placement ):
+    return True
     
-    index = 0
-    for row in animal_reader:
-
-        # Skip the 0 index, since it's just the column names
-        
-        # Check if the index is 1
-        if index == 1:
-            biggest_animal_binomial = row[ BINOMIAL ]
-            biggest_animal_mass = float( row[ MASS ] )
-
-        # Check if the current animal is bigger than the biggest sofar
-        elif index != 0:
-            if float( row[ MASS ] ) > biggest_animal_mass:
-                
-                biggest_animal_binomial = row[ BINOMIAL ]
-                biggest_animal_mass = float( row[ MASS ] )
-
-        # Increment our index 
-        index += 1
-
-    # Now that we know the biggest animal, return the scientific name of the animal
-    print( biggest_animal_binomial )
-    return biggest_animal_binomial
-
-def find_smallest_animal( animal_reader ):
-    
-    index = 0
-    for row in animal_reader:
-
-        # Skip the 0 index, since it's just the column names
-        
-        # Check if the index is 1
-        if index == 1:
-            smallest_animal_binomial = row[ BINOMIAL ]
-            smallest_animal_mass = float( row[ MASS ] )
-
-        # Check if the current animal is bigger than the biggest sofar
-        elif index != 0:
-            if float( row[ MASS ] ) < smallest_animal_mass:
-                smallest_animal_binomial = row[ BINOMIAL ]
-                smallest_animal_mass = float( row[ MASS ] )
-
-        # Increment our index 
-        index += 1
-
-    # Now that we know the biggest animal, return the scientific name of the animal
-    print( smallest_animal_binomial )
-    return smallest_animal_binomial
 
 if __name__ == "__main__":
     main()
