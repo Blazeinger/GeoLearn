@@ -4,7 +4,7 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from biodiversity_image_scraper import image_scraper
+from .biodiversity_image_scraper import image_scraper
 
 MASS = 16
 BINOMIAL = 1
@@ -14,12 +14,17 @@ ENDANGERED_STATUS = 5
 ORDER = 9
 NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def main():
     find_animal_images( 'mammal_info_35.0_-111.0.csv', True, "animals" )
 
 def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
     with open( csv_name ) as csv_file:
+
+        print( BASE_DIR )
+        
         animal_reader = csv.reader( csv_file, delimiter=',' )
 
         # Create a list with the animals from the csv
@@ -34,11 +39,10 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
         # Find the largest animal
         exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
-
         
         # Find the second largest animal 
         exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
-        '''
+        
         # Find the smallest animal
         exemplary_animals.append(("smallest_animal", animal_list[ len( animal_list)-1 ] ))
 
@@ -65,9 +69,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
             # Add that animal to our exemplary animals list
             exemplary_animals.append( ( "Dobble_" + str( index ), animal_list[ random_animal ] ) )
-
-        '''
-
+            
         # Initialize a list for the names of the images 
         image_names = []
         
@@ -194,13 +196,31 @@ def upload_images( images ):
     gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
     drive = GoogleDrive( gauth )
 
+    if os.path.exists( 'credentials.txt' ):
+        gauth.LoadCredentialsFile( 'credentials.txt' )
+
+    if gauth.credentials is None:
+        print( 'local webserver branch' )
+        gauth.LocalWebserverAuth()
+        gauth.SaveCredentialsFile( 'credentials.txt' )
+
+    elif gauth.access_token_expired:
+        print( 'refresh branch' )
+        gauth.Refresh()
+
+    else:
+        print( 'authorize branch' )
+        gauth.Authorize()
+
+    print( "after authorization" )
+
     # Loop through the images
     for image_name in images: 
         upload_image = drive.CreateFile( {'title': image_name} )
 
         # python_scripts/biodiversity/
         
-        upload_image.SetContentFile( "animals/" + image_name )
+        upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name )
         upload_image.Upload()
 
 if __name__ == "__main__":

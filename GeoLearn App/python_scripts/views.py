@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_image_scraper import image_scraper
+from .biodiversity.biodiversity_results_sorter import find_animal_images
+
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
 import sys
@@ -27,16 +29,7 @@ def slides( request ):
 	return render( request, 'Slides.html' )
 
 def biodiversity_submit( request ):
-	'''
-	# For now, these don't matter. I do want to keep them here for future reference just in case
-	if request.method == 'POST':
-		output = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
-	else:
-		output = 'Biodiversity Slideshow submission'
-	#arguments = request.POST.get( 'param' )
-	#print( arguments )
-	#image_scraper( 'fennec fox' )
-	'''
+        
 	# Fetch the longitude and latitude from the form on the slides page 
 	lat = float( request.POST.get( 'lat' ) )
 	lng = float( request.POST.get( 'long' ) )
@@ -46,7 +39,7 @@ def biodiversity_submit( request ):
 	csv_filename = find_animals_script( lat, lng )
 	
 	# Now, filter the animals to find which pictures we need to find 
-	
+	find_animal_images( csv_filename, True, "animal_images" )
 	
 	output = csv_filename 
 	return render( request, 'Slides.html', {'message': output} )
