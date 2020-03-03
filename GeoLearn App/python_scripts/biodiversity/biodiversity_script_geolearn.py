@@ -235,7 +235,7 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
         # Create CSV file name 
         # Add the date and time to ensure that the file names are unique
         #file_wo_extension = "mammal_info_" + now.strftime( "%d-%m-%Y %H-%M-%S" )
-        file_wo_extension = "mammal_info_" + str( latitude ) + '_' + str( longitude )
+        file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
         file_name = file_wo_extension + ".csv"
 	
         # Create a CSV file to write to 

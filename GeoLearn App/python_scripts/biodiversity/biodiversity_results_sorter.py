@@ -1,14 +1,20 @@
 import csv
 import os
+import random
 from biodiversity_image_scraper import image_scraper
 
 MASS = 16
 BINOMIAL = 1
+ANIMAL_TITLE = 0
+ANIMAL_OBJECT = 1
+ENDANGERED_STATUS = 5
+ORDER = 9
+NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
 def main():
-    find_animal_images( 'mammal_info_35.0_-111.0.csv' )
+    find_animal_images( 'mammal_info_35.0_-111.0.csv', False, "animals" )
 
-def find_animal_images( csv_name ):
+def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
     with open( csv_name ) as csv_file:
         animal_reader = csv.reader( csv_file, delimiter=',' )
@@ -23,20 +29,55 @@ def find_animal_images( csv_name ):
         exemplary_animals = []
 
         # Find the largest animal
-        exemplary_animals.append( ("largest_animal", animal_list[ 0 ]) )
+        exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
         
         # Find the second largest animal 
-        exemplary_animals.append( ("second_largest_animal", animal_list[ 1 ] ) )
+        exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
 
         # Find the smallest animal
-        exemplary_animals.append( ("smallest_animal", animal_list[ len( animal_list)-1 ] ) )
+        exemplary_animals.append(("smallest_animal", animal_list[ len( animal_list)-1 ] ))
 
         # Find the second smallest animal
-        exemplary_animals.append( ("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] ) )
+        exemplary_animals.append
+        (
+            ("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] )
+        )
 
+        # Find the largest predator
+        exemplary_animals.append
+        (
+            ("largest_predator", find_predator( 1, animal_list ) )
+        )
+
+        # Find the second largest predator
+        exemplary_animals.append
+        (
+            ( "second_largest_predator", find_predator( 2, animal_list ))
+        )
+
+        # Find the largest past animal
+        exemplary_animals.append
+        (
+            ( "largest_past_animal", animal_list[ 2 ] )
+        )
+
+        # Find the second largest past animal
+        exemplary_animals.append
+        (
+            ( "second_largest_past_animal", animal_list[ 3 ] )
+        )
+
+        # Find a bunch of animals for dobble
+        for index in range( 0, 4 ):
+
+            random_animal = random.randrange( 0, len( animal_list ) )
+
+            exemplary_animals.append( ( "Dobble_" + str( index ), animal_list[ random_animal ] ) )
+        
+        # Download the images for all of the animals we want 
         for animal in exemplary_animals:
 
-            image_scraper( animal[1][ BINOMIAL ], "animal_images", animal[0] )
+            image_scraper( animal[ ANIMAL_OBJECT ][ BINOMIAL ], dir_name , animal[ ANIMAL_TITLE ] )
 
                             
     
@@ -120,10 +161,27 @@ def create_list_from_csv( csv_file ):
     # Return the list
     return animal_list
 
+def find_predator( placement, animal_list ):
 
-def find_predatory_animal( placement ):
-    return True
+    placement_counter = placement
     
+    # Loop through the list
+    for animal in animal_list:
+
+        # Check if the animal is a predator
+        if animal[ ORDER ] not in NON_PREDATOR_ORDERS:
+
+            # Subtrack from our placement counter
+            placement_counter -= 1
+
+            # Check if our placement counter is zero
+            if placement_counter == 0:
+                
+                # If so, return this animal
+                return animal 
+
+    # If no predators were found, return the largest animal
+    return animal_list[ 0 ]
 
 if __name__ == "__main__":
     main()

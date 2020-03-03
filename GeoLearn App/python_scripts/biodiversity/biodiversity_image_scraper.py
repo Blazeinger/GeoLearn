@@ -90,7 +90,7 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
     
     for element in image_elements:
 
-        print( "attempt" + str( attempt_count ) )
+        
         attempt_count += 1 
 
         # Check if you've downloaded all the images you want
@@ -101,13 +101,15 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
         element.click()
 
         # Give the browser some time to catch up 
-        time.sleep( 0.5 )
+        time.sleep( 2 )
 
         # After clicking on the image, get the larger version 
         found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
 
         # find the source of the image, it's url 
         image_url = found_image.get_attribute( 'src' )
+
+        print( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
 
         # Make sure that the image url is a valid source 
         if 'http' in image_url:
@@ -121,7 +123,7 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
             image = Image.open( image_file ).convert( 'RGB' )
 
             # Create the the name of this image we're downloaded
-            image_name = '/' + search_query + '_'  + str( index ) + '.jpg'
+            image_name = '/' + img_name + '.jpg'
 
             # Save the path that we want to save the image to
             # The directory will be the same name as the search query 

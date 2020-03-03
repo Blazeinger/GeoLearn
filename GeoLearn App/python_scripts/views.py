@@ -47,10 +47,6 @@ def biodiversity_submit( request ):
 	
 	# Now, filter the animals to find which pictures we need to find 
 	
-	# Find the pictures and place them inside a folder 
-	
-	# Push the folder to the google drive 
-	
 	
 	output = csv_filename 
 	return render( request, 'Slides.html', {'message': output} )
