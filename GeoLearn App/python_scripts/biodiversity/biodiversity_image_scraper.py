@@ -55,7 +55,7 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
     assert "No results found." not in driver.page_source
 
     ''' Retreive the URLs for the images we're searching for '''
-    retrieve_image_urls( animal_search, driver, directory_name, image_name  )
+    return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
 
 
 def correct_for_query_spaces( search_query ):
@@ -63,6 +63,8 @@ def correct_for_query_spaces( search_query ):
     return '+'.join( temp_query )
 
 def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
+
+    image_name = '' 
 
     # Variable that holds the number of images to fetch 
     number_of_images_to_fetch = 1
@@ -123,11 +125,13 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
             image = Image.open( image_file ).convert( 'RGB' )
 
             # Create the the name of this image we're downloaded
-            image_name = '/' + img_name + '.jpg'
+            image_name = img_name + '.jpg'
+
+            print( image_name )
 
             # Save the path that we want to save the image to
             # The directory will be the same name as the search query 
-            image_path = BASE_DIR + "/biodiversity/" + dir_name + image_name
+            image_path = BASE_DIR + "/biodiversity/" + dir_name + '/' + image_name
 
             # Save the image 
             image.save( image_path, 'JPEG', quality=85 )
@@ -154,6 +158,9 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
 
     # close the web browser
     webdriver.close()
+
+    print( image_name )
+    return image_name
 
 
 '''

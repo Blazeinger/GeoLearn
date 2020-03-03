@@ -1,6 +1,9 @@
 import csv
 import os
 import random
+from pydrive.drive import GoogleDrive
+from pydrive.auth import GoogleAuth
+
 from biodiversity_image_scraper import image_scraper
 
 MASS = 16
@@ -12,7 +15,7 @@ ORDER = 9
 NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
 def main():
-    find_animal_images( 'mammal_info_35.0_-111.0.csv', False, "animals" )
+    find_animal_images( 'mammal_info_35.0_-111.0.csv', True, "animals" )
 
 def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
@@ -28,56 +31,58 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Create our list that contains exemplary animals 
         exemplary_animals = []
 
+        
         # Find the largest animal
         exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
+
         
         # Find the second largest animal 
         exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
-
+        '''
         # Find the smallest animal
         exemplary_animals.append(("smallest_animal", animal_list[ len( animal_list)-1 ] ))
 
         # Find the second smallest animal
-        exemplary_animals.append
-        (
-            ("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] )
-        )
+        exemplary_animals.append(("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] ))
 
         # Find the largest predator
-        exemplary_animals.append
-        (
-            ("largest_predator", find_predator( 1, animal_list ) )
-        )
+        exemplary_animals.append(("largest_predator", find_predator( 1, animal_list ) ))
 
         # Find the second largest predator
-        exemplary_animals.append
-        (
-            ( "second_largest_predator", find_predator( 2, animal_list ))
-        )
+        exemplary_animals.append(( "second_largest_predator", find_predator( 2, animal_list )))
 
         # Find the largest past animal
-        exemplary_animals.append
-        (
-            ( "largest_past_animal", animal_list[ 2 ] )
-        )
+        exemplary_animals.append(( "largest_past_animal", animal_list[ 2 ] ))
 
         # Find the second largest past animal
-        exemplary_animals.append
-        (
-            ( "second_largest_past_animal", animal_list[ 3 ] )
-        )
+        exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
 
         # Find a bunch of animals for dobble
         for index in range( 0, 4 ):
 
+            # Find a random animal index to pull a picture of 
             random_animal = random.randrange( 0, len( animal_list ) )
 
+            # Add that animal to our exemplary animals list
             exemplary_animals.append( ( "Dobble_" + str( index ), animal_list[ random_animal ] ) )
+
+        '''
+
+        # Initialize a list for the names of the images 
+        image_names = []
         
         # Download the images for all of the animals we want 
         for animal in exemplary_animals:
 
-            image_scraper( animal[ ANIMAL_OBJECT ][ BINOMIAL ], dir_name , animal[ ANIMAL_TITLE ] )
+            image_names.append( image_scraper( animal[ ANIMAL_OBJECT ][ BINOMIAL ], dir_name , animal[ ANIMAL_TITLE ] ))
+
+
+        for image in image_names:
+            print( image )
+            
+        # Upload the images to the Google drive 
+        if upload_bool:
+            upload_images( image_names )
 
                             
     
@@ -182,6 +187,21 @@ def find_predator( placement, animal_list ):
 
     # If no predators were found, return the largest animal
     return animal_list[ 0 ]
+
+def upload_images( images ):
+
+    # connect to google drive 
+    gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
+    drive = GoogleDrive( gauth )
+
+    # Loop through the images
+    for image_name in images: 
+        upload_image = drive.CreateFile( {'title': image_name} )
+
+        # python_scripts/biodiversity/
+        
+        upload_image.SetContentFile( "animals/" + image_name )
+        upload_image.Upload()
 
 if __name__ == "__main__":
     main()
