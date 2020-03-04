@@ -38,7 +38,7 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
 
     # Prevent the actual browser from opening
     options = Options()
-    #options.add_argument( '--headless' )
+    options.add_argument( '--headless' )
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
@@ -105,62 +105,59 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
         # Give the browser some time to catch up 
         time.sleep( 2 )
 
-        # After clicking on the image, get the larger version 
-        found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
+        try:
 
-        # find the source of the image, it's url 
-        image_url = found_image.get_attribute( 'src' )
+            # After clicking on the image, get the larger version 
+            found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
 
-        print( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
+            # find the source of the image, it's url 
+            image_url = found_image.get_attribute( 'src' )
 
-        # Make sure that the image url is a valid source 
-        if 'http' in image_url:
+            print( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
 
-            print( "successful image found" )
+            # Make sure that the image url is a valid source 
+            if 'http' in image_url:
 
-            # Download this image as a BytesIO object 
-            image_file = io.BytesIO( requests.get( image_url ).content )
+                print( "successful image found" )
 
-            # Convert our BytesIO object into an actual image
-            image = Image.open( image_file ).convert( 'RGB' )
+                # Download this image as a BytesIO object 
+                image_file = io.BytesIO( requests.get( image_url ).content )
 
-            # Create the the name of this image we're downloaded
-            image_name = img_name + '.jpg'
+                # Convert our BytesIO object into an actual image
+                image = Image.open( image_file ).convert( 'RGB' )
 
-            print( image_name )
+                # Create the the name of this image we're downloaded
+                image_name = img_name + '.jpg'
 
-            # Save the path that we want to save the image to
-            # The directory will be the same name as the search query 
-            image_path = BASE_DIR + "/biodiversity/" + dir_name + '/' + image_name
+                print( image_name )
 
-            # Save the image 
-            image.save( image_path, 'JPEG', quality=85 )
+                # Save the path that we want to save the image to
+                # The directory will be the same name as the search query 
+                image_path = BASE_DIR + "/biodiversity/" + dir_name + '/' + image_name
 
-            found_image_count += 1
+                # Save the image 
+                image.save( image_path, 'JPEG', quality=85 )
 
-        
-    '''
-    for index in range( number_of_images_to_fetch ):
+                found_image_count += 1
 
-        image_elem = image_elements[ index ]
+            # endif statement
 
-        image_elem.click()
+        # end try block
 
-        time.sleep( 1 )
+        except:
+            print( "couldn't find enhanced images" )
 
-        actual_image = webdriver.find_element_by_class_name( 'n3VNCb' )
-        
-        # Find the url of the image that we want tn download 
-        image_url = actual_image.get_attribute( 'src' )
-    '''
-        
-
+        # end except block 
+              
+    # End for loop  loop
 
     # close the web browser
     webdriver.close()
 
     print( image_name )
     return image_name
+
+
 
 
 '''
