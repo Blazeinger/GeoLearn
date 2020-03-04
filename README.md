@@ -1,7 +1,7 @@
 Things to install for Biodiversity
 
-       These are for the webdriver and image scraping
-pip3 install selenium
+     These are for the webdriver and image scraping
+pip3 install selenium \n 
 sudo apt-get install firefox-geckodriver
 
      This is for processing the images 
@@ -17,3 +17,6 @@ pip3 install shapely
 pip3 install pydrive
 
      install Mozilla Firefox because the webdriver that gets the images online only works with Firefox
+
+	install this for the Chrome Driver
+pip3 install chromedriver-py
