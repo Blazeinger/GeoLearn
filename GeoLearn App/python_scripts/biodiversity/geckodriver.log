@@ -1219,3 +1219,6 @@ Exiting due to channel error.
 1583206039625	Marionette	INFO	Listening on port 37939
 1583206039653	Marionette	WARN	TLS certificate errors will be ignored for this session
 1583206046121	Marionette	INFO	Stopped listening on port 37939
+1583352327225	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile0YpEqj"
+Unable to init server: Could not connect: Connection refused
+Error: cannot open display: :0
