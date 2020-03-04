@@ -24,7 +24,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
     with open( csv_name ) as csv_file:
 
         print( BASE_DIR )
-        
+
         animal_reader = csv.reader( csv_file, delimiter=',' )
 
         # Create a list with the animals from the csv
@@ -32,6 +32,8 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
         # Sort the list of animals
         sort_results( animal_list )
+
+        print( "animal list sorted" ) 
 
         # Create our list that contains exemplary animals 
         exemplary_animals = []
@@ -60,7 +62,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
         # Find the second largest past animal
         exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
-
+        
         # Find a bunch of animals for dobble
         for index in range( 0, 4 ):
 
@@ -72,6 +74,8 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
             
         # Initialize a list for the names of the images 
         image_names = []
+
+        print( "saved animal info" )
         
         # Download the images for all of the animals we want 
         for animal in exemplary_animals:
