@@ -3,3 +3,4 @@ testsite/biodiversity/biodiversity_mammal_db.csv
 *.jpg
 README.md~
 geckodriver.log
+db.sqlite3
