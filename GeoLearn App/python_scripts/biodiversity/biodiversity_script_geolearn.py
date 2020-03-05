@@ -23,7 +23,7 @@ def find_animals_main():
 	
 	# The size of the area that we want to search for 
 	# 1 about equals 70 miles  (69.4)
-	SEARCH_RADIUS = 1
+	SEARCH_RADIUS = 2
 	
 	# Our boolean that maintains the main loop 
 	getting_info = True

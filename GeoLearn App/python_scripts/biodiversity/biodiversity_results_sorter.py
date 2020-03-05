@@ -5,6 +5,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
 from .biodiversity_image_scraper import image_scraper
+#from biodiversity_image_scraper import image_scraper
 
 MASS = 16
 BINOMIAL = 1
@@ -17,7 +18,7 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
-    find_animal_images( 'mammal_info_35.0_-111.0.csv', True, "animals" )
+    find_animal_images( 'mammal_info.csv', True, "animals" )
 
 def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
