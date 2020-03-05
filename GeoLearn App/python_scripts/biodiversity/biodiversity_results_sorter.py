@@ -4,8 +4,8 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from .biodiversity_image_scraper import image_scraper
-#from biodiversity_image_scraper import image_scraper
+#from .biodiversity_image_scraper import image_scraper
+from biodiversity_image_scraper import image_scraper
 
 MASS = 16
 BINOMIAL = 1
@@ -18,7 +18,7 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
-    find_animal_images( 'mammal_info.csv', True, "animals" )
+    find_animal_images( 'mammal_info.csv', True, "animal_images" )
 
 def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
@@ -42,7 +42,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
         # Find the largest animal
         exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
-        
+
         # Find the second largest animal 
         exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
         
@@ -64,15 +64,17 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Find the second largest past animal
         exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
 
-        #for dobble_slide_count 
-        # Find a bunch of animals for dobble
-        for index in range( 0,  ):
+        for dobble_slide_count in range( 4, 7 ):
+            
+            # Find a bunch of animals for dobble
+            for index in range( 0, dobble_slide_count ):
 
-            # Find a random animal index to pull a picture of 
-            #random_animal = random.randrange( 0, len( animal_list ) )
+                # Find a random animal index to pull a picture of 
+                #random_animal = random.randrange( 0, len( animal_list ) )
 
-            # Add that animal to our exemplary animals list
-            exemplary_animals.append( ( "Dobble_" + str( index ), animal_list[ random_animal ] ) )
+                # Add that animal to our exemplary animals list
+                exemplary_animals.append( ( "Dobble_" + str(dobble_slide_count) + str( index ), animal_list[ random_animal ] ) )
+
             
         # Initialize a list for the names of the images 
         image_names = []
@@ -220,13 +222,35 @@ def upload_images( images ):
 
     print( "after authorization" )
 
+    ''' Find the name of the folder we want to upload to '''
+    # Define the folder we want to upload to 
+    target_folder_name = 'slideInfo'
+    target_folder_id = ''
+
+    # Find the list of all of the files in the google drive 
+    file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+
+    # Loop through all of the files in the 
+    for file_object in file_list:
+
+        # Check if the current one is our target
+        if file_object[ 'title' ] == target_folder_name:
+
+            # Save the folder id
+            target_folder_id = file_object[ 'id' ]        
+
+    print( "folder id: " + target_folder_id )
+    
     # Loop through the images
     for image_name in images: 
-        upload_image = drive.CreateFile( {'title': image_name} )
-
-        # python_scripts/biodiversity/
+        upload_image = drive.CreateFile( {'title': image_name, 'parents': [{'id': target_folder_id }]})
         
-        upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name )
+        #upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name )
+
+        print( image_name )
+        
+        upload_image.SetContentFile( "animal_images/" + image_name )
+        
         upload_image.Upload()
 
 if __name__ == "__main__":

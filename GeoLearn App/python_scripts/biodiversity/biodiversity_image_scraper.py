@@ -42,31 +42,21 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
     options = Options()
     options.add_argument( '--headless' )
 
-    print( "is it the fucking webdriver? " )
+    print( 'connecting to webdriver' )
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
-
-    print( "it's not the webdriver" )
+    
     # Change any spaces in the search query into pluses
     image_search = correct_for_query_spaces( animal_search )
-
-    print( "it's not the + replace" )
-    print( "It's the fucking driver.get" )
     
     # Have our webdriver connect to our crafted url
     # The url replaces the "search query" with our actual search query
     driver.get( search_url.format( search_query = image_search ))
-
-    print( "it's not the driver.get" )
-    print( "it's the asserts" )
     
     # Check that the connection to the website was successful 
     assert "Google" in driver.title
     assert "No results found." not in driver.page_source
-
-    print( driver.page_source )
-    print( "after asserts, before function call" )
 
     ''' Retreive the URLs for the images we're searching for '''
     return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
