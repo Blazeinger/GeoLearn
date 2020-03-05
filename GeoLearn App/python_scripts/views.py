@@ -52,7 +52,7 @@ def climate_submit( request ):
 	lat = request.POST.get('lat') 
 	lng = request.POST.get('long') 
 	
-	timelapse_path = BASE_DIR + '/climate_change/time_lapse.py' 
+	timelapse_path = BASE_DIR + '/python_scripts/climate_change/time_lapse.py' 
 
 	#out = run([sys.executable,
 	#'//mnt//c//Users//Samuel Prasse//Documents//GitHub//GeoLearn//GeoLearn App//GeoLearn-django_website//testsite//polls//climate_change//time_lapse.py', lat, lng], shell=False, stdout=PIPE)
