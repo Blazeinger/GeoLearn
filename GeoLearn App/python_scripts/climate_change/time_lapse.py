@@ -4,7 +4,7 @@ Code for the Time Lapse Creation
 
 '''
 
-# pip3 install googleearth-api
+# pip3 install earthengine-api
 import ee
 import sys
 import os

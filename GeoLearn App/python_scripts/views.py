@@ -52,7 +52,7 @@ def climate_submit( request ):
 	lat = request.POST.get('lat') 
 	lng = request.POST.get('long') 
 	
-	timelapse_path = BASE_DIR + '/climate_change/time_lapse.py' 
+	timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py' 
 
 	#out = run([sys.executable,
 	#'//mnt//c//Users//Samuel Prasse//Documents//GitHub//GeoLearn//GeoLearn App//GeoLearn-django_website//testsite//polls//climate_change//time_lapse.py', lat, lng], shell=False, stdout=PIPE)
@@ -63,3 +63,30 @@ def climate_submit( request ):
 	output = "climate change script run successfully"
 
 	return render( request, 'Slides.html', {'message': out.stdout} )
+
+def biodiversity_climate_submit( request ):
+
+        # Float values of longitude and latitude 
+        latitude = float( request.POST.get( 'lat' ) )
+	longitude = float( request.POST.get( 'long' ) )
+
+        # Feed the lat and long to our find animals script 
+	# Now, we have the filename of the csv that contains the animal data 
+	csv_filename = find_animals_script( lat, lng )
+	
+	# Now, filter the animals to find which pictures we need to find 
+	find_animal_images( csv_filename, True, "animal_images" )
+	
+	#output = csv_filename 
+	#return render( request, 'Slides.html', {'message': output} )
+
+        timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py'
+
+        out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
+
+	#time_lapse(lat, lng)
+	output = "climate change script run successfully"
+
+	return render( request, 'Slides.html', {'message': out.stdout} )
+
+
