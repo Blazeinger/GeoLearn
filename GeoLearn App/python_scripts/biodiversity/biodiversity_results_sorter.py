@@ -63,12 +63,13 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
         # Find the second largest past animal
         exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
-        
+
+        #for dobble_slide_count 
         # Find a bunch of animals for dobble
-        for index in range( 0, 4 ):
+        for index in range( 0,  ):
 
             # Find a random animal index to pull a picture of 
-            random_animal = random.randrange( 0, len( animal_list ) )
+            #random_animal = random.randrange( 0, len( animal_list ) )
 
             # Add that animal to our exemplary animals list
             exemplary_animals.append( ( "Dobble_" + str( index ), animal_list[ random_animal ] ) )

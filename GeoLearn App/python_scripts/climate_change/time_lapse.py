@@ -7,7 +7,10 @@ Code for the Time Lapse Creation
 # pip3 install googleearth-api
 import ee
 import sys
+import os
 from ee import batch
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 latitude_val = float(sys.argv[1])
 longitude_val = float(sys.argv[2])
