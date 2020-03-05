@@ -26,6 +26,8 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
     # Make sure what we name the image is a valid name
     directory_name = dir_name
     image_name = img_name
+
+    print( "image scraping start" )
     
     if directory_name == None:
         directory_name = animal_search
@@ -39,20 +41,32 @@ def image_scraper( animal_search, dir_name=None, img_name=None ):
     # Prevent the actual browser from opening
     options = Options()
     options.add_argument( '--headless' )
+
+    print( "is it the fucking webdriver? " )
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
 
+    print( "it's not the webdriver" )
     # Change any spaces in the search query into pluses
     image_search = correct_for_query_spaces( animal_search )
 
+    print( "it's not the + replace" )
+    print( "It's the fucking driver.get" )
+    
     # Have our webdriver connect to our crafted url
     # The url replaces the "search query" with our actual search query
     driver.get( search_url.format( search_query = image_search ))
 
+    print( "it's not the driver.get" )
+    print( "it's the asserts" )
+    
     # Check that the connection to the website was successful 
     assert "Google" in driver.title
     assert "No results found." not in driver.page_source
+
+    print( driver.page_source )
+    print( "after asserts, before function call" )
 
     ''' Retreive the URLs for the images we're searching for '''
     return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
@@ -64,8 +78,9 @@ def correct_for_query_spaces( search_query ):
 
 def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
 
+    print( "image_scraping function start" ) 
     image_name = '' 
-
+    
     # Variable that holds the number of images to fetch 
     number_of_images_to_fetch = 1
     index = 0
@@ -89,7 +104,7 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
     '''
     found_image_count = 0
     attempt_count = 0
-    
+    print( "begin finding images" )
     for element in image_elements:
 
         
