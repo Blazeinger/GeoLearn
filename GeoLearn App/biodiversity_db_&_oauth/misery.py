@@ -1,7 +1,6 @@
 import csv
 import mysql.connector
 
-
 DB_NAME = "biodiversity_mammal_db.csv" 
 
 def main():
