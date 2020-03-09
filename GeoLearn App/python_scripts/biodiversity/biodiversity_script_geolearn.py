@@ -18,201 +18,169 @@ def main():
 
 def find_animals_main():
 
-	# constant for testing database executions 
-	ROWS_TO_ACCESS = 1
+        # constant for testing database executions 
+        ROWS_TO_ACCESS = 1
 	
-	# The size of the area that we want to search for 
-	# 1 about equals 70 miles  (69.4)
-	SEARCH_RADIUS = 2
+        # The size of the area that we want to search for 
+        # 1 about equals 70 miles  (69.4)
+        SEARCH_RADIUS = 0.1
 	
-	# Our boolean that maintains the main loop 
-	getting_info = True
+        # Our boolean that maintains the main loop 
+        getting_info = True
 
-	descriptors = []
-	animal_boundaries = []
-	animal_info = []
+        descriptors = []
+        animal_boundaries = []
+        animal_info = []
 	
-	'''
-	# connect to our database
-	mydb = mysql.connector.connect(
+        print( "beginning local db read" )
 	
-		host="ecolocation.c09lpapromur.us-east-2.rds.amazonaws.com",
-		user="TeamEcolocation",
-		password="EcolocationData",
-		port=3306,
-		database="ecolocation_data"
-		)
+        with open( "biodiversity_mammal_db.csv" ) as csvFile:
+                csv.field_size_limit( sys.maxsize )
+                csv_reader = csv.reader( csvFile )
+		
+                index = 0
+		
+                for row in csv_reader: 
+                        if index == 0:
+                                descriptors = row
+                        else:
+                                animal_info.append( row )
+                                animal_boundaries.append( create_shape(animal_info[ index - 1 ][17]) )
 
-	# Create a cursor to look through the database
-	mycursor = mydb.cursor( buffered=True )
-	 
-	# Grab the descriptors of the mammals information from the database
-	descriptors = []
-	mycursor.execute( "SHOW FIELDS FROM iucn" )
-	for x in mycursor: 
-		descriptors.append( x[ 0 ] )
-		
-	animal_boundaries = []
-	animal_info = []
-	
-	
-	print( "starting animal boundary shape file creation" )
-	mycursor.execute( "SELECT AsText(boundaries) FROM iucn LIMIT %d" % (ROWS_TO_ACCESS) )
-	
-	#mycursor.execute( "SELECT AsText(boundaries) FROM iucn" )
-	for animal in mycursor:
-		animal_boundaries.append( create_shape( animal ) )
-	print( "done" )
-	
-	
-	
-	
-	#mycursor.execute( "SELECT * FROM iucn LIMIT %d" % (ROWS_TO_ACCESS) )
-	mycursor.execute( "SELECT * FROM iucn" )
-	print( "starting animal information extraction" )
-	for animal in mycursor:
-		animal_info.append( animal )
-	print( "done" )
-	'''
-	
-	print( "beginning local db read" )
-	
-	with open( "biodiversity_mammal_db.csv" ) as csvFile: 
-		csv.field_size_limit( sys.maxsize )
-		csv_reader = csv.reader( csvFile )
-		
-		index = 0
-		
-		for row in csv_reader: 
-			if index == 0:
-				descriptors = row
-			else:
-				animal_info.append( row )
-				animal_boundaries.append( create_shape(animal_info[ index - 1 ][17]) )
-				
-			index += 1
-			
-			if index % 1000 == 0:
-				print( "read in " + str( index ) + " animals" )
-			
-	print( "finished reading database" )
-	
-	while getting_info:
-	
-		animals_within_boundaries = []
-		print( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
-		response = input()
-		if response.lower() == "exit":
-			getting_info = False
-		else:
-			try: 
-				response = response.split( "," )
-				latitude = float( response[ 0 ] )
-				longitude = float( response[ 1 ] )
-				
-				#count = 0
-				for index in range( 0, len( animal_boundaries ) ):
-				
-					#count += 1
-					#print( count, end= " " )
-					
-					if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
-						animals_within_boundaries.append( animal_info[ index ] )
-								
-				if len( animals_within_boundaries ) == 0:
-					print( "There were no mammals in that area" )
-				else:
-					filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-					send_csv_to_drive( filename )
-					#display_mammal_information( animals_within_boundaries, descriptors )
-					print( "number of animals" )
-					print( len( animals_within_boundaries ) )
-			except ValueError: 
-				print( "Please input a valid latitude and longitude or \"Exit\" " )	
+                        index += 1
+
+                        if index % 1000 == 0:
+                                print( "read in " + str( index ) + " animals" )
+
+        print( "finished reading database" )
+
+        while getting_info:
+
+                animals_within_boundaries = []
+                print( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
+                response = input()
+                if response.lower() == "exit":
+                        getting_info = False
+                else:
+                        try:
+                                response = response.split( "," )
+                                latitude = float( response[ 0 ] )
+                                longitude = float( response[ 1 ] )
+
+                                count = [0]
+                                total = 0
+
+                                for index in range( 0, len( animal_boundaries ) ):
+
+                                        total += 1
+                                        #print( count, end= " " )
+
+                                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, count ):
+                                                animals_within_boundaries.append( animal_info[ index ] )
+
+                                print( "valid shapes: " + str( count[0] ) )
+                                print( "total: " + str( total ) )
+
+                                if len( animals_within_boundaries ) == 0:
+                                        print( "There were no mammals in that area" )
+                                else:
+                                        filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
+                                        #send_csv_to_drive( filename )
+                                        #display_mammal_information( animals_within_boundaries, descriptors )
+                                        print( "number of animals" )
+                                        print( len( animals_within_boundaries ) )
+
+                        except ValueError:
+                                print( "Please input a valid latitude and longitude or \"Exit\" " )	
 	
 # end main 	
 
 def find_animals_script( latitude, longitude ):
-	# constant for testing database executions 
-	ROWS_TO_ACCESS = 1
+        # constant for testing database executions 
+        ROWS_TO_ACCESS = 1
 	
-	# The size of the area that we want to search for 
-	# 1 about equals 70 miles  (69.4)
-	SEARCH_RADIUS = 1
+        # The size of the area that we want to search for 
+        # 1 about equals 70 miles  (69.4)
+        SEARCH_RADIUS = 1
 	
-	# Our boolean that maintains the main loop 
-	getting_info = True
+        # Our boolean that maintains the main loop 
+        getting_info = True
 
-	descriptors = []
-	animal_boundaries = []
-	animal_info = []
+        descriptors = []
+        animal_boundaries = []
+        animal_info = []
 	
-	print( "beginning local db read" )
-	
-	with open( "biodiversity_db_&_oauth/biodiversity_mammal_db.csv" ) as csvFile: 
-		csv.field_size_limit( sys.maxsize )
-		csv_reader = csv.reader( csvFile )
+        print( "beginning local db read" )
+
+        with open( "biodiversity_db_&_oauth/biodiversity_mammal_db.csv" ) as csvFile: 
+                csv.field_size_limit( sys.maxsize )
+                csv_reader = csv.reader( csvFile )
 		
-		index = 0
+                index = 0
 		
-		for row in csv_reader: 
-			if index == 0:
-				descriptors = row
-			else:
-				animal_info.append( row )
-				animal_boundaries.append( create_shape(animal_info[ index - 1 ][17]) )
+                for row in csv_reader: 
+                        if index == 0:
+                                descriptors = row
+                        else:
+                                animal_info.append( row )
+                                animal_boundaries.append( create_shape(animal_info[ index - 1 ][17]) )
 				
-			index += 1
+                        index += 1
 			
-			if index % 1000 == 0:
-				print( "read in " + str( index ) + " animals" )
+                        if index % 1000 == 0:
+                                print( "read in " + str( index ) + " animals" )
 			
-	print( "finished reading database" )
+        print( "finished reading database" )
 
-	animals_within_boundaries = []
+        animals_within_boundaries = []
 
-	try: 
+        successful_shape_count = 0
+
+        try: 
 			
-		for index in range( 0, len( animal_boundaries ) ):
+                for index in range( 0, len( animal_boundaries ) ):
 					
-			if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
-				animals_within_boundaries.append( animal_info[ index ] )
-								
-		if len( animals_within_boundaries ) == 0:
-			print( "There were no mammals in that area" )
-		else:
-			filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-			send_csv_to_drive( filename )
-			#display_mammal_information( animals_within_boundaries, descriptors )
-			print( "number of animals" )
-			print( len( animals_within_boundaries ) )
+                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, successful_shape_count ):
+                                animals_within_boundaries.append( animal_info[ index ] )
+
+                print( "valid animals: " + str( successful_shape_count ) )
+
+                if len( animals_within_boundaries ) == 0:
+                        print( "There were no mammals in that area" )
+                else:
+                        filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
+                        #send_csv_to_drive( filename )
+                        #display_mammal_information( animals_within_boundaries, descriptors )
+                        print( "number of animals" )
+                        print( len( animals_within_boundaries ) )
 			
-			return filename + '.csv'
-			
-	except ValueError: 
-		print( "Please input a valid latitude and longitude or \"Exit\" " )	
+                        return filename + '.csv'
+        except ValueError:
+                print( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 # Check if an animal's habitat area is within the area we're searching 
-def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius ):
+def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius, count  ):
 	
-	# create a polygon object originating from the latitude and longitude
-	origin_point = Point( latitude, longitude )
+        # create a polygon object originating from the latitude and longitude
+        origin_point = Point( latitude, longitude )
 	
-	# Create a circle that will be where we search for animal habitats
-	search_area = origin_point.buffer( search_radius )
-	
-	# Turn this circle into a polygon object that can be used to check if it
-	# intersects with an animal's polygon object that represents its habitat
-	search_polygon = Polygon( list( search_area.exterior.coords ) )
+        # Create a circle that will be where we search for animal habitats
+        search_area = origin_point.buffer( search_radius )
 
-	# Check if the animal's boundary is unusable
-	if animal_boundary.is_valid == False:
+        # Turn this circle into a polygon object that can be used to check if it
+        # intersects with an animal's polygon object that represents its habitat
+        search_polygon = Polygon( list( search_area.exterior.coords ) )
+
+        # Check if the animal's boundary is unusable
+        if animal_boundary.is_valid == False:
 	
-		# If so, just return false 
-		return False
-	
+                # If so, just return false 
+                return False
+
+        count[0] += 1
+        ###################################################################################################3
 	# Otherwise, check if our search area intersects with the animal's habitat
-	return search_polygon.intersects( animal_boundary )
+        return search_polygon.intersects( animal_boundary )
 
 # Print the animal's information to the commandline 
 def display_mammal_information( listOfMammals, descriptors ):
@@ -363,58 +331,58 @@ def create_shape( currentShape ):
 
 def send_csv_to_drive( fileName ):
 
-	print( 'begin file upload' )
+        print( 'begin file upload' )
 	
-	# Create google account authentication objects
-	gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
+        # Create google account authentication objects
+        gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
 	
-	print( 'client secrets 1' )
+        print( 'client secrets 1' )
 	
-	if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
-		gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+        if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
+                gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 	
-	if gauth.credentials is None:
-		print( 'local webserver branch' )
-		gauth.LocalWebserverAuth()
-		
-	elif gauth.access_token_expired:
-		print( 'refresh branch' )
-		gauth.Refresh()
-		
-	else:
-		print( 'authorize branch' )
-		gauth.Authorize()
-	
-	print( 'client secrets 2' )
-		
-	gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
-	
-	drive = GoogleDrive( gauth )
-	
-	''' Find the name of the folder we want to upload to '''
-    # Define the folder we want to upload to 
-    target_folder_name = 'slideInfo'
-    target_folder_id = ''
+        if gauth.credentials is None:
+                print( 'local webserver branch' )
+                gauth.LocalWebserverAuth()
 
-    # Find the list of all of the files in the google drive 
-    file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+        elif gauth.access_token_expired:
+                print( 'refresh branch' )
+                gauth.Refresh()
 
-    # Loop through all of the files in the 
-    for file_object in file_list:
+        else:
+                print( 'authorize branch' )
+                gauth.Authorize()
 
-        # Check if the current one is our target
-        if file_object[ 'title' ] == target_folder_name:
+        print( 'client secrets 2' )
 
-            # Save the folder id
-            target_folder_id = file_object[ 'id' ]        
+        gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 
-    print( "folder id: " + target_folder_id )
-    
-	upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
-	upload_csv.SetContentFile( fileName + '.csv' ) 
-	upload_csv.Upload() 
-	
-	print( 'file uploaded' )
+        drive = GoogleDrive( gauth )
+
+        ''' Find the name of the folder we want to upload to '''
+        # Define the folder we want to upload to
+        target_folder_name = 'slideInfo'
+        target_folder_id = ''
+
+        # Find the list of all of the files in the google drive
+        file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+
+        # Loop through all of the files in the
+        for file_object in file_list:
+
+                # Check if the current one is our target
+                if file_object[ 'title' ] == target_folder_name:
+
+                        # Save the folder id
+                        target_folder_id = file_object[ 'id' ]
+
+        print( "folder id: " + target_folder_id )
+
+        upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
+        upload_csv.SetContentFile( fileName + '.csv' )
+        upload_csv.Upload()
+
+        print( 'file uploaded' )
 
 if __name__ == "__main__": 
 	main()
