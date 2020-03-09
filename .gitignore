@@ -5,4 +5,4 @@ credentials.txt
 README.md~
 geckodriver.log
 db.sqlite3
-*.pyc
+*.cpython-36.pyc

@@ -25,7 +25,8 @@ SECRET_KEY = 'd3f-f@&oi*9je%bm&yse+$jfdcp!lp0+_*__21$8s_fxwx1$c0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-18-219-25-212.us-east-2.compute.amazonaws.com',]
+ALLOWED_HOSTS = ['ec2-18-219-25-212.us-east-2.compute.amazonaws.com',
+                 '127.0.0.1']
 
 
 # Application definition
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'testsite.urls'
+ROOT_URLCONF = 'python_scripts.urls'
 
 TEMPLATES = [
     {
