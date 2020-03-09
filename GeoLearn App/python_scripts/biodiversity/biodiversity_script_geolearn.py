@@ -178,7 +178,7 @@ def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search
                 return False
 
         count[0] += 1
-        ###################################################################################################3
+        
 	# Otherwise, check if our search area intersects with the animal's habitat
         return search_polygon.intersects( animal_boundary )
 
