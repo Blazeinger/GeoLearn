@@ -332,15 +332,13 @@ def create_shape( currentShape ):
 def send_csv_to_drive( fileName ):
 
         print( 'begin file upload' )
-	
         # Create google account authentication objects
         gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
-	
+
         print( 'client secrets 1' )
-	
         if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
                 gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
-	
+
         if gauth.credentials is None:
                 print( 'local webserver branch' )
                 gauth.LocalWebserverAuth()
