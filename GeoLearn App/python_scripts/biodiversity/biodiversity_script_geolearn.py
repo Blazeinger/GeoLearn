@@ -362,8 +362,7 @@ def create_shape( currentShape ):
 			
 
 def send_csv_to_drive( fileName ):
-
-	print( 'begin file upload' )
+        print( 'begin file upload' )
 	
 	# Create google account authentication objects
 	gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
@@ -390,25 +389,23 @@ def send_csv_to_drive( fileName ):
 	gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 	
 	drive = GoogleDrive( gauth )
-	
-	''' Find the name of the folder we want to upload to '''
-    # Define the folder we want to upload to 
-    target_folder_name = 'slideInfo'
-    target_folder_id = ''
 
-    # Find the list of all of the files in the google drive 
-    file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+        ''' Find the name of the folder we want to upload to '''
+        # Define the folder we want to upload to
+        target_folder_name = 'slideInfo'
+        target_folder_id = ''
 
-    # Loop through all of the files in the 
-    for file_object in file_list:
+        # Find the list of all of the files in the google drive
+        file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+        # Loop through all of the files in the
+        for file_object in file_list:
 
         # Check if the current one is our target
         if file_object[ 'title' ] == target_folder_name:
+                # Save the folder id
+                target_folder_id = file_object[ 'id' ]
 
-            # Save the folder id
-            target_folder_id = file_object[ 'id' ]        
-
-    print( "folder id: " + target_folder_id )
+        print( "folder id: " + target_folder_id )
     
 	upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
 	upload_csv.SetContentFile( fileName + '.csv' ) 
