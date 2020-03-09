@@ -1,0 +1,37 @@
+{% load static %}
+<html>
+<head>
+	<link rel="stylesheet" href="{% static 'styles.css' %}">
+	<script src="{% static '/js/Slides.js' %} "> </script>
+
+  <div class="topnav-title">
+  <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
+  <title class="header" style="display:inline; font-size:90px;">EnviroSlides</title>
+</div>
+
+<div class="topnav">
+  <a href="/index.html">Home</a>
+  <a href="/Slides.html">Slides</a>
+ </div>
+</head>
+<body style="background-color:powderblue;">
+
+<div class="grid-container">
+	<div class="item1">
+		<a href="/biodiversity.html">
+			<img src="{% static 'Images/lion.jpg' %}" style="width:300px; height:200px;">
+		</a>
+	</div>
+	<div class="item2">
+		<a href="/climate.html">
+			<img src="{% static 'Images/climate.jpg' %}" style="width:300px; height:200px;">
+		</a>
+	</div>
+	<div class="item3">
+		<a href="/land.html">
+			<img src="{% static 'Images/land_use.png' %}" style="width:300px; height:200px;">
+		</a>
+	</div>
+</div>
+</body>
+</html>
