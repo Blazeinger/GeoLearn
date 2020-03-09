@@ -66,27 +66,26 @@ def climate_submit( request ):
 
 def biodiversity_climate_submit( request ):
 
-        # Float values of longitude and latitude 
+        # Float values of longitude and latitude
         latitude = float( request.POST.get( 'lat' ) )
-	longitude = float( request.POST.get( 'long' ) )
+        longitude = float( request.POST.get( 'long' ) )
 
-        # Feed the lat and long to our find animals script 
-	# Now, we have the filename of the csv that contains the animal data 
-	csv_filename = find_animals_script( lat, lng )
-	
-	# Now, filter the animals to find which pictures we need to find 
-	find_animal_images( csv_filename, True, "animal_images" )
-	
-	#output = csv_filename 
-	#return render( request, 'Slides.html', {'message': output} )
+        # Feed the lat and long to our find animals script
+        # Now, we have the filename of the csv that contains the animal data
+        csv_filename = find_animals_script( lat, lng )
+
+        # Now, filter the animals to find which pictures we need to find
+        find_animal_images( csv_filename, True, "animal_images" )
+
+        #output = csv_filename
+        #return render( request, 'Slides.html', {'message': output} )
 
         timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py'
-
         out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
 
-	#time_lapse(lat, lng)
-	output = "climate change script run successfully"
+        #time_lapse(lat, lng)
+        output = "climate change script run successfully"
 
-	return render( request, 'Slides.html', {'message': out.stdout} )
+        return render( request, 'Slides.html', {'message': out.stdout} )
 
 
