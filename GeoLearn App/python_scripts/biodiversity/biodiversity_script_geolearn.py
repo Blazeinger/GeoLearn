@@ -91,7 +91,7 @@ def find_animals_main():
                                         total += 1
                                         #print( count, end= " " )
 
-                                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, count ):
+                                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
                                                 
                                                 animals_within_boundaries.append( animal_info[ index ] )
 
@@ -157,7 +157,7 @@ def find_animals_script( latitude, longitude ):
 			
                 for index in range( 0, len( animal_boundaries ) ):
 					
-                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, successful_shape_count ):
+                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
                                 animals_within_boundaries.append( animal_info[ index ] )
 
                 print( "valid animals: " + str( successful_shape_count ) )
@@ -176,7 +176,7 @@ def find_animals_script( latitude, longitude ):
                 print( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 # Check if an animal's habitat area is within the area we're searching 
-def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius, count  ):
+def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius ):
 	
         # create a polygon object originating from the latitude and longitude
         origin_point = Point( latitude, longitude )
@@ -194,7 +194,7 @@ def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search
                 # If so, just return false 
                 return False
 
-        count[0] += 1
+        #count[0] += 1
         
 	# Otherwise, check if our search area intersects with the animal's habitat
         return search_polygon.intersects( animal_boundary )

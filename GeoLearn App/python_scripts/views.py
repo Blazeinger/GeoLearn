@@ -43,19 +43,21 @@ def landuse_slides_page( request ):
 
 def biodiversity_submit( request ):
 
-	# Fetch the longitude and latitude from the form on the slides page
-	lat = float( request.POST.get( 'lat' ) )
-	lng = float( request.POST.get( 'long' ) )
+        print( "i hate python" )
 
-	# Feed the lat and long to our find animals script
-	# Now, we have the filename of the csv that contains the animal data
-	csv_filename = find_animals_script( lat, lng )
+        # Fetch the longitude and latitude from the form on the slides page
+        lat = float( request.POST.get( 'lat' ) )
+        lng = float( request.POST.get( 'long' ) )
 
-	# Now, filter the animals to find which pictures we need to find
-	find_animal_images( csv_filename, True, "animal_images" )
+        # Feed the lat and long to our find animals script
+        # Now, we have the filename of the csv that contains the animal dat
+        csv_filename = find_animals_script( lat, lng )
 
-	output = csv_filename
-	return render( request, 'Slides.html', {'message': output} )
+        # Now, filter the animals to find which pictures we need to find
+        find_animal_images( csv_filename, True, "animal_images" )
+
+        output = csv_filename
+        return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):
 	lat = request.POST.get('lat')
