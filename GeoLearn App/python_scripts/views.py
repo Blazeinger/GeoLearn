@@ -46,8 +46,8 @@ def biodiversity_submit( request ):
         print( "i hate python" )
 
         # Fetch the longitude and latitude from the form on the slides page
-        lat = float( request.POST.get( 'lat' ) )
-        lng = float( request.POST.get( 'long' ) )
+        lat = float( request.POST.get( 'Latitude' ) )
+        lng = float( request.POST.get( 'Longitude' ) )
 
         # Feed the lat and long to our find animals script
         # Now, we have the filename of the csv that contains the animal dat
@@ -75,31 +75,43 @@ def climate_submit( request ):
 
 	return render( request, 'Slides.html', {'message': out.stdout} )
 
-def biodiversity_climate_submit( request ):
+def biodiversity_climate_submit( request )
 
-        print( "i despise python" )
-        
+	# Float values of longitude and latitude
+	# Fetch the longitude and latitude from the form on the slides page
+	latitude = float( request.POST.get( 'Latitude' ) )
+	longitude = float( request.POST.get( 'Longitude' ) )
+	difficulty = request.POST.get( 'difficulty' )
+	userEmail = request.POST.get( 'userEmail' )
+	schoolName = request.POST.get( 'schoolName' )
 
-        # Float values of longitude and latitude
-        latitude = float( request.POST.get( 'lat' ) )
-        longitude = float( request.POST.get( 'long' ) )
+	print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
-        # Feed the lat and long to our find animals script
-        # Now, we have the filename of the csv that contains the animal data
-        csv_filename = find_animals_script( lat, lng )
+	# Feed the lat and long to our find animals script
+	# Now, we have the filename of the csv that contains the animal data
+	csv_filename = find_animals_script( latitude, longitude )
 
-        # Now, filter the animals to find which pictures we need to find
-        find_animal_images( csv_filename, True, "animal_images" )
+	# Now, filter the animals to find which pictures we need to find
+	find_animal_images( csv_filename, True, "animal_images" )
+	#output = csv_filename
+	#return render( request, 'Slides.html', {'message': output} )
 
-        #output = csv_filename
-        #return render( request, 'Slides.html', {'message': output} )
+	timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py'
+	out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
 
-        timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py'
-        out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
+	#time_lapse(lat, lng)
+	output = "climate change script run successfully"
 
-        #time_lapse(lat, lng)
-        output = "climate change script run successfully"
+	# if(difficulty == "beginner")
+	# {
+	# 	var app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
+	# 	app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+	# 	app_script_url += userEmail + "&schoolName="
+	# 	app_script_url += schoolName
+	# }
+	# if(difficulty == "advanced")
+	# {
+	#
+	# }
 
-        
-
-        return render( request, 'Slides.html', {'message': out.stdout} )
+	return render( request, 'Slides.html', {'message': out.stdout} )
