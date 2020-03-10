@@ -4,8 +4,8 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from .biodiversity_image_scraper import images_scraper
-#from biodiversity_image_scraper_test import images_scraper
+#from .biodiversity_image_scraper import image_scraper
+from biodiversity_image_scraper import image_scraper
 
 MASS = 16
 BINOMIAL = 1
@@ -38,8 +38,6 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
         # Create our list that contains exemplary animals 
         exemplary_animals = []
-
-        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal" ]
 
         
         # Find the largest animal
@@ -77,8 +75,6 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
             exemplary_animals.append( ( "Dobble_" + str( dobble_image_count ), animal_list[ index ] ) )
 
-            image_titles.append( "Dobble_" + str( dobble_image_count ) )
-
             index += 1
 
             if index == len( animal_list ):
@@ -92,9 +88,9 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         print( "saved animal info" )
         
         # Download the images for all of the animals we want 
-        #for animal in exemplary_animals:
+        for animal in exemplary_animals:
 
-        image_names.append( images_scraper( dir_name, exemplary_animals, image_titles ))
+            image_names.append( image_scraper( animal[ ANIMAL_OBJECT ][ BINOMIAL ], dir_name , animal[ ANIMAL_TITLE ] ))
 
 
         for image in image_names:

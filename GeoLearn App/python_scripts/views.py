@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
-from .biodiversity.biodiversity_image_scraper import image_scraper
 from .biodiversity.biodiversity_results_sorter import find_animal_images
 
 #from .climate_change.time_lapse import time_lapse

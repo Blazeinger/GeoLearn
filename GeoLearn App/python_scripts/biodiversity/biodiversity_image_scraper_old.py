@@ -20,16 +20,20 @@ def main():
         print( "type animal name: " )
         image_scraper( input(), "animal_images", "animals" )
 
-def images_scraper( dir_name=None, image_list=None, image_names=None ):
+def image_scraper( animal_search, dir_name=None, img_name=None ):
 
     # Make sure that the directory we create and save to is a valid name
     # Make sure what we name the image is a valid name
     directory_name = dir_name
+    image_name = img_name
 
     print( "image scraping start" )
     
     if directory_name == None:
         directory_name = animal_search
+
+    if image_name == None:
+        image_name = animal_search
         
     # Create our google image search url template 
     search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
@@ -42,42 +46,20 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
-
-    if image_list != None and image_names != None:
-
-        # Create a list of the image names that were found successfully
-        successful_list = []
-
-        index = 0
-
-        # Loop thorugh the image list
-        for image in image_list:
-
-            print( image[ 1 ][1] )
-            
-            # Change any spaces in the search query into pluses
-            image_search = correct_for_query_spaces( image[ 1 ][1] )
     
-            # Have our webdriver connect to our crafted url
-            # The url replaces the "search query" with our actual search query
-            driver.get( search_url.format( search_query = image_search ))
+    # Change any spaces in the search query into pluses
+    image_search = correct_for_query_spaces( animal_search )
     
-            # Check that the connection to the website was successful 
-            assert "Google" in driver.title
-            assert "No results found." not in driver.page_source
-            
-            successful_list.append( retrieve_image_urls( image[ 1 ][1], driver, directory_name, image_names[ index ] ))
-
-            index += 1
-
-        driver.close()
-
-        return successful_list
-
-    driver.close()
+    # Have our webdriver connect to our crafted url
+    # The url replaces the "search query" with our actual search query
+    driver.get( search_url.format( search_query = image_search ))
+    
+    # Check that the connection to the website was successful 
+    assert "Google" in driver.title
+    assert "No results found." not in driver.page_source
 
     ''' Retreive the URLs for the images we're searching for '''
-    #return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
+    return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
 
 
 def correct_for_query_spaces( search_query ):
@@ -175,13 +157,9 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
     # End for loop  loop
 
     # close the web browser
-    #webdriver.close()
+    webdriver.close()
 
-    if attempt_count > 3:
-        print( "multiple attempts: " + search_query + "<=======" )
-
-    else:
-        print( image_name )
+    print( image_name )
     return image_name
 
 
