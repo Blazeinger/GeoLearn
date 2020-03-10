@@ -1,28 +1,6 @@
 function generateSlides() {
   console.log(document.getElementById("difficulty").value);
 
-  var difficulty = document.getElementById("difficulty").value;
-  var userEmail = document.getElementById("userEmail").value;
-  var schoolName = document.getElementById("schoolName").value;
-
-
-  if(difficulty == "beginner")
-  {
-    var app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-    app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-    app_script_url += userEmail + "&schoolName="
-    app_script_url += schoolName;
-
-    console.log(app_script_url);
-
-    window.location = '/combined_output';
-    window.location = app_script_url;
-  }
-  if(difficulty == "advanced")
-  {
-
-  }
-
 
   //window.location = '/bio_output/'
 

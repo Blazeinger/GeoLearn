@@ -37,26 +37,6 @@
 	</div>
 	 -->
 
-	<form action="/action_page.php">
-		<!--
-	  <label for="cars">Choose a Type:</label>
-	  <select class="dropdown" id="type" name="type">
-	    <option value="biodiversity">Biodiversity</option>
-	    <!-- <option value="landuse">Land-Use Change</option>
-	    <option value="climate">Climate Change</option> ->
-	  </select>
-
-		<br><br>
-	-->
-
-		<label for="cars">Choose a difficulty:</label>
-		<select class="dropdown" id="difficulty" name="difficulty">
-			<option value="advanced">Advanced</option>
-			<!-- <option value="intermediate">Intermediate</option> -->
-			<option value="beginner">Beginner</option>
-		</select>
-
-	</form>
 
 	<!--Google Maps API for LAT LONG Selection-->
 	<input id="pac-input" class="controls" type="text" placeholder="Enter a Location">
@@ -71,26 +51,31 @@
 
 	<br>
 
-	<form action="/climate_output/" method="post">
+	<form id="bio_form" action="combined_output" method='post'>
 		{% csrf_token %}
 		<label for="Longitude">Longitude: <br></label>
-		<input type="text" id="Longitude" name="long" value="">
+		<input type="text" id="Longitude" name="Longitude" value="">
 	  <br><br>
 	  <label for="Latitude">Latitude: <br></label>
-	  <input type="text" id="Latitude" name="lat" value="">
+	  <input type="text" id="Latitude" name="Latitude" value="">
 	  <br><br>
-	  <!-- <input type="submit" value="Submit"> -->
-	</form>
 
-	<form action="">
-	  <label for="userEmail">School Name: </label>
+		<label for="drop">Choose a difficulty:</label>
+		<select class="dropdown" id="difficulty" name="difficulty">
+			<option value="beginner">Beginner</option>
+			<option value="advanced">Advanced</option>
+			<!-- <option value="intermediate">Intermediate</option> -->
+		</select>
+
+	  <label for="schoolName">School Name: </label>
 	  <input type="text" id="schoolName" name="schoolName">
 	  <br><br>
 		<label for="userEmail">Google Email: </label>
-	  <input type="text" id="userEmail" name="email">
+	  <input type="text" id="userEmail" name="userEmail">
 	  <br>
+
+		<input type='submit' value='Generate Slides'>
 	</form>
 
-	<button onclick="generateSlides();">Generate Slides</button>
 </body>
 </html>
