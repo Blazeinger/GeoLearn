@@ -1,0 +1,81 @@
+{% load static %}
+<html>
+<head>
+	<link rel="stylesheet" href="{% static 'styles.css' %}">
+	<script src="{% static '/js/Bio.js' %} "> </script>
+
+  <div class="topnav-title">
+  <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
+  <title class="header" style="display:inline; font-size:90px;">EnviroSlides</title>
+</div>
+
+<div class="topnav">
+  <a href="/index.html">Home</a>
+  <a href="/Slides.html">Slides</a>
+ </div>
+</head>
+<body>
+
+	<!--
+	<div class="dropdown">
+	  <button onclick="selectedTopic()" class="dropbtn">Topics</button>
+	  <div id="topics" class="dropdown-content">
+	    <a href="#biodiversity">Biodiversity</a>
+	    <a href="#land-use">Land-Use Change</a>
+	    <a href="#climate">Climate Change</a>
+		<a href="#fire">Fire</a>
+	  </div>
+	</div>
+
+	<div class="dropdown">
+	  <button onclick="selectedDifficulty()" class="dropbtn">Difficulty</button>
+	  <div id="difficulty" class="dropdown-content">
+	    <a href="#advance">Advanced</a>
+	    <a href="#intermediate">Intermediate</a>
+	    <a href="#beginner">Beginner</a>
+	  </div>
+	</div>
+	 -->
+
+
+	<!--Google Maps API for LAT LONG Selection-->
+	<input id="pac-input" class="controls" type="text" placeholder="Enter a Location">
+	<div id="map"></div>
+
+
+
+	<script
+	 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmykOK6YRGHZ6nkx-mpJc7Ql4y-axWEJE&libraries=places&callback=initAutocomplete"
+	 async defer>
+	</script>
+
+	<br>
+
+	<form id="bio_form" action="combined_output" method='post'>
+		{% csrf_token %}
+		<label for="Longitude">Longitude: <br></label>
+		<input type="text" id="Longitude" name="Longitude" value="">
+	  <br><br>
+	  <label for="Latitude">Latitude: <br></label>
+	  <input type="text" id="Latitude" name="Latitude" value="">
+	  <br><br>
+
+		<label for="drop">Choose a difficulty:</label>
+		<select class="dropdown" id="difficulty" name="difficulty">
+			<option value="beginner">Beginner</option>
+			<option value="advanced">Advanced</option>
+			<!-- <option value="intermediate">Intermediate</option> -->
+		</select>
+
+	  <label for="schoolName">School Name: </label>
+	  <input type="text" id="schoolName" name="schoolName">
+	  <br><br>
+		<label for="userEmail">Google Email: </label>
+	  <input type="text" id="userEmail" name="userEmail">
+	  <br>
+
+		<input type='submit' value='Generate Slides'>
+	</form>
+
+</body>
+</html>
