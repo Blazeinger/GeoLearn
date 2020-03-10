@@ -177,7 +177,7 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
     # close the web browser
     #webdriver.close()
 
-    if attempt_count > 3:
+    if attmept_count > 1:
         print( "multiple attempts: " + search_query + "<=======" )
 
     else:
