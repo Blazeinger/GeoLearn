@@ -49,7 +49,7 @@
 		<br><br>
 	-->
 
-		<label for="cars">Choose a difficulty:</label>
+		<label for="difficulty">Choose a difficulty:</label>
 		<select class="dropdown" id="difficulty" name="difficulty">
 			<option value="advanced">Advanced</option>
 			<!-- <option value="intermediate">Intermediate</option> -->
@@ -71,7 +71,7 @@
 
 	<br>
 
-	<form action="/climate_output/" method="post">
+	<form action="<script>generateSlides();</script>" method="post" id="bio_form">
 		{% csrf_token %}
 		<label for="Longitude">Longitude: <br></label>
 		<input type="text" id="Longitude" name="long" value="">
@@ -91,6 +91,6 @@
 	  <br>
 	</form>
 
-	<button onclick="generateSlides();">Generate Slides</button>
+	<button form="bio_form">Generate Slides</button>
 </body>
 </html>

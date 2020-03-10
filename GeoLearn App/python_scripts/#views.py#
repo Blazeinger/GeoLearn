@@ -78,7 +78,6 @@ def climate_submit( request ):
 def biodiversity_climate_submit( request ):
 
         print( "i despise python" )
-        
 
         # Float values of longitude and latitude
         latitude = float( request.POST.get( 'lat' ) )

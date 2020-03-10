@@ -3,7 +3,9 @@ function generateSlides() {
 
   var difficulty = document.getElementById("difficulty").value;
   var userEmail = document.getElementById("userEmail").value;
-  var schoolName = document.getElementById("schoolName").value;
+    var schoolName = document.getElementById("schoolName").value;
+    var latitude = document.getElementById("Latitude" ).value;
+    var longitude = document.getElementById("Longitude").value; 
 
 
   if(difficulty == "beginner")
