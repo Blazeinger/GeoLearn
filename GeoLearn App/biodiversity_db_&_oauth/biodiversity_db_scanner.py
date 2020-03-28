@@ -32,11 +32,7 @@ class biodiversity_db_generator:
 		self.animal_info = []
 		self.info_merged = []
 		
-                # Historic animal data
-                self.hist_descriptors =[]
-                self.hist_boundaries = []
-                self.hist_info = []
-                self.hist_merged = []
+
 
 		
 	# Our 'main' function that gathers the information from the database
@@ -73,11 +69,6 @@ class biodiversity_db_generator:
 			
 			# Add the column names to our descriptors variable 
 			self.descriptors.append( header[ 0 ] )
-
-                # Execute the sql command that gets the historic animal data
-                self.db_cursor.execute( "SHOW FIELDS FROM historic_data" )
-                for header in self_db_cursor:
-                        self.hist_descriptors.append( header[ 0 ] )
 	
 	
 	
@@ -92,10 +83,6 @@ class biodiversity_db_generator:
 		
 			# Save its boundary information
 			self.animal_boundaries.append( animal )
-
-                self.db_cursor.execute( "SELECT AsText(boundaries) FROM historic_data" )
-                for animal in self.db_cursor:
-                        self.hist_boundaries.append( animal )
 	
 	
 	
@@ -111,10 +98,7 @@ class biodiversity_db_generator:
 			# Save our animal info
 			self.animal_info.append( animal )
 			
-
-                self.db_cursor.execute( "SELECT * FROM historic_data" )
-                for animal in self.db_cursor:
-                        self.hist_info.append( animal )
+			
 			
 			
 	def merge_info( self ):
@@ -127,15 +111,8 @@ class biodiversity_db_generator:
 			
 			# Replace the byte data in the animal info with the animal boundary info 
 			self.info_merged[ index ][ 17 ] = self.animal_boundaries[ index ]
-
-                for index in range( 0, len( self.hist_boundaries ) ):
-
-                        # Create a list for the animals
-                        animal = 
-                        self.info_merged.append( list( self.hist_info[ index ] ) )
-                        
-                        
-                        self.info_merged[ index ][ 17 ] = self.hist_boundaries[ index ]
+	
+	
 	
 	
 	def write_to_csv( self ): 
