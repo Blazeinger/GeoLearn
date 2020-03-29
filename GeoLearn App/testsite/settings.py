@@ -39,9 +39,10 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	'python_scripts',
 	'biodiversity_db_&_oauth',
-	'social_django',
+	# 'social_django',
 ]
 
+'''
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -57,6 +58,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
