@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+## from .models import Post
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_image_scraper import image_scraper
 from .biodiversity.biodiversity_results_sorter import find_animal_images
@@ -7,10 +8,6 @@ from .biodiversity.biodiversity_results_sorter import find_animal_images
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
 import sys
-import os
-
-# Finds the absolute path to this directory
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Create your views here.
 '''
@@ -24,6 +21,12 @@ If you go to localhost/brother, it will run the brother function.
 def index( request ):
 	# render, the way I'm using it, just runs an html file.
 	# It may do other things that I don't know, but that's what it's doing here
+	'''
+	context = {
+		'posts': Post.objects.order_by('-date')
+		if request.user.is_authenticated else[]
+	}
+	'''
 	return render( request, 'index.html' )
 
 def brother( request ):
@@ -31,6 +34,21 @@ def brother( request ):
 
 def slides( request ):
 	return render( request, 'Slides.html' )
+	
+def bio( request ):
+	return render( request, 'biodiversity.html' )
+	
+def climate( request ):
+	return render( request, 'climate.html' )
+	
+def land( request ):
+	return render( request, 'land.html' )
+	
+def faq( request ):
+	return render( request, 'faq.html' )
+	
+def dobble( request ):
+	return render( request, 'dobble.html' )
 
 def biodiversity_submit( request ):
         
@@ -51,41 +69,11 @@ def biodiversity_submit( request ):
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
 	lng = request.POST.get('long') 
-	
-	timelapse_path = BASE_DIR + '/python_scripts/climate_change/time_lapse.py' 
 
-	#out = run([sys.executable,
-	#'//mnt//c//Users//Samuel Prasse//Documents//GitHub//GeoLearn//GeoLearn App//GeoLearn-django_website//testsite//polls//climate_change//time_lapse.py', lat, lng], shell=False, stdout=PIPE)
-	
-	out = run([sys.executable, timelapse_path, lat, lng], shell=False, stdout=PIPE )
+	out = run([sys.executable,
+	'//mnt//c//Users//Samuel Prasse//Documents//GitHub//GeoLearn//GeoLearn App//GeoLearn-django_website//testsite//polls//climate_change//time_lapse.py', lat, lng], shell=False, stdout=PIPE)
 
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
 
 	return render( request, 'Slides.html', {'message': out.stdout} )
-
-def biodiversity_climate_submit( request ):
-
-        # Float values of longitude and latitude
-        latitude = float( request.POST.get( 'lat' ) )
-        longitude = float( request.POST.get( 'long' ) )
-
-        # Feed the lat and long to our find animals script
-        # Now, we have the filename of the csv that contains the animal data
-        csv_filename = find_animals_script( lat, lng )
-
-        # Now, filter the animals to find which pictures we need to find
-        find_animal_images( csv_filename, True, "animal_images" )
-
-        #output = csv_filename
-        #return render( request, 'Slides.html', {'message': output} )
-
-        timelapse_path = BASE_DIR + 'python_scripts/climate_change/time_lapse.py'
-        out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
-
-        #time_lapse(lat, lng)
-        output = "climate change script run successfully"
-
-        return render( request, 'Slides.html', {'message': out.stdout} )
-
-
