@@ -14,8 +14,7 @@ from ee import batch
 
 def main():
 
-    #gatherEarthEngineData()
-    videoProcessing()
+    gatherEarthEngineData()
 
 
 def google_oauth():
