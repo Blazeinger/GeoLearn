@@ -8,6 +8,7 @@ from subprocess import run,PIPE
 import sys
 import os
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 # Finds the absolute path to this directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -97,17 +98,19 @@ def biodiversity_climate_submit( request ):
 	#output = csv_filename
 	#return render( request, 'Slides.html', {'message': output} )
 
-	timelapse_path = BASE_DIR + '/python_scripts/climate_change/time_lapse.py'
+	timelapse_path = BASE_DIR + '/python_scripts/climate_change/combinedFile.py'
 	out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
 
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
-	
+
 	if difficulty == "beginner":
-	
+
 		app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
 		app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
 		app_script_url += userEmail + "&schoolName="
 		app_script_url += schoolName
 		
-	return HttpResponseRedirect( app_script_url )
+	#return HttpResponseRedirect( app_script_url )
+
+	return redirect( app_script_url )
