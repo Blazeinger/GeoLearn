@@ -7,6 +7,7 @@ from .biodiversity.biodiversity_results_sorter import find_animal_images
 from subprocess import run,PIPE
 import sys
 import os
+from django.http import HttpResponseRedirect
 
 # Finds the absolute path to this directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,10 +90,10 @@ def biodiversity_climate_submit( request ):
 
 	# Feed the lat and long to our find animals script
 	# Now, we have the filename of the csv that contains the animal data
-	#csv_filename = "mammal_info.csv" #find_animals_script( latitude, longitude )
+	csv_filename = find_animals_script( latitude, longitude )
 
 	# Now, filter the animals to find which pictures we need to find
-	#find_animal_images( csv_filename, True, "animal_images" )
+	find_animal_images( csv_filename, True, "animal_images" )
 	#output = csv_filename
 	#return render( request, 'Slides.html', {'message': output} )
 
@@ -109,4 +110,4 @@ def biodiversity_climate_submit( request ):
 		app_script_url += userEmail + "&schoolName="
 		app_script_url += schoolName
 		
-	return render( request, app_script_url, {'message': out.stdout } )
+	return HttpResponseRedirect( app_script_url )
