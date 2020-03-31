@@ -12,159 +12,125 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 from ee import batch
 
-def main():
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    #gatherEarthEngineData()
-    videoProcessing()
+latitude_val = float(sys.argv[1])
+longitude_val = float(sys.argv[2])
 
+manipulated_lat = latitude_val + 0.2
+manipulated_lng = longitude_val + 0.2
 
-def google_oauth():
+ee.Initialize()
 
-    # Create google account authentication objects
-    gauth = GoogleAuth('settings.yaml')
-    drive = GoogleDrive(gauth)
+# Define the image collection we will be using
+collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
 
-    if os.path.exists( 'credentials.txt' ):
-       gauth.LoadCredentialsFile( 'credentials.txt' )
+# Creates a polygon which will be used as the bounds of the image
+# Flagstaff Long: -111.6512, Lat: 35.1982
+# region_polygon = ee.Geometry.Polygon(
+#     [[[-111.791491098128,35.150445194872816],
+#       [-111.49829346629207,35.150445194872816],
+#       [-111.49829346629207,35.385344417919924],
+#       [-111.791491098128,35.385344417919924],
+#       [-111.791491098128,35.150445194872816]]])
 
-    if gauth.credentials is None:
-       gauth.LocalWebserverAuth()
-
-    elif gauth.access_token_expired:
-       gauth.Refresh()
-
-    else:
-       gauth.Authorize()
-
-def videoProcessing():
-
-    # Create google account authentication objects
-    gauth = GoogleAuth('settings.yaml')
-    drive = GoogleDrive(gauth)
-
-    if os.path.exists( 'credentials.txt' ):
-       gauth.LoadCredentialsFile( 'credentials.txt' )
-
-    if gauth.credentials is None:
-       gauth.LocalWebserverAuth()
-
-    elif gauth.access_token_expired:
-       gauth.Refresh()
-
-    else:
-       gauth.Authorize()
-
-    #need to wait until file is created in Drive
-    restart = True
-    while restart:
-        #refresh file list of Drive files
-        file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-
-        #iterate through file list
-        for file1 in file_list:
-
-            if file1['title'] == 'Region_Timelapse.mp4':
-
-                print('Downloading file %s from Google Drive' % file1['title'])
-                file1.GetContentFile('toConvert.mp4')
-                restart = False
-                break
-
-            else:
-                #print("Waiting for video in Drive\n")
-                time.sleep(10)
-
-    #define params for conversion
-    ff = ffmpy.FFmpeg(inputs = {'toConvert.mp4': None},
-      outputs = {'convertedVid.gif': None})
-
-    #begin video conversion
-    print("Converting mp4 to GIF")
-    ff.run()
-
-    #create a new file in the Drive and give it the converted
-    #gif as its "content". Upload that schtuff.
-    newDriveFile = drive.CreateFile({'title': 'time_lapse.gif'})
-    newDriveFile.SetContentFile('convertedVid.gif')
-    newDriveFile.Upload()
-    print("Uploaded GIF to Drive as %s" % newDriveFile['title'])
-
-    #delete local files to save storage
-    os.remove("toConvert.mp4")
-    os.remove("convertedVid.gif")
-    print("Files removed from local machine")
+region_polygon = ee.Geometry.Polygon(
+[[[longitude_val, latitude_val],
+  [manipulated_lng, latitude_val],
+  [manipulated_lng, manipulated_lat],
+  [longitude_val, manipulated_lat],
+  [longitude_val, latitude_val]]]
+)
 
 
-def gatherEarthEngineData():
+# Define the time range
+collection_time = collection.filterDate('2013-04-11', '2019-07-01') # YYYY-MM-DD
 
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Select location based on location of tile
+# path = collection_time.filter(ee.Filter.eq('WRS_PATH', 37))
+# pathrow = path.filter(ee.Filter.eq('WRS_ROW', 32))
 
-    latitude_val = float(sys.argv[1])
-    longitude_val = float(sys.argv[2])
+# Select location based on Geo Location
+point_geom = ee.Geometry.Point(longitude_val, latitude_val) # long, lat
+pathrow = collection_time.filterBounds(point_geom)
 
-    manipulated_lat = latitude_val + 0.2
-    manipulated_lng = longitude_val + 0.2
+# Select imagery with less than 5% cloud coverage
+clouds = pathrow.filter(ee.Filter.lt('CLOUD_COVER', 5))
 
-    ee.Initialize()
+# Select bands (RGB Respectively)
+bands = clouds.select(['B4', 'B3', 'B2'])
 
-    # Define the image collection we will be using
-    collection = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+# Make the data 8 bit
+def convertBit(image):
+  return image.multiply(512).uint8()
 
-    # Creates a polygon which will be used as the bounds of the image
-    # Flagstaff Long: -111.6512, Lat: 35.1982
-    # region_polygon = ee.Geometry.Polygon(
-    #     [[[-111.791491098128,35.150445194872816],
-    #       [-111.49829346629207,35.150445194872816],
-    #       [-111.49829346629207,35.385344417919924],
-    #       [-111.791491098128,35.385344417919924],
-    #       [-111.791491098128,35.150445194872816]]])
+# Convert bands to output video
+outputVideo = bands.map(convertBit)
+print("Beginning video creation...\n")
 
-    region_polygon = ee.Geometry.Polygon(
-    [[[longitude_val, latitude_val],
-      [manipulated_lng, latitude_val],
-      [manipulated_lng, manipulated_lat],
-      [longitude_val, manipulated_lat],
-      [longitude_val, latitude_val]]]
-    )
+# Export video to Google Drive
+out = batch.Export.video.toDrive(outputVideo, description='Region_Timelapse',
+	                         dimensions=720, framesPerSecond = 2,
+	                         region = region_polygon, maxFrames = 10000)
 
+# Process the image
+process = batch.Task.start(out)
+print("Video sent to drive...\n")
 
-    # Define the time range
-    collection_time = collection.filterDate('2013-04-11', '2019-07-01') # YYYY-MM-DD
+#run download, conversion, and upload
 
-    # Select location based on location of tile
-    # path = collection_time.filter(ee.Filter.eq('WRS_PATH', 37))
-    # pathrow = path.filter(ee.Filter.eq('WRS_ROW', 32))
+# Create google account authentication objects
+gauth = GoogleAuth('settings.yaml')
+drive = GoogleDrive(gauth)
 
-    # Select location based on Geo Location
-    point_geom = ee.Geometry.Point(longitude_val, latitude_val) # long, lat
-    pathrow = collection_time.filterBounds(point_geom)
+if os.path.exists( 'credentials.txt' ):
+   gauth.LoadCredentialsFile( 'credentials.txt' )
 
-    # Select imagery with less than 5% cloud coverage
-    clouds = pathrow.filter(ee.Filter.lt('CLOUD_COVER', 5))
+if gauth.credentials is None:
+   gauth.LocalWebserverAuth()
 
-    # Select bands (RGB Respectively)
-    bands = clouds.select(['B4', 'B3', 'B2'])
+elif gauth.access_token_expired:
+   gauth.Refresh()
 
-    # Make the data 8 bit
-    def convertBit(image):
-      return image.multiply(512).uint8()
+else:
+   gauth.Authorize()
 
-    # Convert bands to output video
-    outputVideo = bands.map(convertBit)
-    print("Beginning video creation...\n")
+#need to wait until file is created in Drive
+restart = True
+while restart:
+    #refresh file list of Drive files
+    file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
 
-    # Export video to Google Drive
-    out = batch.Export.video.toDrive(outputVideo, description='Region_Timelapse',
-    	                         dimensions=720, framesPerSecond = 2,
-    	                         region = region_polygon, maxFrames = 10000)
+    #iterate through file list
+    for file1 in file_list:
 
-    # Process the image
-    process = batch.Task.start(out)
-    print("Video sent to drive...\n")
+        if file1['title'] == 'Region_Timelapse.mp4':
 
-    #run download, conversion, and upload
-    videoProcessing()
+            print('Downloading file %s from Google Drive' % file1['title'])
+            file1.GetContentFile('toConvert.mp4')
+            restart = False
+            break
 
+        else:
+            #print("Waiting for video in Drive\n")
+            time.sleep(10)
 
-if __name__ == "__main__":
-    main()
+#define params for conversion
+ff = ffmpy.FFmpeg(inputs = {'toConvert.mp4': None},
+  outputs = {'convertedVid.gif': None})
+
+#begin video conversion
+print("Converting mp4 to GIF")
+ff.run()
+
+#create a new file in the Drive and give it the converted
+#gif as its "content". Upload that schtuff.
+newDriveFile = drive.CreateFile({'title': 'time_lapse.gif'})
+newDriveFile.SetContentFile('convertedVid.gif')
+newDriveFile.Upload()
+print("Uploaded GIF to Drive as %s" % newDriveFile['title'])
+
+#delete local files to save storage
+os.remove("toConvert.mp4")
+os.remove("convertedVid.gif")
+print("Files removed from local machine")
