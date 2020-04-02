@@ -20,3 +20,5 @@ pip3 install pydrive
 
 	install this for the Chrome Driver
 pip3 install chromedriver-py
+
+pip3 install ffmpy
