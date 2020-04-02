@@ -23,7 +23,7 @@ pip3 install chromedriver-py
 
 	install this for video conversion
 	
-pip3 install ffmpeg pip3 install ffmpy
+sudo apt install ffmpeg pip3 install ffmpy
 
 	install this for earth engine code
 pip3 install earthengine-api
