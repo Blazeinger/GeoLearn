@@ -12,17 +12,20 @@
 <div class="topnav">
   <a href="/index.html">Home</a>
   <a href="/Slides.html">Slides</a>
+  <a href="/faq.html">FAQ</a>
  </div>
 </head>
-<body style="background-color:powderblue;">
+<body style="background-image:url({% static 'Images/DSC00001.jpg' %});" style="background-repeat:no-repeat;">
 
 <div class="grid-container">
 	<div class="item1">
-		<a href="/biodiversity.html">
-			<img src="{% static 'Images/lion.jpg' %}" style="width:300px; height:200px;">
+		<a href="/biodiversity.html"  style="background-color:green;">
+			<img src="{% static 'Images/Zebra.jpg' %}" style="width:300px; height:200px;">
 		</a>
+		<p style="font-family:Candara; background-color:green;">Biodiversity</p>
 	</div>
 	<div class="item2">
+	<p style="font-family:Candara; font-style:bold;">Climate Change</p>
 		<a href="/climate.html">
 			<img src="{% static 'Images/climate.jpg' %}" style="width:300px; height:200px;">
 		</a>
@@ -31,6 +34,7 @@
 		<a href="/land.html">
 			<img src="{% static 'Images/land_use.png' %}" style="width:300px; height:200px;">
 		</a>
+		<p style="font-family:Candara; font-style:bold;">Land-Use Change</p>
 	</div>
 </div>
 </body>
