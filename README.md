@@ -19,8 +19,8 @@ pip3 install pydrive
      install Mozilla Firefox because the webdriver that gets the images online only works with Firefox
 
 	install this for the Chrome Driver
-pip3 install chromedriver-py
-pip3 install ffmpy
-pip3 install earthengine-api
+pip3 install chromedriver-py\n
+pip3 install ffmpy\n
+pip3 install earthengine-api\n
 ->earthengine authenticate
 
