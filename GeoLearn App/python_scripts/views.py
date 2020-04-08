@@ -40,6 +40,9 @@ def bio( request ):
 	
 def climate( request ):
 	return render( request, 'climate.html' )
+
+def spinner( request ):
+	return render( request, 'Spinner.html' )
 	
 def land( request ):
 	return render( request, 'land.html' )

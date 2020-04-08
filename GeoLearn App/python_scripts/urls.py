@@ -17,6 +17,7 @@ urlpatterns = [
 	path( 'biodiversity.html/', views.bio, name='biodiversity' ),
 	path( 'climate.html/', views.climate, name='climate' ),
 	path( 'land.html/', views.land, name='land' ),
+	path( 'Spinner.html/', views.spinner, name='spinner' ),
 	path( 'faq.html/', views.faq, name='faq' ),
 	path( 'dobble.html/', views.land, name='dobble' ),
 	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
