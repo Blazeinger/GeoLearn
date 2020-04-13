@@ -1,31 +1,23 @@
-"""testsite URL Configuration
+from django.urls import path
+from django.conf.urls import url
+from . import views
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import include, path
-from django.conf import settings
-# from django.contrib.auth.views import logout
+'''
+The things in this list are urls that are accessible on the website
+Each url is associated with a different function in the 'views' python script
+Each of these urls is given a name. These names are what are referenced in the html
+'''
 
 urlpatterns = [
-	
-	# We want to include a path to our urls.py file in the polls directory
-	path( '', include( 'python_scripts.urls' )), 
-	# path( '', include( 'polls.biodiversity.urls' )),
-	path('admin/', admin.site.urls),
-	# path('', include('social_django.urls', namespace='social')),
-	# path('logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL},
-	# name='logout'),
-	
+	# index is the name of the function in views.py
+	path( '', views.index, name='index' ),
+	path( 'brother/', views.brother, name='brother' ),
+	path( 'Slides.html/', views.slides, name='slides' ),
+	path( 'index.html/', views.index, name='index' ),
+	path( 'biodiversity.html/', views.bio, name='biodiversity' ),
+	path( 'climate.html/', views.climate, name='climate' ),
+	path( 'land.html/', views.land, name='land' ),
+	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
+	url( r'bio_output', views.biodiversity_submit, name='bio_submit' ), 
+	url(r'climate_output', views.climate_submit, name="climate_submit")
 ]

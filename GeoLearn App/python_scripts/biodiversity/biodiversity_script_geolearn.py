@@ -23,7 +23,7 @@ def find_animals_main():
 	
         # The size of the area that we want to search for 
         # 1 about equals 70 miles  (69.4)
-        SEARCH_RADIUS = 0.1
+        SEARCH_RADIUS = 1
 	
         # Our boolean that maintains the main loop 
         getting_info = True
@@ -33,14 +33,14 @@ def find_animals_main():
         animal_info = []
 	
         print( "beginning local db read" )
-	
+
         with open( "biodiversity_mammal_db.csv" ) as csvFile:
                 csv.field_size_limit( sys.maxsize )
-                csv_reader = csv.reader( csvFile )
+                curr_reader = csv.reader( csvFile )
 		
                 index = 0
 		
-                for row in csv_reader: 
+                for row in curr_reader: 
                         if index == 0:
                                 descriptors = row
                         else:
@@ -50,8 +50,24 @@ def find_animals_main():
                         index += 1
 
                         if index % 1000 == 0:
-                                print( "read in " + str( index ) + " animals" )
+                                print( "read in " + str( index ) + " currently animals" )
 
+        with open( "biodiversity_hist_db.csv" ) as csvFile:
+                hist_reader = csv.reader( csvFile )
+
+                index = 0
+
+                for row in hist_reader:
+                        if index != 0:
+                                # create empty list that is as long as the regular animal_info indices, 18
+                                animal_info.append( create_hist_animal( row ) )
+                                animal_boundaries.append( create_shape( animal_info[ index - 1][17] ))
+
+                                if index % 100 == 0:
+                                        print( "read in " + str( index ) + " historic animals" )
+
+                        index += 1
+                                
         print( "finished reading database" )
 
         while getting_info:
@@ -75,7 +91,8 @@ def find_animals_main():
                                         total += 1
                                         #print( count, end= " " )
 
-                                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, count ):
+                                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
+                                                
                                                 animals_within_boundaries.append( animal_info[ index ] )
 
                                 print( "valid shapes: " + str( count[0] ) )
@@ -128,8 +145,8 @@ def find_animals_script( latitude, longitude ):
                         index += 1
 			
                         if index % 1000 == 0:
-                                print( "read in " + str( index ) + " animals" )
-			
+                                print( "read in " + str( index ) + " current animals" )
+
         print( "finished reading database" )
 
         animals_within_boundaries = []
@@ -140,7 +157,7 @@ def find_animals_script( latitude, longitude ):
 			
                 for index in range( 0, len( animal_boundaries ) ):
 					
-                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS, successful_shape_count ):
+                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
                                 animals_within_boundaries.append( animal_info[ index ] )
 
                 print( "valid animals: " + str( successful_shape_count ) )
@@ -159,7 +176,7 @@ def find_animals_script( latitude, longitude ):
                 print( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 # Check if an animal's habitat area is within the area we're searching 
-def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius, count  ):
+def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search_radius ):
 	
         # create a polygon object originating from the latitude and longitude
         origin_point = Point( latitude, longitude )
@@ -177,8 +194,8 @@ def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search
                 # If so, just return false 
                 return False
 
-        count[0] += 1
-        ###################################################################################################3
+        #count[0] += 1
+        
 	# Otherwise, check if our search area intersects with the animal's habitat
         return search_polygon.intersects( animal_boundary )
 
@@ -214,11 +231,11 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
                 #writer.writerow( [ latitude, longitude ] )
 		
                 # Delete the 17th column in the descriptors 
-                headers = list( descriptors )
-                headers.pop( 17 )	
+                #headers = list( descriptors )
+                #headers.pop( 17 )	
 			
                 # Write the descriptors/headers to the file 
-                writer.writerow( headers )
+                #writer.writerow( headers )
 		
                 # Loop through each animal we found 
                 for animal in listOfMammals:
@@ -382,6 +399,30 @@ def send_csv_to_drive( fileName ):
 
         print( 'file uploaded' )
 
+def create_hist_animal( animal ):
+
+        # Create the animal template that is the same size as the regular animal
+        info_list = [None] * 18
+
+        # Save the historic animal info into the template
+        # Set the id to say that this is a historic animal
+        info_list[ 0 ] = "historic" 
+        # Binomial 
+        info_list[ 1 ] = animal[ 0 ]
+        # Common name 
+        info_list[ 13 ] = animal[ 1 ]
+        # Wiki Link 
+        info_list[ 14 ] = animal[ 2 ]
+        # Description 
+        info_list[ 15 ] = animal[ 3 ]
+        # Boundaries
+        info_list[ 17 ] = animal[ 4 ]
+        # Mass
+        info_list[ 16 ] = animal[ 5 ]
+
+        # Return the animal list
+        return info_list
+        
 if __name__ == "__main__": 
 	main()
 
