@@ -25,10 +25,7 @@ SECRET_KEY = 'd3f-f@&oi*9je%bm&yse+$jfdcp!lp0+_*__21$8s_fxwx1$c0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-ALLOWED_HOSTS = ['ec2-18-219-25-212.us-east-2.compute.amazonaws.com',
-                 '127.0.0.1',
-                 'localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,10 +39,9 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	'python_scripts',
 	'biodiversity_db_&_oauth',
-	# 'social_django',
+	'social_django',
 ]
 
-'''
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -61,7 +57,6 @@ LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'python_scripts.urls'
+ROOT_URLCONF = 'testsite.urls'
 
 TEMPLATES = [
     {
