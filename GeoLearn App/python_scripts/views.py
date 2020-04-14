@@ -63,7 +63,7 @@ def biodiversity_submit( request ):
 	find_animal_images( csv_filename, True, "animal_images" )
 	
 	output = csv_filename 
-	return render( request, 'Slides.html', {'message': output} )
+	return render( request, 'Spinner.html', {'message': output} )
 
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
