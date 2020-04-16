@@ -96,8 +96,9 @@ def biodiversity_climate_submit( request ):
 
 	# Feed the lat and long to our find animals script
 	# Now, we have the filename of the csv that contains the animal data
-	csv_filename = find_animals_script( latitude, longitude )
+	#csv_filename = find_animals_script( latitude, longitude )
 
+	csv_filename = "mammal_info.csv" 
 	# Now, filter the animals to find which pictures we need to find
 	find_animal_images( csv_filename, True, "animal_images" )
 	#output = csv_filename

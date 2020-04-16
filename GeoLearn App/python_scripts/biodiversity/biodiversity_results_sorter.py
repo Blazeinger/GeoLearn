@@ -13,6 +13,7 @@ ANIMAL_TITLE = 0
 ANIMAL_OBJECT = 1
 ENDANGERED_STATUS = 5
 ORDER = 9
+DIET = 22
 NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,6 +70,12 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Find the largest historic predator
 
         # Find the second largest predator
+        
+        # Find the largest herbivore
+        
+        
+        # Find the second largest herbivore
+        
 
         dobble_count = 28
         index = 0
@@ -203,7 +210,7 @@ def find_predator( placement, animal_list ):
         if animal[ 0 ] != "historic": 
 
             # Check if the animal is a predator
-            if animal[ ORDER ] not in NON_PREDATOR_ORDERS:
+            if animal[ DIET ] != "carnivore":
 
                 # Subtrack from our placement counter
                 placement_counter -= 1
@@ -216,6 +223,22 @@ def find_predator( placement, animal_list ):
 
     # If no predators were found, return the largest animal
     return animal_list[ 0 ]
+    
+def find_herbivore( placement, animal_list ): 
+    
+    placement_counter = placement
+    
+    for animal in animal_list:
+    
+        if animal[0] != "historic":
+        
+            if animal[ DIET ] != "herbivore":
+            
+                placement_counter -= 1
+                
+                if placement_counter == 0:
+                
+                    return animal
 
 def find_large_animal( placement, animal_list, historic=False ):
 
@@ -275,7 +298,7 @@ def upload_images( images ):
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 
-    target_folder_name = 'slideInfo'
+    target_folder_name = 'slideInfo_Bio'
     target_folder_id = ''
 
     # Find the list of all of the files in the google drive 
