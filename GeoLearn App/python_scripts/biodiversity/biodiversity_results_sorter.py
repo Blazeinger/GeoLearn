@@ -4,7 +4,7 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-#from .biodiversity_image_scraper import images_scraper
+from .biodiversity_image_scraper import images_scraper
 #from biodiversity_image_scraper_test import images_scraper
 
 MASS = 16
@@ -100,16 +100,16 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         print( "done writing to csv" )
         
         # Download the images for all of the animals we want 
-        #for animal in exemplary_animals:
 
         #for animal in exemplary_animals:
-
-         #   image_names.append( animal[1][1] )
-        #images_scraper( dir_name, exemplary_animals, image_titles )
+        
+        #	image_names.append( animal[1][1] )
+        	
+        images_scraper( dir_name, exemplary_animals, image_titles )
             
         # Upload the images to the Google drive 
-        #if upload_bool:
-            #upload_images( image_titles )
+        if upload_bool:
+            upload_images( image_titles )
 
                             
     

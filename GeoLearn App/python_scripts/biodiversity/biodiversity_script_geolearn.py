@@ -118,7 +118,7 @@ def find_animals_script( latitude, longitude ):
         animal_info = []
 
         print( "beginning local db read" )
-        get_animal_db( db_path, animal_info, animal_boundaries )                                
+        get_mammal_db( db_path, animal_info, animal_boundaries )                                
         print( "finished reading database" )
 
         return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )

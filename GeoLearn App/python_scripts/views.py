@@ -2,12 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 ## from .models import Post
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
-from .biodiversity.biodiversity_image_scraper import image_scraper
+from .biodiversity.biodiversity_image_scraper import images_scraper
 from .biodiversity.biodiversity_results_sorter import find_animal_images
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
 import sys
+import os
+
+from django.shortcuts import redirect
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Create your views here.
 '''

@@ -11,7 +11,6 @@ Each of these urls is given a name. These names are what are referenced in the h
 urlpatterns = [
 	# index is the name of the function in views.py
 	path( '', views.index, name='index' ),
-	path( 'brother/', views.brother, name='brother' ),
 	path( 'Slides.html/', views.slides, name='slides' ),
 	path( 'index.html/', views.index, name='index' ),
 	path( 'biodiversity.html/', views.bio, name='biodiversity' ),
@@ -22,5 +21,6 @@ urlpatterns = [
 	path( 'dobble.html/', views.land, name='dobble' ),
 	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
 	url( r'bio_output', views.biodiversity_submit, name='bio_submit' ), 
-	url(r'climate_output', views.climate_submit, name="climate_submit")
+	url(r'climate_output', views.climate_submit, name="climate_submit"),
+	url( r'combined_output', views.biodiversity_climate_submit, name="combined_output" )
 ]
