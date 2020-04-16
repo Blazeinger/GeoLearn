@@ -91,12 +91,20 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
 
         print( "saved animal info" )
         
+        with open( "sorted_mammal_info.csv", mode='w' ) as csv_file:
+        	writer = csv.writer( csv_file )
+        	
+        	for animal in animal_list:
+        		writer.writerow( animal )
+        	
+        print( "done writing to csv" )
+        
         # Download the images for all of the animals we want 
-        #for animal in exemplary_animals:
 
         #for animal in exemplary_animals:
-
-         #   image_names.append( animal[1][1] )
+        
+        #	image_names.append( animal[1][1] )
+        	
         images_scraper( dir_name, exemplary_animals, image_titles )
             
         # Upload the images to the Google drive 
@@ -297,4 +305,5 @@ def upload_images( images ):
         upload_image.Upload()
 
 if __name__ == "__main__":
-    main()
+	main()
+	

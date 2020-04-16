@@ -21,5 +21,6 @@ urlpatterns = [
 	path( 'team.html/', views.team, name='team' ),
 	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
 	url( r'bio_output', views.biodiversity_submit, name='bio_submit' ), 
-	url(r'climate_output', views.climate_submit, name="climate_submit")
+	url(r'climate_output', views.climate_submit, name="climate_submit"),
+	url( r'combined_output', views.biodiversity_climate_submit, name="combined_output" )
 ]
