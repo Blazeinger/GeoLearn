@@ -1,45 +1,57 @@
 {% load static %}
 <html>
 <head>
-	<link rel="stylesheet" href="{% static 'styles.css' %}">
-	<script src="{% static '/js/Slides.js' %} "> </script>
-
-  <div class="topnav-title">
-  <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+  <img style="display:inline;" src="{% static 'Images/Ani.png' %}" alt="Animaps Logo">
   <title class="header" style="display:inline; font-size:90px;">EnviroSlides</title>
-</div>
 
-<div class="topnav">
-  <a href="/index.html">Home</a>
-  <a href="/Slides.html">Slides</a>
-  <a href="/faq.html">FAQ</a>
- </div>
+	<nav>
+	  <div class="topnav">
+		  <a href="/index.html">Home</a>
+		  <a href="/Slides.html">Slides</a>
+		  <a href="/faq.html">FAQ</a>
+		  <a href="/about.html">About</a>
+		  <a href="/team.html">Team</a>
+	 </div>
+	</nav>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-
 <body>
 
-<div class="grid-container">
-	<div class="item1">
-		<a href="/biodiversity.html"  style="background-color:green;">
+<table>
+	<tr>
+	  <td>
+		<h2 style="font-family:Candara;">Biodiversity</h2>
+		<a href="/biodiversity.html">
 			<img src="{% static 'Images/Zebra.jpg' %}" style="width:300px; height:200px;">
 		</a>
-		<p style="font-family:Candara; background-color:green;">Biodiversity</p>
-	</div>
-	<div class="item2">
-	<p style="font-family:Candara; font-style:bold;">Climate Change</p>
-
-		<a href="/climate.html">
-			<img src="{% static 'Images/climate.jpg' %}" style="width:300px; height:200px;">
-		</a>
-	</div>
-	<div class="item3">
-		<a href="/land.html">
-			<img src="{% static 'Images/land_use.png' %}" style="width:300px; height:200px;">
-		</a>
-
-		<p style="font-family:Candara; font-style:bold;">Land-Use Change</p>
-
-	</div>
-</div>
+	  </td>
+	  <td>
+		 <p>This topic describes the different animals, historic and current, that live in your area.
+		 These slides will give you the best information on the animals that live in your area, such 
+		 as what is the largest animal that lives in your area and how they interact with the environement 
+		 around them.<p>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+		<h2 style="font-family:Candara; font-style:bold;">Climate Change</h2>
+			<a href="/climate.html">
+				<img src="{% static 'Images/Wheat.jpg' %}" style="width:300px; height:200px;">
+			</a>
+	  </td>
+	  <td>
+		<p>This topic describes the changing in climate patterns in your area. These slides will
+		discuss key changes in your area over time and discusses any possible ways that we as people 
+		can lessen any potentially dangerous effects in the environment in your area.<p>
+	  </td>
+	</tr>
+</table>
 </body>
 </html>
