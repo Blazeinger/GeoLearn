@@ -1,18 +1,26 @@
 {% load static %}
 <html>
 <head>
-	<link rel="stylesheet" href="{% static 'styles.css' %}">
-	<script src="{% static '/js/Bio.js' %} "> </script>
-
-  <div class="topnav-title">
-  <img style="display:inline;" src="{% static 'Logos/GeoLearn_Logo.png' %}" alt="GeoLearn Logo">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+  <img style="display:inline;" src="{% static 'Images/Ani.png' %}" alt="Animaps Logo">
   <title class="header" style="display:inline; font-size:90px;">EnviroSlides</title>
-</div>
 
-<div class="topnav">
-  <a href="/index.html">Home</a>
-  <a href="/Slides.html">Slides</a>
- </div>
+	<nav>
+	  <div class="topnav">
+		  <a href="/index.html">Home</a>
+		  <a href="/Slides.html">Slides</a>
+		  <a href="/faq.html">FAQ</a>
+		  <a href="/about.html">About</a>
+		  <a href="/team.html">Team</a>
+	 </div>
+	</nav>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
@@ -55,10 +63,12 @@
 		{% csrf_token %}
 		<label for="Longitude">Longitude: <br></label>
 		<input type="text" id="Longitude" name="Longitude" value="">
-	  <br><br>
+	  <br/>
+	  <br>
 	  <label for="Latitude">Latitude: <br></label>
 	  <input type="text" id="Latitude" name="Latitude" value="">
-	  <br><br>
+	  </br>
+	  <br>
 
 		<label for="drop">Choose a difficulty:</label>
 		<select class="dropdown" id="difficulty" name="difficulty">
@@ -66,16 +76,18 @@
 			<option value="advanced">Advanced</option>
 			<!-- <option value="intermediate">Intermediate</option> -->
 		</select>
-
+	  </br>
+	  <br>
 	  <label for="schoolName">School Name: </label>
 	  <input type="text" id="schoolName" name="schoolName">
-	  <br><br>
+	  </br>
+	  <br>
 		<label for="userEmail">Google Email: </label>
 	  <input type="text" id="userEmail" name="userEmail">
-	  <br>
-  <form  action="/Spinner.html">
+	  </br>
+      <br>
 		<input type='submit' value='Generate Slides'>
-  </form>
+      </br>
 	</form>
 
 </body>
