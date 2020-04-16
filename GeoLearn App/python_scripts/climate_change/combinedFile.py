@@ -123,9 +123,23 @@ ff = ffmpy.FFmpeg(inputs = {'toConvert.mp4': None},
 print("Converting mp4 to GIF")
 ff.run()
 
+target_folder_name = 'slideInfo_Bio'
+target_folder_id = ''
+
+file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+
+#loop through all files in drive
+for i in file_list:
+
+    #if current one is the target folder
+    if i['title'] == target_folder_name:
+
+        #save the folder id
+        target_folder_id = i['id']
+
 #create a new file in the Drive and give it the converted
 #gif as its "content". Upload that schtuff.
-newDriveFile = drive.CreateFile({'title': 'time_lapse.gif'})
+newDriveFile = drive.CreateFile({'title': 'time_lapse.gif', 'parents': [{'id': target_folder_id}]})
 newDriveFile.SetContentFile('convertedVid.gif')
 newDriveFile.Upload()
 print("Uploaded GIF to Drive as %s" % newDriveFile['title'])

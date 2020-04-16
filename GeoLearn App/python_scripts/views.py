@@ -36,6 +36,9 @@ def index( request ):
 def slides( request ):
 	return render( request, 'Slides.html' )
 	
+def team( request ):
+	return render( request, 'team.html' )
+	
 def bio( request ):
 	return render( request, 'biodiversity.html' )
 	
@@ -45,14 +48,11 @@ def climate( request ):
 def spinner( request ):
 	return render( request, 'Spinner.html' )
 	
-def land( request ):
-	return render( request, 'land.html' )
-	
 def faq( request ):
 	return render( request, 'faq.html' )
 	
-def dobble( request ):
-	return render( request, 'dobble.html' )
+def about( request ):
+	return render( request, 'about.html' )
 
 def biodiversity_submit( request ):
         
@@ -79,8 +79,7 @@ def climate_submit( request ):
 
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
-
-	return render( request, 'Slides.html', {'message': out.stdout} )
+	return render( request, 'Spinner.html', {'message': out.stdout} )
 
 def biodiversity_climate_submit( request ):
 
@@ -120,4 +119,3 @@ def biodiversity_climate_submit( request ):
 	#return HttpResponseRedirect( app_script_url )
 
 	return redirect( app_script_url )
-

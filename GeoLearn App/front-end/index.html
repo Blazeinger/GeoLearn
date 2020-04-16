@@ -3,21 +3,32 @@
 <!DOCTYPE html>
 <html>
 <head>
+<head>
   <link rel="stylesheet" href="{% static 'styles.css' %}">
-
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+  <img style="display:inline;" src="{% static 'Images/Ani.png' %}" alt="Animaps Logo">
   <title class="header" style="display:inline; font-size:90px;">EnviroSlides</title>
 
-
-  <div class="topnav">
-  <a href="/index.html">Home</a>
-  <a href="/Slides.html">Slides</a>
-  <a href="/faq.html">FAQ</a>
- </div>
+	<nav>
+	  <div class="topnav">
+		  <a href="/index.html">Home</a>
+		  <a href="/Slides.html">Slides</a>
+		  <a href="/faq.html">FAQ</a>
+		  <a href="/about.html">About</a>
+		  <a href="/team.html">Team</a>
+	 </div>
+	</nav>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body  style="background-image:url({% static 'Images/Aardvark.jpg' %}); background-repeat:no-repeat;">
 	<div>
-		<h1 style="font-family:Candara">Welcome to EnviroSlides!</h1>
+		<h1 style="font-family:Candara">Welcome to EnviroSlides! A platform of for personalized education about 
+		environmental change.</h1>
 	</div>
 </body>
 </html>
