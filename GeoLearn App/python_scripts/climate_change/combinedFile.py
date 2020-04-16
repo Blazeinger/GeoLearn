@@ -123,7 +123,7 @@ ff = ffmpy.FFmpeg(inputs = {'toConvert.mp4': None},
 print("Converting mp4 to GIF")
 ff.run()
 
-target_folder_name = 'slideInfo_Climate'
+target_folder_name = 'slideInfo_Bio'
 target_folder_id = ''
 
 file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
