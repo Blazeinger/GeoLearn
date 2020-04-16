@@ -29,11 +29,11 @@ def index( request ):
 	'''
 	return render( request, 'index.html' )
 
-def brother( request ):
-	return HttpResponse( "hell yeah, brother" )
-
 def slides( request ):
 	return render( request, 'Slides.html' )
+	
+def team( request ):
+	return render( request, 'team.html' )
 	
 def bio( request ):
 	return render( request, 'biodiversity.html' )
@@ -44,14 +44,11 @@ def climate( request ):
 def spinner( request ):
 	return render( request, 'Spinner.html' )
 	
-def land( request ):
-	return render( request, 'land.html' )
-	
 def faq( request ):
 	return render( request, 'faq.html' )
 	
-def dobble( request ):
-	return render( request, 'dobble.html' )
+def about( request ):
+	return render( request, 'about.html' )
 
 def biodiversity_submit( request ):
         
@@ -67,7 +64,7 @@ def biodiversity_submit( request ):
 	find_animal_images( csv_filename, True, "animal_images" )
 	
 	output = csv_filename 
-	return render( request, 'Slides.html', {'message': output} )
+	return render( request, 'Spinner.html', {'message': output} )
 
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
@@ -79,4 +76,4 @@ def climate_submit( request ):
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
 
-	return render( request, 'Slides.html', {'message': out.stdout} )
+	return render( request, 'Spinner.html', {'message': out.stdout} )
