@@ -1,8 +1,4 @@
-.team-pics{
-  object-fit: cover;
-  width: 300px;
-  height: 337px;
-}
+
 
 /* Set size of div element that contains Map */
 #map {
@@ -85,19 +81,19 @@
 
 /* Style the links inside the navigation bar */
 .topnav a {
-  float: left;
+  float: center;
   color: black;
   text-align: center;
-  padding: 14px 16px;
+  padding: 40px 25px;
   text-decoration: none;
   font-family: Candara;
-  font-size: 17px;
-
+  font-size: 30px;
+  font-weight: bold;
 }
 
 /* Change the color of links on hover */
 .topnav a:hover {
-  background-color: #ddd;
+  background-color:  rgba(253, 253, 253, 0.25);
   color: #1d781d;
 }
 
@@ -108,74 +104,31 @@
 }
 
 .header{
-  font-family: Sans-serif;
+  font-family: Candara;
   -webkit-text-stroke: 3px black;
   color: #1d781d;
+  margin-left: 25px;
 }
 
 
-table.reports {
-  font-family: sans-serif;
-  border: 1px solid #1C6EA4;
-  background-color: #EEEEEE;
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
+h1{
+	margin-left: 200px;
+	margin-right: 200px;
 }
-table.reports td, table.reports th {
-  border: 1.5px solid black;
-  padding: 3px 2px;
-}
-table.reports th{
-  color: #1d781d;
-}
-table.reports tbody td {
-  font-size: 13px;
-}
-table.reports tr:nth-child(even) {
-  background: #ccf1fc;
-}
-table.reports thead {
-  background: #1C6EA4;
-  border-bottom: 2px solid #444444;
-}
-table.reports thead th {
-  font-size: 16px;
-  font-weight: bold;
-  color: #FFFFFF;
-  text-align: center;
-  border-left: 2px solid #D0E4F5;
-}
-table.reports thead th:first-child {
-  border-left: none;
-}
-
-table.reports tfoot td {
-  font-size: 12px;
-}
-table.reports tfoot .links {
-  text-align: right;
-}
-table.reports tfoot .links a{
-  display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 5px;
-}
-
-
 
 h2{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 40px;
+  margin-right: 200px;
+  margin-left: 50px;
 }
 
 h3{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 20px;
+  margin-left:225px;
 }
 
 h4{
@@ -196,8 +149,10 @@ ul{
 }
 
 p{
-	font-family: Sans-serif;
-	color: #000000
+	font-family: Candara;
+	color: #000000;
+	margin-right: 200px;
+	margin-left: 50px;
 }
 
 a{
@@ -267,11 +222,17 @@ a{
 }
 
 nav {
-    background-color: rgba(253, 253, 253, 0.78);
+    background-color: rgba(253, 253, 253, 0);
     width: 80vw;
     height: 10vh;
     display: flex;
     align-items: center;
+	margin-left: 390px;
+	margin-right: 390px;
+}
+
+table{
+	padding:15px;
 }
 
 
