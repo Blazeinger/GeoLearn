@@ -43,7 +43,7 @@ class biodiversity_db_generator:
                 # Animal diet info 
                 self.diet_descriptors = [ "Diet Plant", "Diet Vertebrate", "Diet Invertebrate", "Diet Category" ] 
                 self.trait_data = []
-      			
+                self.diet_not_found = []
                 
 
         # Our 'main' function that gathers the information from the database
@@ -57,6 +57,7 @@ class biodiversity_db_generator:
                 
                 print( "gathering trait data" )
                 self.get_trait_data()
+                print( self.trait_data[ 46 ][0] )
 
                 print( "gathering animal information" )
                 self.get_db_animal_info()
@@ -66,7 +67,17 @@ class biodiversity_db_generator:
 
                 print( "writing to CSV" )
                 self.write_to_csv()
+                
+                # Create a CSV file to write to
+                with open( "animals not found.csv", mode='w' ) as csv_file:
 
+                        # Create our writer object
+                        writer = csv.writer( csv_file )
+                        
+                        for not_found in self.diet_not_found:
+                                
+                                writer.writerow( not_found )
+        
                 print( "finished" )
                 
                 
@@ -89,12 +100,14 @@ class biodiversity_db_generator:
                         
                                 binomial = row[ 0 ].split( "_" )
                                 
-                                binomial = (binomial[ 0 ] + " " + binomial[ 1 ]).lower()                                     
+                                binomial = (binomial[ 0 ] + " " + binomial[ 1 ]).lower().strip()                                
                                 
                 
                                 self.trait_data.append([ binomial, row[plants], row[vertebrates], row[invertebrates] ])
                                 
                                 index += 1 
+                                
+                print( "trait data size: " + str(len( self.trait_data)) )
                                 
 
         # method to grab the categories/headers of each column
@@ -135,8 +148,6 @@ class biodiversity_db_generator:
         def get_db_animal_info( self ):
                 # Execute an sql command that returns the animal information
                 self.db_cursor.execute( "SELECT * FROM iucn" )
-                
-                index = 0
                         
                 # Loop through the cursor
                 for animal in self.db_cursor:
@@ -144,20 +155,22 @@ class biodiversity_db_generator:
                         animal = list( animal )
                 
                         madeit = self.append_diet_info( animal )
-                        
-                        
 
                         # Save our animal info
                         self.animal_info.append( animal )
-                        
-                        index += 1 
-                        
-                        if index % 100 == 0:
-                                print( "On animal: " + str( index ) + " " + str( madeit ))
                                 
 
                 self.db_cursor.execute( "SELECT * FROM historic_data" )
                 for animal in self.db_cursor:
+                
+                        animal = list( animal )
+                        
+                        madeit = self.append_diet_info( animal, True )
+                        
+                        if not madeit:
+                                self.diet_not_found.append( animal )
+                                print( animal[ 0 ].lower().strip() )
+                        
                         self.hist_info.append( animal )
 
         def merge_info( self ):
@@ -175,13 +188,21 @@ class biodiversity_db_generator:
                         self.hist_merged.append( list( self.hist_info[ index ] ) )
                         self.hist_merged[ index ][ 4 ] = self.hist_boundaries[ index ]
                         
-        def append_diet_info( self, animal ):
+                        
+                        
+        def append_diet_info( self, animal, historic=False ):
         
                 # Loop through the trait data 
                 for data in self.trait_data:
                 
+                        if historic:
+                                binomial = animal[0].lower().strip()
+                                
+                        else:
+                                binomial = animal[1].lower().strip()
+                
                         # Try and find a matching binomial
-                        if animal[1].lower() == data[0]:
+                        if binomial == data[0]:
                         
                                 animal.extend([ data[1], data[2], data[3] ])
                                 
@@ -193,6 +214,7 @@ class biodiversity_db_generator:
                                         
                                 else:
                                         animal.append( "omnivore" )
+                                        
                                 return True
                                 
                 return False

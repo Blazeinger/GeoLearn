@@ -4,7 +4,7 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from .biodiversity_image_scraper import images_scraper
+from biodiversity_image_scraper import images_scraper
 #from biodiversity_image_scraper_test import images_scraper
 
 MASS = 16
@@ -40,41 +40,42 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Create our list that contains exemplary animals 
         exemplary_animals = []
 
-        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal" ]
+        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore" ]
 
         
         # Find the largest animal
-        exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
+        exemplary_animals.append(( image_titles[0], animal_list[ 0 ]))
 
         # Find the second largest animal 
-        exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
+        exemplary_animals.append(( image_titles[1], animal_list[ 1 ] ))
         
         # Find the smallest animal
-        exemplary_animals.append(("smallest_animal", animal_list[ len( animal_list)-1 ] ))
+        exemplary_animals.append(( image_titles[2], animal_list[ len( animal_list)-1 ] ))
 
         # Find the second smallest animal
-        exemplary_animals.append(("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] ))
+        exemplary_animals.append(( image_titles[3], animal_list[ len( animal_list ) - 2 ] ))
 
         # Find the largest predator
-        exemplary_animals.append(("largest_predator", find_predator( 1, animal_list ) ))
+        exemplary_animals.append(( image_titles[4], find_predator( 1, animal_list ) ))
 
         # Find the second largest predator
-        exemplary_animals.append(( "second_largest_predator", find_predator( 2, animal_list )))
+        exemplary_animals.append(( image_titles[5], find_predator( 2, animal_list )))
 
         # Find the largest past animal
-        exemplary_animals.append(( "largest_past_animal", find_large_animal( 1, animal_list, True )))#find_large_animal(1, animal_list, True )))
+        exemplary_animals.append(( image_titles[6], find_large_animal( 1, animal_list, True )))#find_large_animal(1, animal_list, True )))
 
         # Find the second largest past animal
-        exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
+        exemplary_animals.append(( image_titles[7], find_large_animal( 2, animal_list, True )))
 
         # Find the largest historic predator
 
         # Find the second largest predator
         
         # Find the largest herbivore
-        
+        exemplary_animals.append(( image_titles[8], find_herbivore( 1, animal_list )))
         
         # Find the second largest herbivore
+        exemplary_animals.append(( image_titles[9], find_herbivore( 2, animal_list )))
         
 
         dobble_count = 28
@@ -200,17 +201,17 @@ def create_list_from_csv( csv_file ):
     # Return the list
     return animal_list
 
-def find_predator( placement, animal_list ):
+def find_predator( placement, animal_list, historic=False ):
 
     placement_counter = placement
     
     # Loop through the list
     for animal in animal_list:
 
-        if animal[ 0 ] != "historic": 
+        if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
 
             # Check if the animal is a predator
-            if animal[ DIET ] != "carnivore":
+            if animal[ DIET ] == "carnivore":
 
                 # Subtrack from our placement counter
                 placement_counter -= 1
@@ -220,25 +221,49 @@ def find_predator( placement, animal_list ):
                 
                     # If so, return this animal
                     return animal 
+                    
+        if historic:
+        
+            if animal[0] == "historic" or animal[5] == "Extinct":
+            
+                if animal[ DIET ] == "carnivore":
+            
+                    placement_counter -= 1
+                
+                    if placement_counter == 0:
+                
+                        return animal
 
     # If no predators were found, return the largest animal
     return animal_list[ 0 ]
     
-def find_herbivore( placement, animal_list ): 
+def find_herbivore( placement, animal_list, historic=False ): 
     
     placement_counter = placement
     
     for animal in animal_list:
     
-        if animal[0] != "historic":
+        if animal[ 0 ] != "historic" and animal[5] != "Extinct":
         
-            if animal[ DIET ] != "herbivore":
+            if animal[ DIET ] == "herbivore":
             
                 placement_counter -= 1
                 
                 if placement_counter == 0:
                 
                     return animal
+                    
+        if historic:
+        
+            if animal[0] == "historic" or animal[5] == "Extinct":
+            
+                if animal[ DIET ] == "herbivore":
+            
+                    placement_counter -= 1
+                
+                    if placement_counter == 0:
+                
+                        return animal
 
 def find_large_animal( placement, animal_list, historic=False ):
 
@@ -253,7 +278,7 @@ def find_large_animal( placement, animal_list, historic=False ):
             if historic:
                 
                 # Check if the animal is historic
-                if animal[ 0 ] == "historic" or animal[5] == "Extinct" :
+                if animal[ 0 ] == "historic" or animal[5] == "Extinct":
 
                     # Save it to our last animal
                     found_animal = animal
