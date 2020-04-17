@@ -4,7 +4,7 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from biodiversity_image_scraper import images_scraper
+from .biodiversity_image_scraper import images_scraper
 #from biodiversity_image_scraper_test import images_scraper
 
 MASS = 16
