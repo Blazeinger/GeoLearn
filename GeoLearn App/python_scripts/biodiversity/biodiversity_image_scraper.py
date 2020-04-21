@@ -117,18 +117,20 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
 
         
         attempt_count += 1 
-
-        # Check if you've downloaded all the images you want
-        if found_image_count == number_of_images_to_fetch:
-            break
-
-        # Click on the image you want to download 
-        element.click()
-
-        # Give the browser some time to catch up 
-        time.sleep( 2 )
-
+        
         try:
+
+            # Check if you've downloaded all the images you want
+            if found_image_count == number_of_images_to_fetch:
+                break
+
+            # Click on the image you want to download 
+            element.click()
+
+            # Give the browser some time to catch up 
+            time.sleep( 3 )
+
+        
 
             # After clicking on the image, get the larger version 
             found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
