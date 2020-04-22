@@ -18,6 +18,7 @@ urlpatterns = [
 	path( 'Spinner.html/', views.spinner, name='spinner' ),
 	path( 'faq.html/', views.faq, name='faq' ),
 	path( 'about.html/', views.about, name='about' ),
+	path( 'disease.html/', views.disease, name='disease' ),
 	path( 'team.html/', views.team, name='team' ),
 	path( 'bio_output/', views.biodiversity_submit, name='bio_submit' ),
 	url( r'bio_output', views.biodiversity_submit, name='bio_submit' ), 

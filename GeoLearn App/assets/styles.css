@@ -70,7 +70,7 @@
 #title {
   color: #fff;
   background-color: #4d90fe;
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 500;
   padding: 6px 12px;
 }
@@ -107,13 +107,9 @@
   font-family: Candara;
   -webkit-text-stroke: 3px black;
   color: #1d781d;
-  margin-left: 25px;
-}
-
 
 h1{
-	margin-left: 200px;
-	margin-right: 200px;
+	margin-left: 15%;
 }
 
 h2{
@@ -151,8 +147,6 @@ ul{
 p{
 	font-family: Candara;
 	color: #000000;
-	margin-right: 200px;
-	margin-left: 50px;
 }
 
 a{
@@ -227,12 +221,11 @@ nav {
     height: 10vh;
     display: flex;
     align-items: center;
-	margin-left: 390px;
-	margin-right: 390px;
+	  margin-left: 28.78%;
 }
 
 table{
-	padding:15px;
+	border-spacing:25px;
 }
 
 

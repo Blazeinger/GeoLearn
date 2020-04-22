@@ -53,6 +53,9 @@ def faq( request ):
 	
 def about( request ):
 	return render( request, 'about.html' )
+	
+def disease( request ):
+	return render( request, 'disease.html' )
 
 def biodiversity_submit( request ):
         
