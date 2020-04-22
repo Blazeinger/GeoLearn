@@ -41,10 +41,10 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore" ]
         
         # Find the largest animal
-        exemplary_animals.append(( image_titles[0], find_large_animal( 1, animal_list, exemplary_animals ))
+        exemplary_animals.append(( image_titles[0], find_large_animal( 1, animal_list, exemplary_animals ) ))
 
         # Find the second largest animal 
-        exemplary_animals.append(( image_titles[1], find_large_animal( 2, animal_list, exemplary_animals ))
+        exemplary_animals.append(( image_titles[1], find_large_animal( 2, animal_list, exemplary_animals ) ))
         
         # Find the smallest animal
         exemplary_animals.append(( image_titles[2], animal_list[ len( animal_list)-1 ] ))
@@ -56,7 +56,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         exemplary_animals.append(( image_titles[4], find_predator( 1, animal_list, exemplary_animals ) ))
 
         # Find the second largest predator
-        exemplary_animals.append(( image_titles[5], find_predator( 2, animal_list, exemplary_animals )))
+        exemplary_animals.append(( image_titles[5], find_predator( 2, animal_list, exemplary_animals ) ))
 
         # Find the largest past animal
         exemplary_animals.append(( image_titles[6], find_large_animal( 1, animal_list, exemplary_animals, True )))#find_large_animal(1, animal_list, True )))
@@ -238,6 +238,18 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
     
     # Loop through the list
     for animal in animal_list:
+    
+        if historic:
+        
+            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            
+                if animal[ DIET ] == "carnivore":
+            
+                    placement_counter -= 1
+                
+                    if placement_counter == 0:
+                
+                        return animal
 
         if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
 
@@ -253,17 +265,7 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
                     # If so, return this animal
                     return animal 
                     
-        if historic:
         
-            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
-            
-                if animal[ DIET ] == "carnivore":
-            
-                    placement_counter -= 1
-                
-                    if placement_counter == 0:
-                
-                        return animal
 
     # If no predators were found, return the largest animal
     return False
@@ -273,16 +275,6 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
     placement_counter = placement
     
     for animal in animal_list:
-    
-        if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
-        
-            if animal[ DIET ] == "herbivore":
-            
-                placement_counter -= 1
-                
-                if placement_counter == 0:
-                
-                    return animal
     
         if historic:
         
@@ -295,8 +287,16 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
                     if placement_counter == 0:
                 
                         return animal
-                        
-              
+    
+        if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+        
+            if animal[ DIET ] == "herbivore":
+            
+                placement_counter -= 1
+                
+                if placement_counter == 0:
+                
+                    return animal
                         
     return False
 
