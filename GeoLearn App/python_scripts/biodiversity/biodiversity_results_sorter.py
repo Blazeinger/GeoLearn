@@ -41,8 +41,9 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Create our list that contains exemplary animals 
         exemplary_animals = []
 
-        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore" ]
-        
+        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore",
+"largest_non-predator", "second_largest_non-predator" ]
+      
         # Find the largest animal
         exemplary_animals.append(( image_titles[0], find_large_animal( 1, animal_list, exemplary_animals ) ))
 
@@ -72,14 +73,30 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Find the second largest herbivore
         exemplary_animals.append(( image_titles[9], find_herbivore( 2, animal_list, exemplary_animals ) ))
         
-        # Find 6 herbivores 
-        for placement in range( 3, 9 ):
+        # Find the largest non-predator
+        exemplary_animals.append(( image_titles[10], find_h
+        
+        # Find the second largets non-predator
+        
+        # Find 3 more herbivores 
+        for placement in range( 3, 6 ):
         
             found_animal = find_herbivore( placement, animal_list, exemplary_animals )
             
             if found_animal:
                 exemplary_animals.append(( "large_herbivores_" + str( placement), found_animal ))
             
+                image_titles.append( "large_herbivores_" + str( placement ) )
+                
+        # Find 3 more predators
+        for placement in range( 3, 6 ):
+        
+            found_animal = find_predator( placement, animal_list, exemplary_animals )
+            
+            if found_animal:
+            
+                exemplary_animals.append(( "large_predators_" + str( placement ), found_animal ))
+                
                 image_titles.append( "large_herbivores_" + str( placement ) )
             
         # Find 6 historic animals
@@ -148,9 +165,10 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
         #	image_names.append( animal[1][1] )
         #
-        #images_scraper( dir_name, exemplary_animals, image_titles )
+        images_scraper( dir_name, exemplary_animals, image_titles )
             
         # Upload the images to the Google drive 
+        
         if upload_bool:
             upload_files( image_titles, "chosen_mammals_info.csv" )
         
@@ -302,6 +320,10 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
                     return animal
                         
     return False
+    
+def find_non_predator( placement, animal_list, exemplary_animals, historic=False ):
+
+    
 
 def find_large_animal( placement, animal_list, exemplary_animals, historic=False ):
 
@@ -328,7 +350,7 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
             else:
 
                 # Check if the animal is historic
-                if animal[ 0 ] != "historic" and not check_duplicate( animal, exemplary_animals ):
+                if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
 
                     placement_counter -= 1
                     
