@@ -18,7 +18,7 @@ ROWS_TO_ACCESS = 1
 	
 # The size of the area that we want to search for 
 # 1 about equals 70 miles  (69.4)
-SEARCH_RADIUS = 0.1
+SEARCH_RADIUS = 1
 
 def main():
 
@@ -59,12 +59,12 @@ def main():
                         coordinates = input()
                         coordinates = coordinates.split( "," )
                         
-                        latitude = float( coordinates[ 0 ] )
                         longitude = float( coordinates[ 1 ] )
+                        latitude = float( coordinates[ 0 ] )
 
                         if animal_index != 0:
 
-                                print( "animla at: " + str( animal_index ) )
+                                print( "animal at index: " + str( animal_index ) )
                                 # Print if it was within those coordinates
                                 search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
 
@@ -90,9 +90,42 @@ def main():
                                         print( "distance: " + str( area.distance( search_area )) )
                                         
                                 # Print the bounds of the animal
-                                #print( animal_boundaries[ animal_index ].bounds() )
+                                #print( "boundaries: {0}".format(animal_boundaries[ animal_index ].bounds()) )
                         else:
                                 print( "Could not find animal" )
+
+                elif response.lower() == "hist": 
+                        
+                        # Compare it to a lat long
+                        print( "Enter a latitude and longitude" )
+                        coordinates = input()
+                        coordinates = coordinates.split( "," )
+                        
+                        latitude = float( coordinates[ 0 ] )
+                        longitude = float( coordinates[ 1 ] )
+                        
+                        # create a polygon object originating from the latitude and longitude
+                        origin_point = Point( latitude, longitude )
+	
+                        # Create a circle that will be where we search for animal habitats
+                        search_area = origin_point.buffer( SEARCH_RADIUS )
+
+                        # Turn this circle into a polygon object that can be used to check if it
+                        # intersects with an animal's polygon object that represents its habitat
+                        search_polygon = Polygon( list( search_area.exterior.coords ) )
+
+                        for index in range( len( animal_info )):
+                                
+                                if animal_info[ index ][0] == "historic":
+                                
+                                        print( "{} bounds: ".format( animal_info[ index ][1] ) )
+                                        
+                                        for boundary in animal_boundaries[ index ]:
+                                                
+                                                        print( "        {}".format( list(boundary.bounds) ))
+                                                        print( "    " + str( boundary.distance( search_area )) )
+                        
+                        
                                 
                 else:
                                 
@@ -138,11 +171,14 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
                         if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
                                 animals_within_boundaries.append( animal_info[ index ] )
                                 
+                        if index % 500 == 0:
+                                print( str(index) + " animals tested" )
+                                
                 if len( animals_within_boundaries ) == 0:
                         print( "There were no mammals in that area" )
                 else:
                         filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-                        #send_csv_to_drive( filename )
+                        send_csv_to_drive( filename )
                         #display_mammal_information( animals_within_boundaries, descriptors )
                         print( "number of animals" )
                         print( len( animals_within_boundaries ) )
@@ -244,7 +280,7 @@ def checkCoordinates_in_animalInfo( latitude, longitude, animal_boundary, search
         for boundary in animal_boundary:
                 
                 # Check if any of the animal boundaries intersect with the search area
-                if search_polygon.intersects( boundary ) and boundary.is_valid:
+                if search_polygon.intersects( boundary ):
 
                         # If one does intersect, return true 
                         return True
@@ -361,14 +397,33 @@ def create_polygon( currentShape, multi ):
 
         try:
                 if len( listOf_shapesPoints ) == 0:
+                
+                        # Sometimes, the area the animal lives is a point
+                        if len( linearRing ) == 2:
+                                linearRing.append( linearRing[ 0 ] )
+                                
                         polygon = Polygon( linearRing )
+                        
+                        if len( list(polygon.bounds)) == 0:
+                                print( "linearRing 0" )
 
                 else:
+                        
                         polygon = Polygon( linearRing, listOf_shapesPoints )
-
-                return polygon.buffer( 0 )
+                        
+                        if len( list( polygon.bounds) ) == 0:
+                                print( "linearRing zero" )
+                
+                '''
+                if len( list( polygon.buffer(0).bounds)) == 0:
+                        print( "problem" )
+                        '''
+                return polygon #.buffer( 0 )
 
         except ValueError:
+                if len(linearRing) < 10 and len( listOf_shapesPoints) < 10:
+                        print( "LinearRings: " ) 
+                        print( linearRing )
                 return Polygon( [(0,0), (0,0), (0,0 )] )
 		
 # Creates a multi-polygon object from our database's animal boundary information 
@@ -381,6 +436,10 @@ def create_multi_polygon( currentShape ):
 
         for index in range( 0, len( polygonInfo ) ):
                 gon_guy = create_polygon( polygonInfo[ index ], True )
+                
+                '''
+                if len( list(gon_guy.bounds)) == 0:
+                        print( "zero boy" ) '''
                 
                 listOfPolygons.append( gon_guy )
                 
@@ -432,34 +491,63 @@ def append_shape( animal_boundaries, currentShape ):
 def send_csv_to_drive( fileName ):
 
         print( 'begin file upload' )
-        # Create google account authentication objects
-        gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
 
-        print( 'client secrets 1' )
-        if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
-                gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+        if __name__ == "__main__":
+        
+                # Create google account authentication objects
+                gauth = GoogleAuth()
 
-        if gauth.credentials is None:
-                print( 'local webserver branch' )
-                gauth.LocalWebserverAuth()
+                print( 'client secrets 1' )
+                if os.path.exists( 'credentials.txt' ):
+                        gauth.LoadCredentialsFile( 'credentials.txt' )
 
-        elif gauth.access_token_expired:
-                print( 'refresh branch' )
-                gauth.Refresh()
+                if gauth.credentials is None:
+                        print( 'local webserver branch' )
+                        gauth.LocalWebserverAuth()
 
+                elif gauth.access_token_expired:
+                        print( 'refresh branch' )
+                        gauth.Refresh()
+
+                else:
+                        print( 'authorize branch' )
+                        gauth.Authorize()
+
+                print( 'client secrets 2' )
+
+                gauth.SaveCredentialsFile( 'credentials.txt' )
+
+                drive = GoogleDrive( gauth )
+        
         else:
-                print( 'authorize branch' )
-                gauth.Authorize()
+                # Create google account authentication objects
+                gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
 
-        print( 'client secrets 2' )
+                print( 'client secrets 1' )
+                if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
+                        gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 
-        gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+                if gauth.credentials is None:
+                        print( 'local webserver branch' )
+                        gauth.LocalWebserverAuth()
 
-        drive = GoogleDrive( gauth )
+                elif gauth.access_token_expired:
+                        print( 'refresh branch' )
+                        gauth.Refresh()
+
+                else:
+                        print( 'authorize branch' )
+                        gauth.Authorize()
+
+                print( 'client secrets 2' )
+
+                gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+
+                drive = GoogleDrive( gauth )
 
         ''' Find the name of the folder we want to upload to '''
         # Define the folder we want to upload to
-        target_folder_name = 'slideInfo'
+        target_folder_name = 'slideInfo_Bio'
         target_folder_id = ''
 
         # Find the list of all of the files in the google drive
@@ -470,6 +558,8 @@ def send_csv_to_drive( fileName ):
 
                 # Check if the current one is our target
                 if file_object[ 'title' ] == target_folder_name:
+                
+                        print( "folder found" )
 
                         # Save the folder id
                         target_folder_id = file_object[ 'id' ]

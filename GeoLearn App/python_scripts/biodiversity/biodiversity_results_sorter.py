@@ -4,8 +4,8 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from .biodiversity_image_scraper import images_scraper
-#from biodiversity_image_scraper_test import images_scraper
+#from .biodiversity_image_scraper import images_scraper
+from biodiversity_image_scraper import images_scraper
 
 MASS = 16
 BINOMIAL = 1
@@ -13,6 +13,7 @@ ANIMAL_TITLE = 0
 ANIMAL_OBJECT = 1
 ENDANGERED_STATUS = 5
 ORDER = 9
+DIET = 22
 NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,8 +24,6 @@ def main():
 def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
     with open( csv_name ) as csv_file:
-
-        print( BASE_DIR )
 
         animal_reader = csv.reader( csv_file, delimiter=',' )
 
@@ -39,36 +38,59 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Create our list that contains exemplary animals 
         exemplary_animals = []
 
-        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal" ]
-
+        image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore" ]
         
         # Find the largest animal
-        exemplary_animals.append(("largest_animal", animal_list[ 0 ]))
+        exemplary_animals.append(( image_titles[0], find_large_animal( 1, animal_list, exemplary_animals ))
 
         # Find the second largest animal 
-        exemplary_animals.append(("second_largest_animal", animal_list[ 1 ] ))
+        exemplary_animals.append(( image_titles[1], find_large_animal( 2, animal_list, exemplary_animals ))
         
         # Find the smallest animal
-        exemplary_animals.append(("smallest_animal", animal_list[ len( animal_list)-1 ] ))
+        exemplary_animals.append(( image_titles[2], animal_list[ len( animal_list)-1 ] ))
 
         # Find the second smallest animal
-        exemplary_animals.append(("second_smallest_animal", animal_list[ len( animal_list ) - 2 ] ))
+        exemplary_animals.append(( image_titles[3], animal_list[ len( animal_list ) - 2 ] ))
 
         # Find the largest predator
-        exemplary_animals.append(("largest_predator", find_predator( 1, animal_list ) ))
+        exemplary_animals.append(( image_titles[4], find_predator( 1, animal_list, exemplary_animals ) ))
 
         # Find the second largest predator
-        exemplary_animals.append(( "second_largest_predator", find_predator( 2, animal_list )))
+        exemplary_animals.append(( image_titles[5], find_predator( 2, animal_list, exemplary_animals )))
 
         # Find the largest past animal
-        exemplary_animals.append(( "largest_past_animal", find_large_animal( 1, animal_list, True )))#find_large_animal(1, animal_list, True )))
+        exemplary_animals.append(( image_titles[6], find_large_animal( 1, animal_list, exemplary_animals, True )))#find_large_animal(1, animal_list, True )))
 
         # Find the second largest past animal
-        exemplary_animals.append(( "second_largest_past_animal", animal_list[ 3 ] ))
-
-        # Find the largest historic predator
-
-        # Find the second largest predator
+        exemplary_animals.append(( image_titles[7], find_large_animal( 2, animal_list, exemplary_animals, True ) ))
+        
+        exemplary_animals.append(( image_titles[8], find_herbivore( 1, animal_list, exemplary_animals ) ))
+        
+        # Find the second largest herbivore
+        exemplary_animals.append(( image_titles[9], find_herbivore( 2, animal_list, exemplary_animals ) ))
+        
+        # Find 6 herbivores 
+        for placement in range( 3, 9 ):
+        
+            found_animal = find_herbivore( placement, animal_list, exemplary_animals )
+            
+            if found_animal:
+                exemplary_animals.append(( "large_herbivores_" + str( placement), found_animal ))
+            
+                image_titles.append( "large_herbivores_" + str( placement ) )
+            
+        # Find 6 historic animals
+        for placement in range( 3, 9 ):
+        
+            found_animal = find_large_animal( placement - 2, animal_list, exemplary_animals, True )
+            
+            if found_animal:
+            
+                exemplary_animals.append(( "historic_" + str( placement - 2 ), found_animal ))
+                
+                image_titles.append( "historic_" + str( placement - 2 ) )
+            
+        
 
         dobble_count = 28
         index = 0
@@ -97,20 +119,38 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         	for animal in animal_list:
         		writer.writerow( animal )
         	
-        print( "done writing to csv" )
+        print( "done sorting csv" )
+        
+        with open( "chosen_mammals_info.csv", mode='w' ) as csv_file:
+        
+                writer = csv.writer( csv_file )
+                
+                for chosen_animal in exemplary_animals:
+                
+                        row = list(chosen_animal )
+                        
+                        row.extend( list( row[1] ) )
+                        row.pop(1)
+                        
+                        writer.writerow( row )
+                        
+        print( "done writing chosen mammals csv" )
+        
+        #for animal in exemplary_animals:
+        #    print( animal[1][1] )
         
         # Download the images for all of the animals we want 
 
         #for animal in exemplary_animals:
         
         #	image_names.append( animal[1][1] )
-        	
-        images_scraper( dir_name, exemplary_animals, image_titles )
+        #
+        #images_scraper( dir_name, exemplary_animals, image_titles )
             
         # Upload the images to the Google drive 
         if upload_bool:
-            upload_images( image_titles )
-
+            upload_files( image_titles, "chosen_mammals_info.csv" )
+        
                             
     
 
@@ -186,24 +226,23 @@ def create_list_from_csv( csv_file ):
             animal_list.append( animal )
 
         else:
-
             # Since we skipped the categories, we are now looking at the actual animals
             looking_at_animals = True
 
     # Return the list
     return animal_list
 
-def find_predator( placement, animal_list ):
+def find_predator( placement, animal_list, exemplary_animals, historic=False ):
 
     placement_counter = placement
     
     # Loop through the list
     for animal in animal_list:
 
-        if animal[ 0 ] != "historic": 
+        if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
 
             # Check if the animal is a predator
-            if animal[ ORDER ] not in NON_PREDATOR_ORDERS:
+            if animal[ DIET ] == "carnivore" and not check_duplicate( animal, exemplary_animals ):
 
                 # Subtrack from our placement counter
                 placement_counter -= 1
@@ -213,14 +252,58 @@ def find_predator( placement, animal_list ):
                 
                     # If so, return this animal
                     return animal 
+                    
+        if historic:
+        
+            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            
+                if animal[ DIET ] == "carnivore":
+            
+                    placement_counter -= 1
+                
+                    if placement_counter == 0:
+                
+                        return animal
 
     # If no predators were found, return the largest animal
-    return animal_list[ 0 ]
+    return False
+    
+def find_herbivore( placement, animal_list, exemplary_animals, historic=False ): 
+    
+    placement_counter = placement
+    
+    for animal in animal_list:
+    
+        if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+        
+            if animal[ DIET ] == "herbivore":
+            
+                placement_counter -= 1
+                
+                if placement_counter == 0:
+                
+                    return animal
+    
+        if historic:
+        
+            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            
+                if animal[ DIET ] == "herbivore":
+            
+                    placement_counter -= 1
+                
+                    if placement_counter == 0:
+                
+                        return animal
+                        
+              
+                        
+    return False
 
-def find_large_animal( placement, animal_list, historic=False ):
+def find_large_animal( placement, animal_list, exemplary_animals, historic=False ):
 
     placement_counter = placement
-    found_animal = animal_list[ 0 ] 
+    found_animal = False
 
     for animal in animal_list:
 
@@ -230,26 +313,33 @@ def find_large_animal( placement, animal_list, historic=False ):
             if historic:
                 
                 # Check if the animal is historic
-                if animal[ 0 ] == "historic" or animal[5] == "Extinct" :
+                if animal[ 0 ] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
 
-                    # Save it to our last animal
-                    found_animal = animal
+                    placement_counter -= 1
+                    
+                    if placement_counter == 0:
+                        # Save it to our last animal
+                        found_animal = animal
 
             # Otherwise, assume that we're are searching for current animals
             else:
 
                 # Check if the animal is historic
-                if animal[ 0 ] != "historic":
+                if animal[ 0 ] != "historic" and not check_duplicate( animal, exemplary_animals ):
 
-                    # Save it to our last animal
-                    found_animal = animal
+                    placement_counter -= 1
                     
-        placement_counter -= 1
+                    if placement_counter == 0:
+                    
+                        # Save it to our last animal
+                        found_animal = animal
+                    
+        
 
     return found_animal
             
 
-def upload_images( images ):
+def upload_files( images, csv_name ):
 
     # connect to google drive 
     gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
@@ -275,7 +365,7 @@ def upload_images( images ):
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 
-    target_folder_name = 'slideInfo'
+    target_folder_name = 'slideInfo_Bio'
     target_folder_id = ''
 
     # Find the list of all of the files in the google drive 
@@ -292,6 +382,12 @@ def upload_images( images ):
 
     print( "folder id: " + target_folder_id )
     
+    # upload the CSV containing only the info on the chosen animals for images
+    upload_csv = drive.CreateFile({'title': csv_name, 'parents': [{'id': target_folder_id }] })
+    upload_csv.SetContentFile( csv_name )
+    upload_csv.Upload()
+    print( "uploaded chosen_mammals csv" )
+    
     # Loop through the images
     for image_name in images: 
         upload_image = drive.CreateFile( {'title': image_name, 'parents': [{'id': target_folder_id }]})
@@ -300,9 +396,22 @@ def upload_images( images ):
 
         print( image_name )
         
-        upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
+        #upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
+        upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()
+
+def check_duplicate( animal, animal_info ):
+
+    # Loop through the animal array 
+    for potential_duplicate in animal_info:
+    
+        # Check if the binomial is the same as in the array 
+        if animal[ BINOMIAL ] == potential_duplicate[1][BINOMIAL]:
+        
+            return True
+    # If no duplicate was found, return false 
+    return False
 
 if __name__ == "__main__":
 	main()

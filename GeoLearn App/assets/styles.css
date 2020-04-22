@@ -107,9 +107,6 @@
   font-family: Candara;
   -webkit-text-stroke: 3px black;
   color: #1d781d;
-  
-}
-
 
 h1{
 	margin-left: 15%;
@@ -119,12 +116,15 @@ h2{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 40px;
+  margin-right: 200px;
+  margin-left: 50px;
 }
 
 h3{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 20px;
+  margin-left:225px;
 }
 
 h4{
@@ -221,7 +221,7 @@ nav {
     height: 10vh;
     display: flex;
     align-items: center;
-	margin-left: 28.78%;
+	  margin-left: 28.78%;
 }
 
 table{
