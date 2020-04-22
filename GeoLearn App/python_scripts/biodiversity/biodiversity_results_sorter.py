@@ -4,8 +4,11 @@ import random
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-#from .biodiversity_image_scraper import images_scraper
-from biodiversity_image_scraper import images_scraper
+if __name__ == "__main__":
+    from biodiversity_image_scraper import images_scraper
+else:
+    from .biodiversity_image_scraper import images_scraper
+
 
 MASS = 16
 BINOMIAL = 1
