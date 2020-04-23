@@ -22,146 +22,134 @@ SEARCH_RADIUS = 1
 
 def main():
 
-        db_path = ""
+    db_path = ""
         
-        # Our boolean that maintains the main loop 
-        getting_info = True
+    # Our boolean that maintains the main loop 
+    getting_info = True
 
-        descriptors = get_descriptors( db_path )
-        animal_boundaries = []
-        animal_info = []
+    descriptors = get_descriptors( db_path )
+    animal_boundaries = []
+    animal_info = []
 
-        print( "beginning local db read" )
-        get_mammal_db( db_path, animal_info, animal_boundaries )                                
-        print( "finished reading database" )
+    print( "beginning local db read" )
+    get_mammal_db( db_path, animal_info, animal_boundaries )                                
+    print( "finished reading database" )
 
-        while getting_info:
+    while getting_info:
 
-                animals_within_boundaries = []
-                print( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
-                response = input()
-                if response.lower() == "exit":
-                        getting_info = False
+        animals_within_boundaries = []
+        print( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
+        response = input()
+        if response.lower() == "exit":
+            getting_info = False
 
-                elif response.lower() == "search":
+        elif response.lower() == "search":
 
-                        # Find the index of the animal we want to find
-                        print( "Enter the binomial of the animal: " ) 
-                        response = input()
-                        animal_index = find_animal_index_by_name( response, animal_info )
+            # Find the index of the animal we want to find
+            print( "Enter the binomial of the animal: " ) 
+            response = input()
+            animal_index = find_animal_index_by_name( response, animal_info )
 
-                        if animal_index == 0:
-                                print( "could not find animal" )
-                                continue
+            if animal_index == 0:
+                print( "could not find animal" )
+                continue
+
+            if animal_index != 0:
+
+                # Compare it to a lat long
+                print( "Enter a latitude and longitude" )
+                coordinates = input()
+                coordinates = coordinates.split( "," )
                         
-                        # Compare it to a lat long
-                        print( "Enter a latitude and longitude" )
-                        coordinates = input()
-                        coordinates = coordinates.split( "," )
-                        
-                        longitude = float( coordinates[ 1 ] )
-                        latitude = float( coordinates[ 0 ] )
+                longitude = float( coordinates[ 1 ] )
+                latitude = float( coordinates[ 0 ] )
 
-                        if animal_index != 0:
-
-                                print( "animal at index: " + str( animal_index ) )
-                                # Print if it was within those coordinates
-                                search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
-
-                                '''
- # create a polygon object originating from the latitude and longitude
-        origin_point = Point( latitude, longitude )
-	
-        # Create a circle that will be where we search for animal habitats
-        search_area = origin_point.buffer( search_radius )
-                                '''
+                print( "animal at index: " + str( animal_index ) )
+                # Print if it was within those coordinates
+                search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
                                 
-                                if search_result:
-                                	print( "animal was on that" )
-                                else:
-                                	print( "it was not there" )
-                                        
-                                origin_point = Point( longitude, latitude )
-                                search_area = origin_point.buffer( SEARCH_RADIUS )
-
-                                print( "boundary count: " + str( len( animal_boundaries[ animal_index ] )) )
-                                
-                                for area in animal_boundaries[ animal_index ]:
-                                        print( "distance: " + str( area.distance( search_area )) )
-                                        
-                                # Print the bounds of the animal
-                                #print( "boundaries: {0}".format(animal_boundaries[ animal_index ].bounds()) )
-                        else:
-                                print( "Could not find animal" )
-
-                elif response.lower() == "hist" or response.lower() == "hist full": 
-                
-                        if response.lower() == "hist full":
-                                full_output = True
-                        else:
-                                full_output = False
-                        
-                        # Compare it to a lat long
-                        print( "Enter a latitude and longitude" )
-                        coordinates = input()
-                        coordinates = coordinates.split( "," )
-                        
-                        latitude = float( coordinates[ 0 ] )
-                        longitude = float( coordinates[ 1 ] )
-                        
-                        # create a polygon object originating from the latitude and longitude
-                        origin_point = Point( longitude, latitude )
-	
-                        # Create a circle that will be where we search for animal habitats
-                        search_area = origin_point.buffer( SEARCH_RADIUS )
-
-                        # Turn this circle into a polygon object that can be used to check if it
-                        # intersects with an animal's polygon object that represents its habitat
-                        search_polygon = Polygon( list( search_area.exterior.coords ) )
-
-                        for index in range( len( animal_info )):
-                                
-                                if animal_info[ index ][0] == "historic":
-                                
-                                        print( "{} bounds: ".format( animal_info[ index ][1] ) )
-                                        
-                                        for boundary in animal_boundaries[ index ]:
-                                        
-                                                if boundary.distance( search_area ) < 30 or full_output:
-                                                
-                                                        print( "        {}".format( list(boundary.bounds) ))
-                                                        print( "    " + str( boundary.distance( search_area )) )
-                        
-                        
-                                
+                if not search_result:
+                    print( "it was not there" )
+                    
                 else:
-                                
-                        try:
-                                response = response.split( "," )
-                        
-                                latitude = float( response[ 0 ] )
-                                longitude = float( response[ 1 ] )
-                                find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
+                    print( "animal was on that" )
+                    origin_point = Point( longitude, latitude )
+                    search_area = origin_point.buffer( SEARCH_RADIUS )
 
-                        except:
-                                print( "not valid input" )
+                    print( "boundary count: " + str( len( animal_boundaries[ animal_index ] )) )
+                                
+                    for area in animal_boundaries[ animal_index ]:
+                        print( "distance: " + str( area.distance( search_area )) )
+            else:
+                print( "Could not find animal" )
+
+        elif response.lower() == "hist" or response.lower() == "hist full": 
+                
+            if response.lower() == "hist full":
+                full_output = True
+                
+            else:
+                full_output = False
+                        
+            # Compare it to a lat long
+            print( "Enter a latitude and longitude" )
+            coordinates = input()
+            coordinates = coordinates.split( "," )
+                        
+            latitude = float( coordinates[ 0 ] )
+            longitude = float( coordinates[ 1 ] )
+                        
+            # create a polygon object originating from the latitude and longitude
+            origin_point = Point( longitude, latitude )
+	
+            # Create a circle that will be where we search for animal habitats
+            search_area = origin_point.buffer( SEARCH_RADIUS )
+
+            # Turn this circle into a polygon object that can be used to check if it
+            # intersects with an animal's polygon object that represents its habitat
+            search_polygon = Polygon( list( search_area.exterior.coords ) )
+
+            for index in range( len( animal_info )):
+                                
+                if animal_info[ index ][0] == "historic":
+                                
+                    print( "{} bounds: ".format( animal_info[ index ][1] ) )
+                                        
+                    for boundary in animal_boundaries[ index ]:
+                                        
+                        if boundary.distance( search_area ) < 30 or full_output:
+                                                
+                            print( "        {}".format( list(boundary.bounds) ))
+                            print( "    " + str( boundary.distance( search_area )) )
+                            
+        else:
+                                
+            try:
+                response = response.split( "," )
+                        
+                latitude = float( response[ 0 ] )
+                longitude = float( response[ 1 ] )
+                find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
+
+            except:
+                print( "not valid input" )
 	
 	
-# end main 	
+# end main
 
 def find_animals_script( latitude, longitude ):
 
-        db_path = "biodiversity_db_&_oauth/"
+    db_path = "biodiversity_db_&_oauth/"
 
-        descriptors = get_descriptors( db_path )
-        animal_boundaries = []
-        animal_info = []
+    descriptors = get_descriptors( db_path )
+    animal_boundaries = []
+    animal_info = []
 
-        print( "beginning local db read" )
-        get_mammal_db( db_path, animal_info, animal_boundaries )                                
-        print( "finished reading database" )
+    print( "beginning local db read" )
+    get_mammal_db( db_path, animal_info, animal_boundaries )                                
+    print( "finished reading database" )
 
-        return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
+    return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
                         
 
 
@@ -170,30 +158,30 @@ def find_animals_script( latitude, longitude ):
 
 def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude ):
 
-        animals_within_boundaries = []
+    animals_within_boundaries = []
         
-        try:
-                for index in range( 0, len( animal_boundaries )):
+    try:
+        for index in range( 0, len( animal_boundaries )):
 
-                        if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
-                                animals_within_boundaries.append( animal_info[ index ] )
+            if checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ index ], SEARCH_RADIUS ):
+                animals_within_boundaries.append( animal_info[ index ] )
                                 
-                        if index % 500 == 0:
-                                print( str(index) + " animals tested" )
+            if index % 500 == 0:
+                print( str(index) + " animals tested" )
                                 
-                if len( animals_within_boundaries ) == 0:
+            if len( animals_within_boundaries ) == 0:
                         print( "There were no mammals in that area" )
-                else:
-                        filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-                        send_csv_to_drive( filename )
-                        #display_mammal_information( animals_within_boundaries, descriptors )
-                        print( "number of animals" )
-                        print( len( animals_within_boundaries ) )
+            else:
+                filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
+                send_csv_to_drive( filename )
+                #display_mammal_information( animals_within_boundaries, descriptors )
+                print( "number of animals" )
+                print( len( animals_within_boundaries ) )
 			
-                        return filename + '.csv'
+                return filename + '.csv'
                 
-        except ValueError:
-                print( "Please input a valid latitude and longitude or \"Exit\" " )	
+    except ValueError:
+        print( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 
 
@@ -201,46 +189,46 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
                 
 def get_mammal_db( path, animal_info, animal_boundaries ):
         
-        with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
-                csv.field_size_limit( sys.maxsize )
-                curr_reader = csv.reader( csvFile )
+    with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
+        csv.field_size_limit( sys.maxsize )
+        curr_reader = csv.reader( csvFile )
 
-                index = 0
+        index = 0
 
-                for row in curr_reader:
+        for row in curr_reader:
                         
-                        if index == 0:
-                                descriptors = row
-                        else:
-                                animal_info.append( row )
+            if index == 0:
+                descriptors = row
+            else:
+                animal_info.append( row )
 
-                                append_shape( animal_boundaries, animal_info[ index - 1 ][ 17 ] )
-                                #animal_boundaries.append( create_shape( animal_info[ index - 1 ][ 17 ]))
+                append_shape( animal_boundaries, animal_info[ index - 1 ][ 17 ] )
+                #animal_boundaries.append( create_shape( animal_info[ index - 1 ][ 17 ]))
 
-                        index += 1
+                index += 1
 
-                        if index % 1000 == 0:
-                                print( "read in " + str( index ) + " current animals" )
+                if index % 1000 == 0:
+                    print( "read in " + str( index ) + " current animals" )
 
-        with open( path + "biodiversity_hist_db.csv" ) as csvFile:
-                hist_reader = csv.reader( csvFile )
+    with open( path + "biodiversity_hist_db.csv" ) as csvFile:
+        hist_reader = csv.reader( csvFile )
 
-                index = 0
+        index = 0
                 
-                # Skip the categories bit
-                next( hist_reader )
+        # Skip the categories bit
+        next( hist_reader )
 
-                for row in hist_reader:
+        for row in hist_reader:
                 
-                        animal_info.append( create_hist_animal( row ))
+            animal_info.append( create_hist_animal( row ))
 
-                        append_shape( animal_boundaries, animal_info[ index ][ 17 ] )
-                                #animal_boundaries.append( create_shape( animal_info[ index - 1 ][17] ))
+            append_shape( animal_boundaries, animal_info[ index ][ 17 ] )
+            #animal_boundaries.append( create_shape( animal_info[ index - 1 ][17] ))
 
-                        index += 1
+            index += 1
                         
-                        if index % 100 == 0:
-                                print( "read in " + str( index ) + " historic animals" )
+            if index % 100 == 0:
+                print( "read in " + str( index ) + " historic animals" )
                         
 
 
