@@ -1,5 +1,6 @@
 
 
+
 /* Set size of div element that contains Map */
 #map {
   height: 700px;
@@ -107,24 +108,20 @@
   font-family: Candara;
   -webkit-text-stroke: 3px black;
   color: #1d781d;
-
-h1{
-	margin-left: 15%;
+  
 }
+
 
 h2{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 40px;
-  margin-right: 200px;
-  margin-left: 50px;
 }
 
 h3{
   font-family: Sans-serif;
   color: #1d781d;
   font-size: 20px;
-  margin-left:225px;
 }
 
 h4{
@@ -190,39 +187,16 @@ a{
   display: block;
 }
 
-.grid-container {
-	display: grid;
-	grid-template-columns: 300px 300px;
-	grid-template-rows: 200px 200px;
-	grid-column-gap: 75px;
-	grid-row-gap: 75px;
-}
-
-.item1 {
-	grid-column-start: 1;
-	grid-column-end: 1;
-	grid-row-start: 1;
-	grid-row-end: 1;
-}
-
-.item2 {
-	grid-column: 1;
-	grid-row: 2;
-}
-
-.item3 {
-	grid-column-start: 2;
-	grid-row-start: 1;
-}
 
 nav {
     background-color: rgba(253, 253, 253, 0);
-    width: 80vw;
+    width: 50vw;
     height: 10vh;
     display: flex;
     align-items: center;
-	  margin-left: 28.78%;
 }
+
+
 
 table{
 	border-spacing:25px;
