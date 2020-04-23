@@ -180,8 +180,9 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
         # If animals were found, write them to the csv
         else:
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-
-            send_csv_to_drive( filename )
+            
+            if __name__ != "__main__":
+                send_csv_to_drive( filename )
             #display_mammal_information( animals_within_boundaries, descriptors )
             print( "number of animals" )
             print( len( animals_within_boundaries ) )
