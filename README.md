@@ -22,3 +22,11 @@ pip3 install pydrive
 pip3 install chromedriver-py
 
 pip3 install ffmpy
+
+	install this for video conversion
+	
+sudo apt install ffmpeg pip3 install ffmpy
+
+	install this for earth engine code
+pip3 install earthengine-api
+->earthengine authenticate
