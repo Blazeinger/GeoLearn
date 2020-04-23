@@ -107,9 +107,9 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
             found_animal = find_herbivore( 1, animal_list, exemplary_animals )
             
             if found_animal:
-                exemplary_animals.append(( "large_herbivores_" + str( placement), found_animal ))
+                exemplary_animals.append(( "large_herbivores_" + str( placement - 2), found_animal ))
             
-                image_titles.append( "large_herbivores_" + str( placement ) )
+                image_titles.append( "large_herbivores_" + str( placement - 2) )
                 
                 
         # Find 3 more predators
@@ -119,9 +119,9 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
             
             if found_animal:
             
-                exemplary_animals.append(( "large_predators_" + str( placement ), found_animal ))
+                exemplary_animals.append(( "large_predators_" + str( placement - 2), found_animal ))
                 
-                image_titles.append( "large_predators_" + str( placement ) )
+                image_titles.append( "large_predators_" + str( placement - 2) )
                 
             
         # Find 6 historic animals
@@ -138,20 +138,41 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
 
         dobble_count = 28
+        dobble_offset = 0
         index = 0
+        dobble_animals = []
 
         for dobble_image_count in range( 0, dobble_count ):
+        
+            animal = animal_list[ index ]
+            
+            duplicate_check = True
+            
+            while( duplicate_check ):
+            
+                if check_duplicate( animal, dobble_animals ):
+                    
+                    index += 1
+                    
+                    animal = animal_list[ index ]
+                    
+                else:
+                    
+                    duplicate_check = False
+            
+            dobble_number = dobble_image_count - dobble_offset
 
-            exemplary_animals.append( ( "Dobble_" + str( dobble_image_count ), animal_list[ index ] ) )
+            dobble_animals.append( ( "Dobble_" + str( (dobble_image_count ) ), animal_list[ index ] ) )
 
-            image_titles.append( "Dobble_" + str( dobble_image_count ) )
+            image_titles.append( "Dobble_" + str( (dobble_image_count ) ) )
 
             index += 1
 
             if index == len( animal_list ):
-                
+                    
                 index = 0
 
+        exemplary_animals.extend( dobble_animals )
             
         # Initialize a list for the names of the images 
         image_names = []
@@ -190,8 +211,8 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
         #	image_names.append( animal[1][1] )
         #
-        images_scraper( dir_name, exemplary_animals, image_titles )
-            
+        #images_scraper( dir_name, exemplary_animals, image_titles )
+        
         # Upload the images to the Google drive 
         
         if upload_bool:
@@ -471,8 +492,11 @@ def upload_files( images, csv_name ):
 
         print( image_name )
         
-        #upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
-        upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
+        if __name__ == "__main__":
+            upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
+            
+        else:
+            upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()
 

@@ -94,7 +94,9 @@ def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
     index = 0
 
     # Scroll down the webpage to load more images
-    #scroll_down( webdriver )
+    scroll_down( webdriver )
+
+    time.sleep( 5 )
 
     # Save all of the html image elements from our google search
     # 'rg_i' is the class name that the images have 

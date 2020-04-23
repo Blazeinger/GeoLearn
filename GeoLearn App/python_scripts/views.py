@@ -106,11 +106,14 @@ def biodiversity_climate_submit( request ):
 	#output = csv_filename
 	#return render( request, 'Slides.html', {'message': output} )
 
+	'''
 	timelapse_path = BASE_DIR + '/python_scripts/climate_change/combinedFile.py'
 	out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
 
+	print( "timelapse created" )
+	'''
 	#time_lapse(lat, lng)
-	output = "climate change script run successfully"
+	output = "biodiversity script run successfully"
 
 	if difficulty == "beginner":
 
@@ -119,6 +122,7 @@ def biodiversity_climate_submit( request ):
 		app_script_url += userEmail + "&schoolName="
 		app_script_url += schoolName
 		
+	print( "redirected to slideshow creation url" )
 	#return HttpResponseRedirect( app_script_url )
 
 	return redirect( app_script_url )
