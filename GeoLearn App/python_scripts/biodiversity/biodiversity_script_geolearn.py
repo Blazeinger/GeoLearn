@@ -94,7 +94,12 @@ def main():
                         else:
                                 print( "Could not find animal" )
 
-                elif response.lower() == "hist": 
+                elif response.lower() == "hist" or response.lower() == "hist full": 
+                
+                        if response.lower() == "hist full":
+                                full_output = True
+                        else:
+                                full_output = False
                         
                         # Compare it to a lat long
                         print( "Enter a latitude and longitude" )
@@ -105,7 +110,7 @@ def main():
                         longitude = float( coordinates[ 1 ] )
                         
                         # create a polygon object originating from the latitude and longitude
-                        origin_point = Point( latitude, longitude )
+                        origin_point = Point( longitude, latitude )
 	
                         # Create a circle that will be where we search for animal habitats
                         search_area = origin_point.buffer( SEARCH_RADIUS )
@@ -121,6 +126,8 @@ def main():
                                         print( "{} bounds: ".format( animal_info[ index ][1] ) )
                                         
                                         for boundary in animal_boundaries[ index ]:
+                                        
+                                                if boundary.distance( search_area ) < 30 or full_output:
                                                 
                                                         print( "        {}".format( list(boundary.bounds) ))
                                                         print( "    " + str( boundary.distance( search_area )) )
@@ -219,13 +226,15 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                 hist_reader = csv.reader( csvFile )
 
                 index = 0
+                
+                # Skip the categories bit
+                next( hist_reader )
 
                 for row in hist_reader:
+                
+                        animal_info.append( create_hist_animal( row ))
 
-                        if index != 0:
-                                animal_info.append( create_hist_animal( row ))
-
-                                append_shape( animal_boundaries, animal_info[ index - 1 ][ 17 ] )
+                        append_shape( animal_boundaries, animal_info[ index ][ 17 ] )
                                 #animal_boundaries.append( create_shape( animal_info[ index - 1 ][17] ))
 
                         index += 1
@@ -575,7 +584,7 @@ def send_csv_to_drive( fileName ):
 def create_hist_animal( animal ):
 
         # Create the animal template that is the same size as the regular animal
-        info_list = [None] * 18
+        info_list = [None] * 24
 
         # Save the historic animal info into the template
         # Set the id to say that this is a historic animal
@@ -588,12 +597,35 @@ def create_hist_animal( animal ):
         info_list[ 14 ] = animal[ 2 ]
         # Description 
         info_list[ 15 ] = animal[ 3 ]
+        
+        ''' The historic database has these swapped, I guess'''
         # Boundaries
         info_list[ 17 ] = animal[ 4 ]
         # Mass
         info_list[ 16 ] = animal[ 5 ]
-
-        # Return the animal list
+        
+        ''' Some historic animals didn't have diet data''' 
+        
+        try:
+                # Plant diet
+                info_list[20] = animal[6]
+                # Vertebrate Diet
+                info_list[21] = animal[7]
+                # Invertebate Diet
+                info_list[22] = animal[8]
+                # Return the animal list
+                info_list[23] = animal[9]
+        except IndexError:
+                
+                # Plant diet
+                info_list[20] = 0
+                # Vertebrate Diet
+                info_list[21] = 0
+                # Invertebate Diet
+                info_list[22] = 0
+                # Return the animal list
+                info_list[23] = "no data"
+        
         return info_list
         
 if __name__ == "__main__": 

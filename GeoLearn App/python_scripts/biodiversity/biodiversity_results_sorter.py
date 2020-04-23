@@ -42,25 +42,29 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         exemplary_animals = []
 
         image_titles = [ "largest_animal", "second_largest_animal", "smallest_animal", "second_smallest_animal", "largest_predator", "second_largest_predator", "largest_past_animal", "second_largest_past_animal", "large_herbivore", "second_largest_herbivore",
-"largest_non-predator", "second_largest_non-predator" ]
+"largest_non-predator", "second_largest_non-predator", "largest_historic_predator", "second_largest_historic_predator", 
+"largest_historic_non-predator", "second_largest_historic_non-predator" ]
       
         # Find the largest animal
         exemplary_animals.append(( image_titles[0], find_large_animal( 1, animal_list, exemplary_animals ) ))
 
         # Find the second largest animal 
-        exemplary_animals.append(( image_titles[1], find_large_animal( 2, animal_list, exemplary_animals ) ))
+        exemplary_animals.append(( image_titles[1], find_large_animal( 1, animal_list, exemplary_animals ) ))
+        
         
         # Find the smallest animal
         exemplary_animals.append(( image_titles[2], animal_list[ len( animal_list)-1 ] ))
 
         # Find the second smallest animal
         exemplary_animals.append(( image_titles[3], animal_list[ len( animal_list ) - 2 ] ))
+        
 
         # Find the largest predator
         exemplary_animals.append(( image_titles[4], find_predator( 1, animal_list, exemplary_animals ) ))
 
         # Find the second largest predator
-        exemplary_animals.append(( image_titles[5], find_predator( 2, animal_list, exemplary_animals ) ))
+        exemplary_animals.append(( image_titles[5], find_predator( 1, animal_list, exemplary_animals ) ))
+        
 
         # Find the largest past animal
         exemplary_animals.append(( image_titles[6], find_large_animal( 1, animal_list, exemplary_animals, True )))#find_large_animal(1, animal_list, True )))
@@ -68,41 +72,62 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         # Find the second largest past animal
         exemplary_animals.append(( image_titles[7], find_large_animal( 2, animal_list, exemplary_animals, True ) ))
         
+        
+        # Find the largest herbivore
         exemplary_animals.append(( image_titles[8], find_herbivore( 1, animal_list, exemplary_animals ) ))
         
         # Find the second largest herbivore
-        exemplary_animals.append(( image_titles[9], find_herbivore( 2, animal_list, exemplary_animals ) ))
+        exemplary_animals.append(( image_titles[9], find_herbivore( 1, animal_list, exemplary_animals ) ))
+        
         
         # Find the largest non-predator
-        exemplary_animals.append(( image_titles[10], find_h
+        exemplary_animals.append(( image_titles[10], find_non_predator( 1, animal_list, exemplary_animals ) ))
         
         # Find the second largets non-predator
+        exemplary_animals.append(( image_titles[11], find_non_predator( 1, animal_list, exemplary_animals ) ))
+        
+        
+        # Find the largest historic predator 
+        exemplary_animals.append(( image_titles[12], find_predator( 1, animal_list, exemplary_animals, True ) ))
+        
+        # Find the second largest historic predator
+        exemplary_animals.append(( image_titles[13], find_predator( 2, animal_list, exemplary_animals, True ) ))
+        
+        
+        # Find the largest historic non-predator 
+        exemplary_animals.append(( image_titles[14], find_non_predator( 1, animal_list, exemplary_animals, True ) ))
+        
+        # Find the second largest historic non-predator
+        exemplary_animals.append(( image_titles[15], find_non_predator( 2, animal_list, exemplary_animals, True ) ))
+        
         
         # Find 3 more herbivores 
         for placement in range( 3, 6 ):
         
-            found_animal = find_herbivore( placement, animal_list, exemplary_animals )
+            found_animal = find_herbivore( 1, animal_list, exemplary_animals )
             
             if found_animal:
                 exemplary_animals.append(( "large_herbivores_" + str( placement), found_animal ))
             
                 image_titles.append( "large_herbivores_" + str( placement ) )
                 
+                
         # Find 3 more predators
         for placement in range( 3, 6 ):
         
-            found_animal = find_predator( placement, animal_list, exemplary_animals )
+            found_animal = find_predator( 1, animal_list, exemplary_animals )
             
             if found_animal:
             
                 exemplary_animals.append(( "large_predators_" + str( placement ), found_animal ))
                 
-                image_titles.append( "large_herbivores_" + str( placement ) )
+                image_titles.append( "large_predators_" + str( placement ) )
+                
             
         # Find 6 historic animals
-        for placement in range( 3, 9 ):
+        for placement in range( 3, 8 ):
         
-            found_animal = find_large_animal( placement - 2, animal_list, exemplary_animals, True )
+            found_animal = find_large_animal( placement, animal_list, exemplary_animals, True )
             
             if found_animal:
             
@@ -262,7 +287,7 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
     
         if historic:
         
-            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            if animal[0] == "historic" or animal[5] == "Extinct":# and not check_duplicate( animal, exemplary_animals ):
             
                 if animal[ DIET ] == "carnivore":
             
@@ -271,25 +296,22 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
                     if placement_counter == 0:
                 
                         return animal
+                        
+        else:
 
-        if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
+            if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
 
-            # Check if the animal is a predator
-            if animal[ DIET ] == "carnivore" and not check_duplicate( animal, exemplary_animals ):
+                # Check if the animal is a predator
+                if animal[ DIET ] == "carnivore" and not check_duplicate( animal, exemplary_animals ):
 
-                # Subtrack from our placement counter
-                placement_counter -= 1
+                    # Subtrack from our placement counter
+                    placement_counter -= 1
 
-                # Check if our placement counter is zero
-                if placement_counter == 0:
-                
-                    # If so, return this animal
-                    return animal 
+                    # Check if our placement counter is zero
+                    if placement_counter == 0:
                     
-        
-
-    # If no predators were found, return the largest animal
-    return False
+                        # If so, return this animal
+                        return animal 
     
 def find_herbivore( placement, animal_list, exemplary_animals, historic=False ): 
     
@@ -299,7 +321,7 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
     
         if historic:
         
-            if animal[0] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            if animal[0] == "historic" or animal[5] == "Extinct": #and not check_duplicate( animal, exemplary_animals ):
             
                 if animal[ DIET ] == "herbivore":
             
@@ -308,20 +330,48 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
                     if placement_counter == 0:
                 
                         return animal
-    
-        if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
-        
-            if animal[ DIET ] == "herbivore":
-            
-                placement_counter -= 1
-                
-                if placement_counter == 0:
-                
-                    return animal
                         
-    return False
+        else:
+    
+            if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            
+                if animal[ DIET ] == "herbivore":
+                
+                    placement_counter -= 1
+                    
+                    if placement_counter == 0:
+                    
+                        return animal
     
 def find_non_predator( placement, animal_list, exemplary_animals, historic=False ):
+
+    placement_counter = placement
+    
+    for animal in animal_list:
+    
+        if historic:
+        
+            if animal[ 0 ] != "historic" and animal[5] != "Extinct": # and not check_duplicate( animal, exemplary_animals ):
+        
+                if animal[ DIET ] == "herbivore" or animal[ DIET ] == "omnivore":
+                
+                    placement_counter -= 1
+                    
+                    if placement_counter == 0:
+                    
+                        return animal
+                        
+        else:
+            
+            if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+        
+                if animal[ DIET ] == "herbivore" or animal[ DIET ] == "omnivore":
+                
+                    placement_counter -= 1
+                    
+                    if placement_counter == 0:
+                    
+                        return animal
 
     
 
@@ -338,7 +388,7 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
             if historic:
                 
                 # Check if the animal is historic
-                if animal[ 0 ] == "historic" or animal[5] == "Extinct" and not check_duplicate( animal, exemplary_animals ):
+                if animal[ 0 ] == "historic" or animal[5] == "Extinct": # and not check_duplicate( animal, exemplary_animals ):
 
                     placement_counter -= 1
                     
@@ -431,6 +481,7 @@ def check_duplicate( animal, animal_info ):
     # Loop through the animal array 
     for potential_duplicate in animal_info:
     
+        #print( potential_duplicate )
         # Check if the binomial is the same as in the array 
         if animal[ BINOMIAL ] == potential_duplicate[1][BINOMIAL]:
         
