@@ -71,7 +71,7 @@ def biodiversity_submit( request ):
 	find_animal_images( csv_filename, True, "animal_images" )
 	
 	output = csv_filename 
-	return render( request, 'Spinner.html', {'message': output} )
+	return render( request, 'Slides.html', {'message': output} )
 
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
@@ -82,7 +82,7 @@ def climate_submit( request ):
 
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
-	return render( request, 'Spinner.html', {'message': out.stdout} )
+	return render( request, 'Slides.html', {'message': out.stdout} )
 
 def biodiversity_climate_submit( request ):
 
@@ -100,7 +100,6 @@ def biodiversity_climate_submit( request ):
 	# Now, we have the filename of the csv that contains the animal data
 	csv_filename = find_animals_script( latitude, longitude )
 
-	#csv_filename = "mammal_info.csv" 
 	# Now, filter the animals to find which pictures we need to find
 	find_animal_images( csv_filename, True, "animal_images" )
 	#output = csv_filename
