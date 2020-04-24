@@ -211,7 +211,7 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
         #	image_names.append( animal[1][1] )
         #
-        #images_scraper( dir_name, exemplary_animals, image_titles )
+        images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
@@ -496,6 +496,7 @@ def upload_files( images, csv_name ):
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
             
         else:
+            print( BASE_DIR)
             upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()

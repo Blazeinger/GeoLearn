@@ -13,6 +13,8 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
+# #from biodiversity_db_scanner import biodiversity_db_generator
+
 # constant for testing database executions 
 ROWS_TO_ACCESS = 1
 	
@@ -141,7 +143,7 @@ def main():
 
 def find_animals_script( latitude, longitude ):
 
-    db_path = "biodiversity_db_&_oauth/"
+    db_path = "python_scripts/biodiversity/"
 
     descriptors = get_descriptors( db_path )
     animal_boundaries = []
@@ -197,6 +199,22 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
 
                 
 def get_mammal_db( path, animal_info, animal_boundaries ):
+
+    if __name__ == "__main__":
+        csv_path = ""
+    else:
+        csv_path = "python_scripts/biodiversity/"
+    
+    # Check if the database exists
+    if os.path.exists( csv_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( csv_path + 'biodiversity_hist_db.csv' ):
+
+        print( "databases already exist" )
+        
+    else:
+    
+        print( "generating databases" )
+        import biodiversity_db_scanner
+        generator = ""
 
     with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
         csv.field_size_limit( sys.maxsize )

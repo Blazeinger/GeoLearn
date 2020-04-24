@@ -173,7 +173,6 @@ class biodiversity_db_generator:
                         
                         if not madeit:
                                 self.diet_not_found.append( animal )
-                                print( animal[ 0 ].lower().strip() )
                         
                         self.hist_info.append( animal )
 
