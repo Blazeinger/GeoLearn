@@ -206,7 +206,7 @@ class biodiversity_db_generator:
                         
                                 animal.extend([ data[1], data[2], data[3] ])
                                 
-                                if int(data[1]) >= 80:
+                                if int(data[1]) >= 50:
                                         animal.append( "herbivore" )
                                         
                                 elif int(data[2]) + int(data[3]) >= 80:

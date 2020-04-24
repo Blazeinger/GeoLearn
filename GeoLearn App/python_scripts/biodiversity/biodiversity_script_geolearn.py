@@ -502,7 +502,7 @@ def send_csv_to_drive( fileName ):
     
     else:
         # Create google account authentication objects
-        gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
+        gauth = GoogleAuth()
 
         print( 'client secrets 1' )
         if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
