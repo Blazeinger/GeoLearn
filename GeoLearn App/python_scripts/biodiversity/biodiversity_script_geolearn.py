@@ -13,7 +13,7 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-# #from biodiversity_db_scanner import biodiversity_db_generator
+from .biodiversity_db_scanner import biodiversity_db_generator
 
 # constant for testing database executions 
 ROWS_TO_ACCESS = 1
@@ -29,12 +29,12 @@ def main():
     # Our boolean that maintains the main loop 
     getting_info = True
 
-    descriptors = get_descriptors( db_path )
+    descriptors = []
     animal_boundaries = []
     animal_info = []
 
     print( "beginning local db read" )
-    get_mammal_db( db_path, animal_info, animal_boundaries )                                
+    get_mammal_db( db_path, animal_info, animal_boundaries )                           
     print( "finished reading database" )
 
     while getting_info:
@@ -145,7 +145,7 @@ def find_animals_script( latitude, longitude ):
 
     db_path = "python_scripts/biodiversity/"
 
-    descriptors = get_descriptors( db_path )
+    descriptors = []
     animal_boundaries = []
     animal_info = []
 
@@ -213,7 +213,9 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
     else:
     
         print( "generating databases" )
-        import biodiversity_db_scanner
+        #run_database_scanner()
+        generator = biodiversity_db_generator()
+        generator.generate_db_csv( csv_path, True )
         generator = ""
 
     with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
@@ -262,14 +264,12 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
     
                         
 
-
 def get_descriptors( path ):
     with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
         curr_reader = csv.reader( csvFile )
 
         for row in curr_reader:
             return row
-
         
 
 
