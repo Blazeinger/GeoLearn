@@ -246,7 +246,8 @@ class biodiversity_db_generator:
                         # Write the row to the csv file
                         writer.writerows( self.info_merged )
 
-                file_name = HIST_FILE_NAME
+                file_name = extension + HIST_FILE_NAME
+                
                 with open( file_name, mode='w' ) as csv_file:
 
                         writer = csv.writer( csv_file )
