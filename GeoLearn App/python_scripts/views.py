@@ -119,10 +119,10 @@ def biodiversity_climate_submit( request ):
 
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
-    csv_filename = find_animals_script( latitude, longitude )
+    csv_filename = None
     
     while csv_filename == None:
-        time.sleep(1)
+        csv_filename = find_animals_script( latitude, longitude )
 
     if difficulty == "beginner":
 
