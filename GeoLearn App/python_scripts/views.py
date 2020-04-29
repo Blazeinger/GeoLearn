@@ -175,55 +175,7 @@ def biodiversity_climate_submit( request ):
     print( "redirected to slideshow creation url" )
 
     return redirect( app_script_url )
-    '''
-
-
-
-def biodiversity_thread( csv_filename, difficulty, userEmail, schoolName ):
-
-        
-    if difficulty == "beginner":
-
-        # Now, filter the animals to find which pictures we need to find
-        chosen_csv_name = basic_image_finder( csv_filename, True, "animal_images" )
-
-        webdriver = initialize_webdriver()
-
-        index = 0
-        
-        with open( chosen_csv_name, encoding="utf8" ) as csv_file:
-            curr_reader = csv.reader( csv_file )
-
-            for animal in curr_reader:
-                single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
-
-                index += 1
-
-                #if index == 10:
-                    #output_thread = threading.Thread( target=show_user_progress )
-                    
-                    #output_thread.start()
-        
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
-
-
-
-                                      
-
-    elif difficulty == "advanced":
-
-        advanced_image_finder( csv_filename, True, "animal_images" )
-
-        '''
-        #Insert app script url stuff here, Kaitlyn
-        '''
-		
-    print( "redirected to slideshow creation url" )
-
-    return redirect( app_script_url )
+    
     
 
 
