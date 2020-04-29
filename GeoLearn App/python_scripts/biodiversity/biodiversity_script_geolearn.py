@@ -206,11 +206,9 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         csv_path = ""
     else:
         csv_path = "/biodiversity/"
-        
-    base_dir = BASE_DIR
     
     # Check if the database exists
-    if os.path.exists( csv_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( csv_path + 'biodiversity_hist_db.csv' ):
+    if os.path.exists( BASE_DIR + csv_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( BASE_DIR + csv_path + 'biodiversity_hist_db.csv' ):
 
         print( "databases already exist" )
         
@@ -222,7 +220,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         generator.generate_db_csv( csv_path, True )
         generator = ""
 
-    with open( csv_path + "biodiversity_mammal_db.csv" ) as csvFile:
+    with open( BASE_DIR + csv_path + "biodiversity_mammal_db.csv", encoding="utf8" ) as csvFile:
         csv.field_size_limit( sys.maxsize )
         curr_reader = csv.reader( csvFile )
 
@@ -243,7 +241,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                 print( "read in " + str( index ) + " current animals" )
 
                 
-    with open( csv_path + "biodiversity_hist_db.csv" ) as csvFile:
+    with open( BASE_DIR + csv_path + "biodiversity_hist_db.csv", encoding="utf8" ) as csvFile:
         hist_reader = csv.reader( csvFile )
                 
         # Skip the categories bit
@@ -269,7 +267,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                         
 
 def get_descriptors( path ):
-    with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
+    with open( path + "biodiversity_mammal_db.csv", encoding="utf8" ) as csvFile:
         curr_reader = csv.reader( csvFile )
 
         for row in curr_reader:
