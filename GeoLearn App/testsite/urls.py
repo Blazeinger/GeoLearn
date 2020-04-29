@@ -10,7 +10,7 @@ Each of these urls is given a name. These names are what are referenced in the h
 
 urlpatterns = [
 	# index is the name of the function in views.py
-	path( 'front-end/', views.index, name='index' ),
+	path( 'front-end/index.html', views.index, name='index' ),
 	path( 'front-end/brother/', views.brother, name='brother' ),
 	path( 'front-end/Slides.html/', views.slides, name='slides' ),
 	path( 'front-end/index.html/', views.index, name='index' ),
