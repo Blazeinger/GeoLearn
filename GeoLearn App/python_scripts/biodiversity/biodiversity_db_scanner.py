@@ -52,7 +52,7 @@ class biodiversity_db_generator:
 
         # Our 'main' function that gathers the information from the database
         # and writes it to a csv
-        def generate_db_csv( self, path="", server_run=False ):
+        def generate_db_csv( self, read_path="", write_path="", server_run=False ):
         
                 self.server_main = server_run
                 
@@ -63,7 +63,7 @@ class biodiversity_db_generator:
                 self.get_db_boundary_info()
                 
                 print( "gathering trait data" )
-                self.get_trait_data( path )
+                self.get_trait_data( read_path )
 
                 print( "gathering animal information" )
                 self.get_db_animal_info()
@@ -72,7 +72,7 @@ class biodiversity_db_generator:
                 self.merge_info()
 
                 print( "writing to CSV" )
-                self.write_to_csv( path )
+                self.write_to_csv( write_path )
         
                 print( "finished" )
                 
