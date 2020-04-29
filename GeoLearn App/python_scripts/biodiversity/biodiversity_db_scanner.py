@@ -226,9 +226,7 @@ class biodiversity_db_generator:
                         extension = "/biodiversity/" 
 
                 # Create CSV file name
-                file_name = BASE_DIR + extension + DB_FILE_NAME
-                
-                server_progress = self.info_merged[4000] 
+                file_name = extension + DB_FILE_NAME
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w' ) as csv_file:
