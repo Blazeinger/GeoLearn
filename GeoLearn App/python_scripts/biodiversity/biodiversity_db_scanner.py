@@ -49,7 +49,7 @@ class biodiversity_db_generator:
 
         # Our 'main' function that gathers the information from the database
         # and writes it to a csv
-        def generate_db_csv( self, server_run=False ):
+        def generate_db_csv( self, path="", server_run=False ):
         
                 self.server_main = server_run
                 
@@ -60,7 +60,7 @@ class biodiversity_db_generator:
                 self.get_db_boundary_info()
                 
                 print( "gathering trait data" )
-                self.get_trait_data()
+                self.get_trait_data( path )
                 print( self.trait_data[ 46 ][0] )
 
                 print( "gathering animal information" )
@@ -85,14 +85,14 @@ class biodiversity_db_generator:
                 print( "finished" )
                 
                 
-        def get_trait_data( self ):
+        def get_trait_data( self, csv_path ):
         
                 plants = 19
                 vertebrates = 20
                 invertebrates = 21
-        
+                
                 # Open the trait_data csv file 
-                with open( "Trait_data.csv", mode='r' ) as trait_csv:
+                with open( csv_path + "Trait_data.csv", mode='r' ) as trait_csv:
                 
                         csv.field_size_limit( sys.maxsize )
                         curr_reader = csv.reader( trait_csv )
@@ -173,7 +173,6 @@ class biodiversity_db_generator:
                         
                         if not madeit:
                                 self.diet_not_found.append( animal )
-                                print( animal[ 0 ].lower().strip() )
                         
                         self.hist_info.append( animal )
 
@@ -247,13 +246,20 @@ class biodiversity_db_generator:
                         # Write the row to the csv file
                         writer.writerows( self.info_merged )
 
-                file_name = HIST_FILE_NAME
+                file_name = extension + HIST_FILE_NAME
+                
                 with open( file_name, mode='w' ) as csv_file:
 
                         writer = csv.writer( csv_file )
                         writer.writerow( self.hist_descriptors )
                         writer.writerows( self.hist_merged )
-	
-generator = biodiversity_db_generator()
-generator.generate_db_csv()
+    
+def run_database_scanner():
+    generator = biodiversity_db_generator()
+    generator.generate_db_csv()
+    
+if __name__ == "__main__":
+    run_database_scanner()
+    
+
 #

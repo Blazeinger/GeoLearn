@@ -22,9 +22,11 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
-    find_animal_images( 'mammal_info.csv', True, "animal_images" )
-
-def find_animal_images( csv_name, upload_bool, dir_name ):
+    advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
+    
+def basic_image_finder( csv_name, upload_bool, dir_name ):
+    
+#def find_animal_images( csv_name, upload_bool, dir_name ):
     # Open CSV file
     with open( csv_name ) as csv_file:
 
@@ -138,87 +140,167 @@ def find_animal_images( csv_name, upload_bool, dir_name ):
         
 
         dobble_count = 28
-        dobble_offset = 0
-        index = 0
-        dobble_animals = []
-
-        for dobble_image_count in range( 0, dobble_count ):
-        
-            animal = animal_list[ index ]
-            
-            duplicate_check = True
-            
-            while( duplicate_check ):
-            
-                if check_duplicate( animal, dobble_animals ):
-                    
-                    index += 1
-                    
-                    animal = animal_list[ index ]
-                    
-                else:
-                    
-                    duplicate_check = False
-            
-            dobble_number = dobble_image_count - dobble_offset
-
-            dobble_animals.append( ( "Dobble_" + str( (dobble_image_count ) ), animal_list[ index ] ) )
-
-            image_titles.append( "Dobble_" + str( (dobble_image_count ) ) )
-
-            index += 1
-
-            if index == len( animal_list ):
-                    
-                index = 0
-
-        exemplary_animals.extend( dobble_animals )
+        exemplary_animals.extend( find_dobble_images( dobble_count, animal_list, image_titles ) )
             
         # Initialize a list for the names of the images 
         image_names = []
-
-        print( "saved animal info" )
         
-        with open( "sorted_mammal_info.csv", mode='w' ) as csv_file:
-        	writer = csv.writer( csv_file )
-        	
-        	for animal in animal_list:
-        		writer.writerow( animal )
-        	
-        print( "done sorting csv" )
+        write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )
         
-        with open( "chosen_mammals_info.csv", mode='w' ) as csv_file:
-        
-                writer = csv.writer( csv_file )
-                
-                for chosen_animal in exemplary_animals:
-                
-                        row = list(chosen_animal )
-                        
-                        row.extend( list( row[1] ) )
-                        row.pop(1)
-                        
-                        writer.writerow( row )
-                        
-        print( "done writing chosen mammals csv" )
-        
-        #for animal in exemplary_animals:
-        #    print( animal[1][1] )
-        
-        # Download the images for all of the animals we want 
-
-        #for animal in exemplary_animals:
-        
-        #	image_names.append( animal[1][1] )
-        #
-        #images_scraper( dir_name, exemplary_animals, image_titles )
+        images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
         if upload_bool:
             upload_files( image_titles, "chosen_mammals_info.csv" )
+
+
+
+
+            
         
-                            
+def advanced_image_finder( csv_name, upload_bool, dir_name ):
+
+    # Open CSV file
+    with open( csv_name ) as csv_file:
+
+        animal_reader = csv.reader( csv_file, delimiter=',' )
+
+        # Create a list with the animals from the csv
+        animal_list = create_list_from_csv( animal_reader )
+
+    # Sort the list of animals
+    sort_results( animal_list )
+
+    print( "animal list sorted" )
+
+    chosen_animals = []
+
+    image_titles = [ "largest_herbivore",
+                     "second_largest_herbivore",
+                     "largest_predator",
+                     "second_largest_predator" ]
+
+    # Find the largest herbivores
+    chosen_animals.append(( image_titles[0], find_herbivore( 1, animal_list, chosen_animals ) ))
+        
+    # Find the second largest herbivore
+    chosen_animals.append(( image_titles[1], find_herbivore( 1, animal_list, chosen_animals ) ))
+    
+    # Find the largest predator
+    chosen_animals.append(( image_titles[2], find_predator( 1, animal_list, chosen_animals ) ))
+
+    # Find the second largest predator
+    chosen_animals.append(( image_titles[3], find_predator( 1, animal_list, chosen_animals ) ))
+
+    # Find 3 historic animals
+    for placement in range( 0, 3 ):
+
+        found_animal = find_large_animal( 1, animal_list, chosen_animals, True )
+
+        if found_animal:
+
+            image_name = "historic_" + str( placement ) 
+
+            image_titles.append( image_name )
+
+            chosen_animals.append(( image_name, found_animal ))
+
+    # Find 6 additional herbivores
+    for placement in range( 0, 6 ):
+
+        found_animal = find_herbivore( 1, animal_list, chosen_animals )
+
+        if found_animal:
+
+            image_name = "herbivore_" + str( placement )
+
+            image_titles.append( image_name )
+            chosen_animals.append(( image_name, found_animal ))
+
+    # Find 6 additional predators
+    for placement in range( 0, 6 ):
+
+        found_animal = find_predator( 1, animal_list, chosen_animals )
+
+        if found_animal:
+
+            image_name = "predator_" + str( placement )
+
+            image_titles.append( image_name )
+            chosen_animals.append(( image_name, found_animal ))
+
+
+    write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, chosen_animals )
+        
+    images_scraper( dir_name, chosen_animals, image_titles )
+        
+    # Upload the images to the Google drive 
+        
+    if upload_bool:
+        upload_files( image_titles, "chosen_mammals_info.csv" )
+
+    
+        
+        
+def find_dobble_images( amount, animal_info, image_titles ):
+
+    dobble_animals = []
+
+    index = 0
+    
+    for dobble_image_count in range( 0, amount ):
+        
+        animal = animal_info[ index ]
+            
+        duplicate_check = True
+            
+        while( duplicate_check ):
+            
+            if check_duplicate( animal, dobble_animals ):
+                    
+                index += 1
+                    
+                animal = animal_info[ index ]
+                    
+            else:
+                    
+                duplicate_check = False
+
+        dobble_animals.append( ( "Dobble_" + str( (dobble_image_count ) ), animal_info[ index ] ) )
+
+        image_titles.append( "Dobble_" + str( (dobble_image_count ) ) )
+
+        index += 1
+
+        if index == len( animal_info ):
+                    
+            index = 0
+        
+    return dobble_animals
+        
+        
+def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
+
+     with open( sort_csv, mode='w' ) as csv_file: 
+        writer = csv.writer( csv_file )
+        
+        for animal in animal_list:
+            writer.writerow( animal )
+            
+     print( "done sorting csv" )
+     
+     with open( chosen_csv, mode='w' ) as csv_file:
+        writer = csv.writer( csv_file )
+        
+        for chosen_animal in chosen_animals:
+            row = list( chosen_animal )
+            row.extend( list( row[1] ) )
+            row.pop(1)
+            
+            writer.writerow( row )
+            
+     print( "done writing chosen mammals csv" )
     
 
 '''
@@ -496,6 +578,7 @@ def upload_files( images, csv_name ):
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
             
         else:
+            print( BASE_DIR)
             upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()

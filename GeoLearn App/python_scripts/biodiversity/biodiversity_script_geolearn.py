@@ -13,6 +13,8 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
+from .biodiversity_db_scanner import biodiversity_db_generator
+
 # constant for testing database executions 
 ROWS_TO_ACCESS = 1
 	
@@ -27,12 +29,12 @@ def main():
     # Our boolean that maintains the main loop 
     getting_info = True
 
-    descriptors = get_descriptors( db_path )
+    descriptors = []
     animal_boundaries = []
     animal_info = []
 
     print( "beginning local db read" )
-    get_mammal_db( db_path, animal_info, animal_boundaries )                                
+    get_mammal_db( db_path, animal_info, animal_boundaries )                           
     print( "finished reading database" )
 
     while getting_info:
@@ -141,9 +143,9 @@ def main():
 
 def find_animals_script( latitude, longitude ):
 
-    db_path = "biodiversity_db_&_oauth/"
+    db_path = "python_scripts/biodiversity/"
 
-    descriptors = get_descriptors( db_path )
+    descriptors = []
     animal_boundaries = []
     animal_info = []
 
@@ -180,8 +182,9 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
         # If animals were found, write them to the csv
         else:
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
-
-            send_csv_to_drive( filename )
+            
+            if __name__ != "__main__":
+                send_csv_to_drive( filename )
             #display_mammal_information( animals_within_boundaries, descriptors )
             print( "number of animals" )
             print( len( animals_within_boundaries ) )
@@ -197,7 +200,25 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
                 
 def get_mammal_db( path, animal_info, animal_boundaries ):
 
-    with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
+    if __name__ == "__main__":
+        csv_path = ""
+    else:
+        csv_path = "python_scripts/biodiversity/"
+    
+    # Check if the database exists
+    if os.path.exists( csv_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( csv_path + 'biodiversity_hist_db.csv' ):
+
+        print( "databases already exist" )
+        
+    else:
+    
+        print( "generating databases" )
+        #run_database_scanner()
+        generator = biodiversity_db_generator()
+        generator.generate_db_csv( csv_path, True )
+        generator = ""
+
+    with open( csv_path + "biodiversity_mammal_db.csv" ) as csvFile:
         csv.field_size_limit( sys.maxsize )
         curr_reader = csv.reader( csvFile )
 
@@ -218,7 +239,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                 print( "read in " + str( index ) + " current animals" )
 
                 
-    with open( path + "biodiversity_hist_db.csv" ) as csvFile:
+    with open( csv_path + "biodiversity_hist_db.csv" ) as csvFile:
         hist_reader = csv.reader( csvFile )
                 
         # Skip the categories bit
@@ -243,14 +264,12 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
     
                         
 
-
 def get_descriptors( path ):
     with open( path + "biodiversity_mammal_db.csv" ) as csvFile:
         curr_reader = csv.reader( csvFile )
 
         for row in curr_reader:
             return row
-
         
 
 
@@ -501,7 +520,7 @@ def send_csv_to_drive( fileName ):
     
     else:
         # Create google account authentication objects
-        gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml')
+        gauth = GoogleAuth()
 
         print( 'client secrets 1' )
         if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):

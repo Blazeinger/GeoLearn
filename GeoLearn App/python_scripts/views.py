@@ -3,7 +3,8 @@ from django.http import HttpResponse
 ## from .models import Post
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_image_scraper import images_scraper
-from .biodiversity.biodiversity_results_sorter import find_animal_images
+from .biodiversity.biodiversity_results_sorter import basic_image_finder
+from .biodiversity.biodiversity_results_sorter import advanced_image_finder
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
@@ -86,42 +87,38 @@ def climate_submit( request ):
 
 def biodiversity_climate_submit( request ):
 
-	# Float values of longitude and latitude
-	# Fetch the longitude and latitude from the form on the slides page
-	latitude = float( request.POST.get( 'Latitude' ) )
-	longitude = float( request.POST.get( 'Longitude' ) )
-	difficulty = request.POST.get( 'difficulty' )
-	userEmail = request.POST.get( 'userEmail' )
-	schoolName = request.POST.get( 'schoolName' )
+    # Float values of longitude and latitude
+    # Fetch the longitude and latitude from the form on the slides page
+    latitude = float( request.POST.get( 'Latitude' ) )
+    longitude = float( request.POST.get( 'Longitude' ) )
+    difficulty = request.POST.get( 'difficulty' )
+    userEmail = request.POST.get( 'userEmail' )
+    schoolName = request.POST.get( 'schoolName' )
 
-	print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
+    print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
-	# Feed the lat and long to our find animals script
-	# Now, we have the filename of the csv that contains the animal data
-	csv_filename = find_animals_script( latitude, longitude )
+    # Feed the lat and long to our find animals script
+    # Now, we have the filename of the csv that contains the animal data
+    csv_filename = find_animals_script( latitude, longitude )
 
-	# Now, filter the animals to find which pictures we need to find
-	find_animal_images( csv_filename, True, "animal_images" )
-	#output = csv_filename
-	#return render( request, 'Slides.html', {'message': output} )
+    if difficulty == "beginner":
 
-	'''
-	timelapse_path = BASE_DIR + '/python_scripts/climate_change/combinedFile.py'
-	out = run([sys.executable, timelapse_path, str(latitude), str(longitude)], shell=False, stdout=PIPE )
+        # Now, filter the animals to find which pictures we need to find
+        basic_image_finder( csv_filename, True, "animal_images" )
 
-	print( "timelapse created" )
-	'''
-	#time_lapse(lat, lng)
-	output = "biodiversity script run successfully"
+        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
+        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+        app_script_url += userEmail + "&schoolName="
+        app_script_url += schoolName
 
-	if difficulty == "beginner":
+    elif difficulty == "advanced":
 
-		app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-		app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-		app_script_url += userEmail + "&schoolName="
-		app_script_url += schoolName
+        advanced_image_finder( csv_filename, True, "animal_images" )
+
+        '''
+        Insert app script url stuff here, Kaitlyn
+        '''
 		
-	print( "redirected to slideshow creation url" )
-	#return HttpResponseRedirect( app_script_url )
+    print( "redirected to slideshow creation url" )
 
-	return redirect( app_script_url )
+    return redirect( app_script_url )
