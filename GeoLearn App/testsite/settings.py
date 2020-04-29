@@ -26,9 +26,7 @@ SECRET_KEY = 'd3f-f@&oi*9je%bm&yse+$jfdcp!lp0+_*__21$8s_fxwx1$c0'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['ec2-3-22-118-61.us-east-2.compute.amazonaws.com',
-                 '127.0.0.1',
-                 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
