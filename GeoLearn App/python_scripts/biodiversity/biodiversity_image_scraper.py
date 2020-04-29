@@ -14,6 +14,7 @@ import requests
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+basest_dir = BASE_DIR.replace( "/python_scripts", "" )
 
 def main():
     while True:
@@ -66,7 +67,7 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
             assert "Google" in driver.title
             assert "No results found." not in driver.page_source
             
-            successful_list.append( retrieve_image_urls( image[ 1 ][1], driver, directory_name, image_names[ index ] ))
+            successful_list.append( retrieve_image( image[ 1 ][1], driver, directory_name, image_names[ index ] ))
 
             index += 1
 
@@ -80,11 +81,79 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     #return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
 
 
+
+
+def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=None ):
+    # Make sure that the directory we create and save to is a valid name
+    # Make sure what we name the image is a valid name
+    directory_name = dir_name
+    self_initialized_driver = False
+
+    print( "image scraping start" )
+    
+    if animal_name == None:
+        return False
+        
+    if directory_name == None:
+        directory_name = animal_search
+        
+    if driver == None:
+        self_initialized_driver = True 
+        driver = initailize_webdriver()
+        
+    if image_name == None: 
+        image_name = animal_name
+        
+    # Change any spaces in the search query into pluses
+    image_search = correct_for_query_spaces( animal_name )
+    
+    # Create our google image search url template 
+    search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
+    
+    # Have our webdriver connect to our crafted url
+    # The url replaces the "search query" with our actual search query
+    driver.get( search_url.format( search_query = image_search ))
+    
+    # Check that the connection to the website was successful 
+    assert "Google" in driver.title
+    assert "No results found." not in driver.page_source
+            
+    retrieve_image( image_search, driver, directory_name, image_name )
+    
+    if self_initialized_driver:
+        driver.close()
+        
+    
+
+
+
+
+
+def initialize_webdriver():
+
+    # Prevent the actual browser from opening
+    options = Options()
+    options.add_argument( '--headless' )
+
+    print( 'connecting to webdriver' )
+    
+    # Connect our python script to our firefox browser
+    return webdriver.Firefox( options=options )
+
+
+
+
+
 def correct_for_query_spaces( search_query ):
     temp_query = search_query.split()
     return '+'.join( temp_query )
+    
+    
+    
+    
+    
 
-def retrieve_image_urls( search_query, webdriver, dir_name, img_name ):
+def retrieve_image( search_query, webdriver, dir_name, img_name ):
 
     print( "image_scraping function start" ) 
     image_name = '' 
