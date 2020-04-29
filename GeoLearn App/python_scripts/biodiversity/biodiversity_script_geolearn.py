@@ -357,19 +357,9 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
 
     # Create a CSV file to write to 
     with open( file_name, mode='w' ) as csv_file: 
-        os.chmod(file_name, 0o777)
+        os.chmod(file_name, 0o777):
         writer = csv.writer( csv_file )
-		
-        # Write the latitude and longitude to the CSV
-        #writer.writerow( [ latitude, longitude ] )
-		
-        # Delete the 17th column in the descriptors 
-        #headers = list( descriptors )
-        #headers.pop( 17 )	
-			
-        # Write the descriptors/headers to the file 
-        #writer.writerow( headers )
-		
+        
         # Loop through each animal we found 
         for animal in listOfMammals:
 			
