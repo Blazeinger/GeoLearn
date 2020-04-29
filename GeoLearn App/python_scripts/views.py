@@ -120,14 +120,15 @@ def biodiversity_climate_submit( request ):
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = find_animals_script( latitude, longitude )
 
+    '''
     biodiversity_images = threading.Thread( target=biodiversity_thread, args=( csv_filename, difficulty, userEmail, schoolName, ), daemon=True )
     biodiversity_images.start()
 
     return render( request, 'Spinner.html' )
-
-    '''
+    
     output_thread = threading.Thread( target=show_user_progress, args=( "found nearby animals", ) )
     output_thread.start()
+    '''
 
     if difficulty == "beginner":
 
@@ -145,11 +146,14 @@ def biodiversity_climate_submit( request ):
                 single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
 
                 index += 1
-
+                
+                '''
                 if index == 10:
                     output_thread = threading.Thread( target=show_user_progress )
                     
                     output_thread.start()
+                    
+                '''
         
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
         app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
@@ -164,9 +168,9 @@ def biodiversity_climate_submit( request ):
 
         advanced_image_finder( csv_filename, True, "animal_images" )
 
-    '''
+        '''
         #Insert app script url stuff here, Kaitlyn
-    '''
+        '''
 		
     print( "redirected to slideshow creation url" )
 
@@ -214,7 +218,7 @@ def biodiversity_thread( csv_filename, difficulty, userEmail, schoolName ):
         advanced_image_finder( csv_filename, True, "animal_images" )
 
         '''
-        Insert app script url stuff here, Kaitlyn
+        #Insert app script url stuff here, Kaitlyn
         '''
 		
     print( "redirected to slideshow creation url" )
