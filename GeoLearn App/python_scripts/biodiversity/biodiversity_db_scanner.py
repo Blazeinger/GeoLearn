@@ -92,7 +92,7 @@ class biodiversity_db_generator:
                 vertebrates = 20
                 invertebrates = 21
 
-                print( BASE_DIR )
+                directory_to_this_place = BASE_DIR
                 
                 # Open the trait_data csv file 
                 with open( csv_path + "Trait_data.csv", mode='r' ) as trait_csv:
