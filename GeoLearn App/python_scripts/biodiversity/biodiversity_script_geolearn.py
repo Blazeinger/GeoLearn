@@ -22,6 +22,8 @@ ROWS_TO_ACCESS = 1
 # 1 about equals 70 miles  (69.4)
 SEARCH_RADIUS = 1
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def main():
 
     db_path = ""
@@ -204,6 +206,8 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         csv_path = ""
     else:
         csv_path = "biodiversity/"
+        
+    base_dir = BASE_DIR
     
     # Check if the database exists
     if os.path.exists( csv_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( csv_path + 'biodiversity_hist_db.csv' ):
