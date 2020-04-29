@@ -12,6 +12,7 @@ import sys
 import os
 import threading
 import csv
+import time
 
 from django.shortcuts import redirect
 
@@ -119,16 +120,9 @@ def biodiversity_climate_submit( request ):
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = find_animals_script( latitude, longitude )
-
-    '''
-    biodiversity_images = threading.Thread( target=biodiversity_thread, args=( csv_filename, difficulty, userEmail, schoolName, ), daemon=True )
-    biodiversity_images.start()
-
-    return render( request, 'Spinner.html' )
     
-    output_thread = threading.Thread( target=show_user_progress, args=( "found nearby animals", ) )
-    output_thread.start()
-    '''
+    while csv_filename == None:
+        time.sleep(1)
 
     if difficulty == "beginner":
 
