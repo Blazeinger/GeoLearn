@@ -239,10 +239,7 @@ class biodiversity_db_generator:
                 if os.path.exists( file_name ):
                     file_path_exists = 2
                     
-                file_name = BASE_DIR + extension + DB_FILE_NAME
-                
-                if os.path.exists( file_name ):
-                    file_path_exists = 3
+                file_name = BASE_DIR + DB_FILE_NAME
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w' ) as csv_file:
