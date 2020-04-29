@@ -23,6 +23,7 @@ ROWS_TO_ACCESS = 1
 SEARCH_RADIUS = 1
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+basest_dir = BASE_DIR.replace( "python_scripts", "" )
 
 def main():
 
@@ -352,7 +353,7 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
     # Create CSV file name 
     # Add the date and time to ensure that the file names are unique
     file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
-    file_name = file_wo_extension + ".csv"
+    file_name = basest_dir + file_wo_extension + ".csv"
 	
     # Create a CSV file to write to 
     with open( file_name, mode='w' ) as csv_file:
