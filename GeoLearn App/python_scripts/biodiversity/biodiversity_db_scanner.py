@@ -84,7 +84,7 @@ class biodiversity_db_generator:
                 invertebrates = 21
                 
                 # Open the trait_data csv file 
-                with open( BASE_DIR + csv_path + "Trait_data.csv", mode='r', encoding = 'utf8' ) as trait_csv:
+                with open( BASE_DIR + csv_path + "/biodiversity/Trait_data.csv", mode='r', encoding = 'utf8' ) as trait_csv:
                 
                         csv.field_size_limit( sys.maxsize )
                         curr_reader = csv.reader( trait_csv )

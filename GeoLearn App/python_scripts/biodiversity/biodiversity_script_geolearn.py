@@ -347,33 +347,34 @@ def display_mammal_information( listOfMammals, descriptors ):
 def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
 
     # Variables
-    now = datetime.now() 
-    list_of_mammals_cleaned = []; 
+    now = datetime.now()
+    list_of_mammals_cleaned = [];
 
-    # Create CSV file name 
+    # Create CSV file name
     # Add the date and time to ensure that the file names are unique
     file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
-    file_name = basest_dir + file_wo_extension + ".csv"
-	
-    # Create a CSV file to write to 
+
+    file_name = basest_dir + file_wo_extension + ".csv" 
+
     with open( file_name, mode='w' ) as csv_file:
+        os.chmod(file_name, 0o777)
         writer = csv.writer( csv_file )
-        
-        # Loop through each animal we found 
+
+        # Loop through each animal we found
         for animal in listOfMammals:
-			
-            # Create a list of the animal's info 
+
+            # Create a list of the animal's info
             mammal_info = list( animal )
-			
-            # Delete the 17th index, the shape files 
+
+            # Delete the 17th index, the shape files
             mammal_info.pop( 17 )
-	    
+
             # Write the information to the row in the CSV
-            writer.writerow( mammal_info )	
-			
+            writer.writerow( mammal_info )
+
     # Print to the user that the CSV file has been printed
     print( "done writing to CSV file" )
-	
+
     return file_wo_extension
 
 
