@@ -72,16 +72,6 @@ class biodiversity_db_generator:
 
                 print( "writing to CSV" )
                 self.write_to_csv()
-                
-                # Create a CSV file to write to
-                with open( "animals not found.csv", mode='w' ) as csv_file:
-
-                        # Create our writer object
-                        writer = csv.writer( csv_file )
-                        
-                        for not_found in self.diet_not_found:
-                                
-                                writer.writerow( not_found )
         
                 print( "finished" )
                 
@@ -95,7 +85,7 @@ class biodiversity_db_generator:
                 directory_to_this_place = BASE_DIR
                 
                 # Open the trait_data csv file 
-                with open( csv_path + "Trait_data.csv", mode='r' ) as trait_csv:
+                with open( BASE_DIR + csv_path + "Trait_data.csv", mode='r' ) as trait_csv:
                 
                         csv.field_size_limit( sys.maxsize )
                         curr_reader = csv.reader( trait_csv )

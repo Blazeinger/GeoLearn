@@ -205,7 +205,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
     if __name__ == "__main__":
         csv_path = ""
     else:
-        csv_path = "biodiversity/"
+        csv_path = "/biodiversity/"
         
     base_dir = BASE_DIR
     
