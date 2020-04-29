@@ -5,9 +5,9 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
 if __name__ == "__main__":
-    from biodiversity_image_scraper import images_scraper
+    from biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 else:
-    from .biodiversity_image_scraper import images_scraper
+    from .biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 
 
 MASS = 16
@@ -20,13 +20,13 @@ DIET = 22
 NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLOPHAGA", "ANOPLURA", "HOMOPTERA", "SIPHONAPTERA" ] 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+basest_dir = BASE_DIR.replace( "python_scripts", "" )
 
 def main():
     advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
     
 def basic_image_finder( csv_name, upload_bool, dir_name ):
-    
-#def find_animal_images( csv_name, upload_bool, dir_name ):
+
     # Open CSV file
     with open( csv_name ) as csv_file:
 
@@ -147,12 +147,16 @@ def basic_image_finder( csv_name, upload_bool, dir_name ):
         
         write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )
         
+        return basest_dir + "chosen_mammals_info.csv"
+        
+        '''
         images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
         if upload_bool:
             upload_files( image_titles, "chosen_mammals_info.csv" )
+        '''
 
 
 
@@ -578,7 +582,6 @@ def upload_files( images, csv_name ):
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
             
         else:
-            print( BASE_DIR)
             upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()
