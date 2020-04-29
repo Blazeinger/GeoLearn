@@ -6,11 +6,13 @@ from shapely.geometry import Polygon
 from shapely.geometry import MultiPolygon
 from shapely.geometry import Point
 from datetime import datetime
-from os import path
+import os
 
 
 DB_FILE_NAME = "biodiversity_mammal_db.csv"
 HIST_FILE_NAME = "biodiversity_hist_db.csv" 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Class that connects to the biodiversity database and creates a 
 # local CSV file that contains all the information. 
@@ -61,7 +63,6 @@ class biodiversity_db_generator:
                 
                 print( "gathering trait data" )
                 self.get_trait_data( path )
-                print( self.trait_data[ 46 ][0] )
 
                 print( "gathering animal information" )
                 self.get_db_animal_info()
@@ -90,6 +91,8 @@ class biodiversity_db_generator:
                 plants = 19
                 vertebrates = 20
                 invertebrates = 21
+
+                print( BASE_DIR )
                 
                 # Open the trait_data csv file 
                 with open( csv_path + "Trait_data.csv", mode='r' ) as trait_csv:
