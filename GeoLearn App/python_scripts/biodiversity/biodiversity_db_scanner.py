@@ -221,7 +221,12 @@ class biodiversity_db_generator:
                 # Create CSV file name
                 
                 # Remember that the 'path' variable must have '/' on both sides of it
-                file_name = BASE_DIR + path + DB_FILE_NAME
+                
+                this_base_dir = BASE_DIR - "/python_scripts"
+                
+                trying = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                
+                file_name = this_base_dir + path + DB_FILE_NAME
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
@@ -235,7 +240,7 @@ class biodiversity_db_generator:
                         # Write the row to the csv file
                         writer.writerows( self.info_merged )
 
-                file_name = BASE_DIR + path + HIST_FILE_NAME
+                file_name = this_base_dir + path + HIST_FILE_NAME
                 
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
 
