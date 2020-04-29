@@ -222,7 +222,7 @@ class biodiversity_db_generator:
                 
                 # Remember that the 'path' variable must have '/' on both sides of it
                 
-                this_base_dir = BASE_DIR - "/python_scripts"
+                this_base_dir = BASE_DIR.replace( "/python_scripts", "" )
                 
                 trying = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
                 
