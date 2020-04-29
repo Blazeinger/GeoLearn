@@ -201,9 +201,15 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
 
                 
 def get_mammal_db( path, animal_info, animal_boundaries ):
+
+    if __name__ == "__main__":
+        extension = "/"
+        
+    else:
+        extension = "/python_scripts/biodiversity/"
     
     # Check if the database exists
-    if os.path.exists( BASE_DIR + 'biodiversity_mammal_db.csv' ) and os.path.exists( BASE_DIR + 'biodiversity_hist_db.csv' ):
+    if os.path.exists( BASE_DIR + extension + 'biodiversity_mammal_db.csv' ) and os.path.exists( BASE_DIR + extension + 'biodiversity_hist_db.csv' ):
 
         print( "databases already exist" )
         
@@ -212,10 +218,10 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         print( "generating databases" )
         #run_database_scanner()
         generator = biodiversity_db_generator()
-        generator.generate_db_csv( path="/biodiversity/", server_run=True )
+        generator.generate_db_csv( path=extension, server_run=True )
         generator = ""
 
-    with open( BASE_DIR + "biodiversity_mammal_db.csv", encoding="utf8" ) as csvFile:
+    with open( BASE_DIR + extension + "biodiversity_mammal_db.csv", encoding="utf8" ) as csvFile:
         csv.field_size_limit( sys.maxsize )
         curr_reader = csv.reader( csvFile )
 
@@ -236,7 +242,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                 print( "read in " + str( index ) + " current animals" )
 
                 
-    with open( BASE_DIR + "biodiversity_hist_db.csv", encoding="utf8" ) as csvFile:
+    with open( BASE_DIR + extension + "/biodiversity_hist_db.csv", encoding="utf8" ) as csvFile:
         hist_reader = csv.reader( csvFile )
                 
         # Skip the categories bit

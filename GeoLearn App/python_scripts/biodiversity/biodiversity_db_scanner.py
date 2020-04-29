@@ -72,7 +72,7 @@ class biodiversity_db_generator:
                 self.merge_info()
 
                 print( "writing to CSV" )
-                self.write_to_csv()
+                self.write_to_csv( path )
         
                 print( "finished" )
                 
@@ -82,8 +82,6 @@ class biodiversity_db_generator:
                 plants = 19
                 vertebrates = 20
                 invertebrates = 21
-
-                directory_to_this_place = BASE_DIR
                 
                 # Open the trait_data csv file 
                 with open( BASE_DIR + csv_path + "Trait_data.csv", mode='r', encoding = 'utf8' ) as trait_csv:
@@ -218,11 +216,12 @@ class biodiversity_db_generator:
                                 
                 
 
-        def write_to_csv( self ):
+        def write_to_csv( self, path ):
 
                 # Create CSV file name
                 
-                file_name = BASE_DIR + DB_FILE_NAME
+                # Remember that the 'path' variable must have '/' on both sides of it
+                file_name = BASE_DIR + path + DB_FILE_NAME
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
@@ -236,7 +235,7 @@ class biodiversity_db_generator:
                         # Write the row to the csv file
                         writer.writerows( self.info_merged )
 
-                file_name = BASE_DIR + extension + HIST_FILE_NAME
+                file_name = BASE_DIR + path + HIST_FILE_NAME
                 
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
 
