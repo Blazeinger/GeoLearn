@@ -212,7 +212,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         print( "generating databases" )
         #run_database_scanner()
         generator = biodiversity_db_generator()
-        generator.generate_db_csv( csv_path, True )
+        generator.generate_db_csv( server_run=True )
         generator = ""
 
     with open( BASE_DIR + "biodiversity_mammal_db.csv", encoding="utf8" ) as csvFile:
