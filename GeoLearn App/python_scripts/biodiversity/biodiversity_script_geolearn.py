@@ -208,7 +208,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         
     else:
         trait_path = "/biodiversity/"
-        db_path = "/python_scripts/biodiversity/" 
+        db_path = "/biodiversity/" 
     
     # Check if the database exists
     if os.path.exists( BASE_DIR + db_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( BASE_DIR + db_path + 'biodiversity_hist_db.csv' ):
