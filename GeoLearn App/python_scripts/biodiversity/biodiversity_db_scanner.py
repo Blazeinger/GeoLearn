@@ -30,7 +30,6 @@ class biodiversity_db_generator:
                 # Create a cursor that we will use to execute commands
                 self.db_cursor = self.database.cursor( buffered=True )
                 self.server_main = False
-                self.server_progress = ""
 
                 # Create other variables that will be used later
                 self.descriptors = []
@@ -224,12 +223,12 @@ class biodiversity_db_generator:
                 extension = ""
         
                 if self.server_main:
-                        extension = "python_scripts/biodiversity/" 
+                        extension = "/biodiversity/" 
 
                 # Create CSV file name
                 file_name = BASE_DIR + extension + DB_FILE_NAME
                 
-                self.server_progress = self.info_merged[4000] 
+                server_progress = self.info_merged[4000] 
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w' ) as csv_file:
