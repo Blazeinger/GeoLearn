@@ -219,30 +219,13 @@ class biodiversity_db_generator:
                 
 
         def write_to_csv( self ):
-        
-                extension = ""
-        
-                if self.server_main:
-                        extension = "/biodiversity/" 
 
                 # Create CSV file name
                 
-                file_path_exists = 0
-                
-                file_name = BASE_DIR
-                
-                if os.path.exists( file_name ):
-                    file_path_exists = 1
-                    
-                file_name = BASE_DIR + extension
-                
-                if os.path.exists( file_name ):
-                    file_path_exists = 2
-                    
                 file_name = BASE_DIR + DB_FILE_NAME
 
                 # Create a CSV file to write to
-                with open( file_name, mode='w' ) as csv_file:
+                with open( file_name, mode='w', encoding="utf8" ) as csv_file:
 
                         # Create our writer object
                         writer = csv.writer( csv_file )
@@ -255,7 +238,7 @@ class biodiversity_db_generator:
 
                 file_name = BASE_DIR + extension + HIST_FILE_NAME
                 
-                with open( file_name, mode='w' ) as csv_file:
+                with open( file_name, mode='w', encoding="utf8" ) as csv_file:
 
                         writer = csv.writer( csv_file )
                         writer.writerow( self.hist_descriptors )
