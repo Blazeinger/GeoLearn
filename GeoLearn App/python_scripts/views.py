@@ -120,11 +120,17 @@ def biodiversity_climate_submit( request ):
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
-    
-    while csv_filename == None:
-        csv_filename = find_animals_script( latitude, longitude )
 
     if difficulty == "beginner":
+        
+        '''
+        while csv_filename == None:
+            
+        '''
+        
+        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
+            
+        assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
         chosen_csv_name = basic_image_finder( csv_filename, True, "animal_images" )
@@ -159,6 +165,9 @@ def biodiversity_climate_submit( request ):
                                       
 
     elif difficulty == "advanced":
+    
+        while csv_filename == None:
+            csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
 
         advanced_image_finder( csv_filename, True, "animal_images" )
 
