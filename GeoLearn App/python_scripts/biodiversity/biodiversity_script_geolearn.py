@@ -517,6 +517,8 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
     print( 'begin file upload' )
     
     curr_dir = CURR_DIR
+    
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = CURR_DIR + "/client_secrets.json"
 
     if __name__ == "__main__":
         
