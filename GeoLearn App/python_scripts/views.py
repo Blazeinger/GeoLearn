@@ -164,10 +164,6 @@ def biodiversity_climate_submit( request ):
             csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
 
         advanced_image_finder( csv_filename, True, "animal_images" )
-
-        '''
-        #Insert app script url stuff here, Kaitlyn
-        '''
 		
     print( "redirected to slideshow creation url" )
 
@@ -208,14 +204,6 @@ def biodiversity_thread( difficulty, userEmail, schoolName ):
                 single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
 
                 index += 1
-                
-                '''
-                if index == 10:
-                    output_thread = threading.Thread( target=show_user_progress )
-                    
-                    output_thread.start()
-                    
-                '''
         
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
         app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
