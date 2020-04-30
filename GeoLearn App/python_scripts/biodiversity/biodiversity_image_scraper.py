@@ -173,9 +173,9 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
 
     # Check if the directory that we want to put our iamges in already exists
     if not os.path.exists( BASE_DIR + "/biodiversity/" + dir_name ):
-
+    
        # If not, make that directory 
-        os.mkdir( BASE_DIR + "/biodiversity/" + dir_name )
+        os.mkdir( BASE_DIR + "/biodiversity/" + dir_name, 0777 )
 
     ''' 
     Loop through the image elements gathered and translate them to 

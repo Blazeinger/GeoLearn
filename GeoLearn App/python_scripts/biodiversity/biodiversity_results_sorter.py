@@ -21,6 +21,7 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "python_scripts", "" )
+CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def main():
     advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
@@ -528,6 +529,8 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
             
 
 def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
+
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = CURR_DIR + "/client_secrets.json"
 
     # connect to google drive 
     gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
