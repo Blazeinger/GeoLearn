@@ -515,6 +515,8 @@ def append_shape( animal_boundaries, currentShape ):
 def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     print( 'begin file upload' )
+    
+    curr_dir = CURR_DIR
 
     if __name__ == "__main__":
         
