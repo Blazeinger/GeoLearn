@@ -175,7 +175,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
     if not os.path.exists( BASE_DIR + "/biodiversity/" + dir_name ):
     
        # If not, make that directory 
-        os.makedirs( BASE_DIR + "/biodiversity/" + dir_name, 0777 )
+        os.mkdir( BASE_DIR + "/biodiversity/" + dir_name )
 
     ''' 
     Loop through the image elements gathered and translate them to 
