@@ -226,11 +226,11 @@ class biodiversity_db_generator:
                 
                 file_name = this_base_dir + path + DB_FILE_NAME
                 
-                os.chmod( file_name, 0o777)
+                
 
                 # Create a CSV file to write to
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
-                        
+                        os.chmod( file_name, 0o777)
 
                         # Create our writer object
                         writer = csv.writer( csv_file )
@@ -243,10 +243,10 @@ class biodiversity_db_generator:
 
                 file_name = this_base_dir + path + HIST_FILE_NAME
                 
-                os.chmod( write_csv_name, 0o777)
+                
                 
                 with open( file_name, mode='w', encoding="utf8" ) as csv_file:
-                        
+                        os.chmod( file_name, 0o777)
 
                         writer = csv.writer( csv_file )
                         writer.writerow( self.hist_descriptors )
