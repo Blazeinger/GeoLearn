@@ -230,7 +230,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         db_path = "/"
         
     else:
-        trait_path = "/python_scripts/biodiversity"
+        trait_path = "/"
         db_path = "/"
     
     basest_dir = BASE_DIR
