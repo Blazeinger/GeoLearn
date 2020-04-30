@@ -12,7 +12,7 @@ import os
 DB_FILE_NAME = "biodiversity_mammal_db.csv"
 HIST_FILE_NAME = "biodiversity_hist_db.csv" 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # Class that connects to the biodiversity database and creates a 
 # local CSV file that contains all the information. 
@@ -84,7 +84,7 @@ class biodiversity_db_generator:
                 invertebrates = 21
                 
                 # Open the trait_data csv file 
-                with open( BASE_DIR + csv_path + "/biodiversity/Trait_data.csv", mode='r', encoding = 'utf8' ) as trait_csv:
+                with open( BASE_DIR + csv_path + "/Trait_data.csv", mode='r', encoding = 'utf8' ) as trait_csv:
                 
                         csv.field_size_limit( sys.maxsize )
                         curr_reader = csv.reader( trait_csv )
@@ -222,9 +222,7 @@ class biodiversity_db_generator:
                 
                 # Remember that the 'path' variable must have '/' on both sides of it
                 
-                this_base_dir = BASE_DIR.replace( "/python_scripts", "" )
-                
-                trying = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                this_base_dir = BASE_DIR  #.replace( "/python_scripts", "" )
                 
                 file_name = this_base_dir + path + DB_FILE_NAME
 
