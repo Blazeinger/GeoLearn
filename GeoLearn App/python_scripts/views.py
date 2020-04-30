@@ -169,8 +169,8 @@ def biodiversity_climate_submit( request ):
 
     return redirect( app_script_url )
     '''
-    return render( request, 'Spinner.html' )
-    
+    yield render( request, 'Spinner.html' )
+    bio_thread.join()
 
 
 
