@@ -13,7 +13,10 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-from .biodiversity_db_scanner import biodiversity_db_generator
+if __name__ == "__main__":
+    from biodiversity_db_scanner import biodiversity_db_generator
+else:
+    from .biodiversity_db_scanner import biodiversity_db_generator
 
 # constant for testing database executions 
 ROWS_TO_ACCESS = 1
@@ -22,8 +25,7 @@ ROWS_TO_ACCESS = 1
 # 1 about equals 70 miles  (69.4)
 SEARCH_RADIUS = 1
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-basest_dir = BASE_DIR.replace( "python_scripts", "" )
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def main():
 
@@ -136,7 +138,22 @@ def main():
                         
                 latitude = float( response[ 0 ] )
                 longitude = float( response[ 1 ] )
-                find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
+                
+                difficulty = input( "(b)asic or (a)dvanced?: " )
+                
+                if difficulty.lower() == "b":
+                    target_dir = "slideInfo_Bio"
+                    print( "basic presentation selected" )
+                    
+                elif difficulty.lower() == "a":
+                    target_dir = "slideInfo_BioAdv"
+                    print( "advanced presentation selected" )
+                    
+                else:
+                    target_dir = "slideInfo_Bio" 
+                    print( "default selected, basic" )
+                    
+                print( find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir ) )
 
             except:
                 print( "not valid input" )
@@ -144,7 +161,7 @@ def main():
 	
 # end main
 
-def find_animals_script( latitude, longitude ):
+def find_animals_script( latitude, longitude, target_dir ):
 
     db_path = "" #python_scripts/biodiversity/"
 
@@ -156,14 +173,14 @@ def find_animals_script( latitude, longitude ):
     get_mammal_db( db_path, animal_info, animal_boundaries )                                
     print( "finished reading database" )
 
-    return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude )
+    return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir )
                         
 
 
 
 
 
-def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude ):
+def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir ):
 
     animals_within_boundaries = []
         
@@ -186,13 +203,18 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
         else:
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
             
-            if __name__ != "__main__":
-                send_csv_to_drive( filename )
+            #if __name__ != "__main__":
+            send_csv_to_drive( filename, target_dir )
             #display_mammal_information( animals_within_boundaries, descriptors )
             print( "number of animals" )
             print( len( animals_within_boundaries ) )
+            
+            print( filename )
+            assert filename != None
+            
+            print( "done" )
 			
-            return filename + '.csv'
+            return BASE_DIR + "/" + filename + ".csv"
                 
     except ValueError:
         print( "Please input a valid latitude and longitude or \"Exit\" " )	
@@ -211,7 +233,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
         trait_path = "/biodiversity/"
         db_path = "/"
     
-    basest_dir = BASE_DIR.replace( "/python_scripts", "" )
+    basest_dir = BASE_DIR
     
     # Check if the database exists
     if os.path.exists( basest_dir + db_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( basest_dir + db_path + 'biodiversity_hist_db.csv' ):
@@ -354,9 +376,9 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
     # Add the date and time to ensure that the file names are unique
     file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
 
-    file_name = basest_dir + file_wo_extension + ".csv" 
+    file_name = BASE_DIR + "/" + file_wo_extension + ".csv" 
 
-    with open( file_name, mode='w' ) as csv_file:
+    with open( file_name, mode='w', encoding="utf8" ) as csv_file:
         os.chmod(file_name, 0o777)
         writer = csv.writer( csv_file )
 
@@ -374,6 +396,9 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
 
     # Print to the user that the CSV file has been printed
     print( "done writing to CSV file" )
+    
+    assert file_name != None
+    assert file_wo_extension != None
 
     return file_wo_extension
 
@@ -486,7 +511,7 @@ def append_shape( animal_boundaries, currentShape ):
 			
 			
 
-def send_csv_to_drive( fileName ):
+def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     print( 'begin file upload' )
 
@@ -545,7 +570,7 @@ def send_csv_to_drive( fileName ):
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to
-    target_folder_name = 'slideInfo_Bio'
+    target_folder_name = target_dir
     target_folder_id = ''
 
     # Find the list of all of the files in the google drive

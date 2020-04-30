@@ -25,7 +25,10 @@ basest_dir = BASE_DIR.replace( "python_scripts", "" )
 def main():
     advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
     
-def basic_image_finder( csv_name, upload_bool, dir_name ):
+def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
+
+    if csv_name == None:
+        csv_name = "mammal_info" 
 
     # Open CSV file
     with open( csv_name ) as csv_file:
@@ -149,21 +152,24 @@ def basic_image_finder( csv_name, upload_bool, dir_name ):
         
         return basest_dir + "chosen_mammals_info.csv"
         
-        '''
+        
         images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
         if upload_bool:
             upload_files( image_titles, "chosen_mammals_info.csv" )
-        '''
+        
 
 
 
 
             
         
-def advanced_image_finder( csv_name, upload_bool, dir_name ):
+def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
+    
+    if csv_name == None:
+        csv_name = "mammal_info" 
 
     # Open CSV file
     with open( csv_name ) as csv_file:
@@ -198,7 +204,7 @@ def advanced_image_finder( csv_name, upload_bool, dir_name ):
     chosen_animals.append(( image_titles[3], find_predator( 1, animal_list, chosen_animals ) ))
 
     # Find 3 historic animals
-    for placement in range( 0, 3 ):
+    for placement in range( 1, 4 ):
 
         found_animal = find_large_animal( 1, animal_list, chosen_animals, True )
 
@@ -211,7 +217,7 @@ def advanced_image_finder( csv_name, upload_bool, dir_name ):
             chosen_animals.append(( image_name, found_animal ))
 
     # Find 6 additional herbivores
-    for placement in range( 0, 6 ):
+    for placement in range( 1, 7 ):
 
         found_animal = find_herbivore( 1, animal_list, chosen_animals )
 
@@ -223,7 +229,7 @@ def advanced_image_finder( csv_name, upload_bool, dir_name ):
             chosen_animals.append(( image_name, found_animal ))
 
     # Find 6 additional predators
-    for placement in range( 0, 6 ):
+    for placement in range( 1, 7 ):
 
         found_animal = find_predator( 1, animal_list, chosen_animals )
 
@@ -242,7 +248,7 @@ def advanced_image_finder( csv_name, upload_bool, dir_name ):
     # Upload the images to the Google drive 
         
     if upload_bool:
-        upload_files( image_titles, "chosen_mammals_info.csv" )
+        upload_files( image_titles, "chosen_mammals_info.csv", "slideInfo_BioAdv" )
 
     
         
@@ -521,7 +527,7 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
     return found_animal
             
 
-def upload_files( images, csv_name ):
+def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
 
     # connect to google drive 
     gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
@@ -547,7 +553,7 @@ def upload_files( images, csv_name ):
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 
-    target_folder_name = 'slideInfo_Bio'
+    target_folder_name = target_drive_dir
     target_folder_id = ''
 
     # Find the list of all of the files in the google drive 
