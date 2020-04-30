@@ -25,7 +25,8 @@ ROWS_TO_ACCESS = 1
 # 1 about equals 70 miles  (69.4)
 SEARCH_RADIUS = 1
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+CURR_DIR = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
 
 def main():
 
