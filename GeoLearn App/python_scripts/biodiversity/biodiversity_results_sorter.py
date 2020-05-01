@@ -6,6 +6,7 @@ from pydrive.auth import GoogleAuth
 
 if __name__ == "__main__":
     from biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
+    from enviro_log import enviro_logger
 else:
     from .biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
     from .enviro_log import enviro_logger
@@ -26,7 +27,8 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 logger = enviro_logger()
 
 def main():
-    advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
+    basic_image_finder( True, "animal_images", "mammal_info.csv" )
+    #advanced_image_finder( True, "animal_images", 'mammal_info.csv' )
     
 def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 

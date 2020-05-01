@@ -30,6 +30,7 @@ SEARCH_RADIUS = 1
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
 
+
 logger = enviro_logger()
 
 def main():
@@ -556,8 +557,8 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         gauth = GoogleAuth()
 
         logger.log( 'client secrets 1' )
-        if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
-            gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+        if os.path.exists( 'credentials.txt' ): # 'biodiversity_db_&_oauth/credentials.txt' ):
+            gauth.LoadCredentialsFile( 'credentials.txt' ) # 'biodiversity_db_&_oauth/credentials.txt' )
 
         if gauth.credentials is None:
             logger.log( 'local webserver branch' )
@@ -573,7 +574,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
         logger.log( 'client secrets 2' )
 
-        gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
+        gauth.SaveCredentialsFile( 'credentials.txt' ) #'biodiversity_db_&_oauth/credentials.txt' )
 
         drive = GoogleDrive( gauth )
 
