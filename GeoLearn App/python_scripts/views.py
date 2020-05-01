@@ -3,10 +3,14 @@ from django.http import HttpResponse
 from selenium import webdriver
 ## from .models import Post
 
-from .biodiversity.biodiversity_script_geolearn import find_animals_script
-from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
-from .biodiversity.biodiversity_results_sorter import basic_image_finder
-from .biodiversity.biodiversity_results_sorter import advanced_image_finder
+if __name__ == "__main__":
+    True
+
+else:
+    from .biodiversity.biodiversity_script_geolearn import find_animals_script
+    from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
+    from .biodiversity.biodiversity_results_sorter import basic_image_finder
+    from .biodiversity.biodiversity_results_sorter import advanced_image_finder
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
@@ -119,64 +123,13 @@ def biodiversity_climate_submit( request ):
 
     print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
+    '''
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
     bio_thread.start()
 
     return render( request, 'Spinner.html' )
     '''
 
-    # Feed the lat and long to our find animals script
-    # Now, we have the filename of the csv that contains the animal data
-    csv_filename = None
-
-    if difficulty == "beginner":
-        
-        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
-            
-        assert csv_filename != None
-
-        # Now, filter the animals to find which pictures we need to find
-        chosen_csv_name = basic_image_finder( csv_filename, True, "animal_images" )
-
-        webdriver = initialize_webdriver()
-
-        index = 0
-        
-        with open( chosen_csv_name, encoding="utf8" ) as csv_file:
-            curr_reader = csv.reader( csv_file )
-
-            for animal in curr_reader:
-                single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
-
-                index += 1
-        
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
-        
-        driver.get( app_script_url )
-
-
-
-                                      
-
-    elif difficulty == "advanced":
-    
-        while csv_filename == None:
-            csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
-
-        advanced_image_finder( csv_filename, True, "animal_images" )
-		
-    print( "redirected to slideshow creation url" )
-
-    return redirect( app_script_url )
-    '''
-    
-
-
-
-def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
@@ -190,7 +143,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Now, filter the animals to find which pictures we need to find
         chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
         
-        webdriver = Firefox.webdriver()
+        driver = webdriver.Firefox()
 
         index = 0
         
@@ -209,7 +162,62 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( difficulty, userEmail, schoolName, webdriver )
+        activate_google_script_url( difficulty, userEmail, schoolName, driver )
+
+                                      
+
+    elif difficulty == "advanced":
+    
+        while csv_filename == None:
+            csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
+
+        advanced_image_finder( True, "animal_images", csv_filename )
+
+        '''
+        #Insert app script url stuff here, Kaitlyn
+        '''
+		
+    print( "redirected to slideshow creation url" )
+    return render( request, 'Spinner.html' )
+    
+
+
+
+def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
+    
+    # Feed the lat and long to our find animals script
+    # Now, we have the filename of the csv that contains the animal data
+    csv_filename = None
+
+    if difficulty == "beginner":
+        
+        '''
+        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
+        assert csv_filename != None
+
+        # Now, filter the animals to find which pictures we need to find
+        chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
+        '''
+        driver = webdriver.Firefox()
+
+        index = 0
+        
+        '''
+        with open( chosen_csv_name, encoding="utf8" ) as csv_file:
+            curr_reader = csv.reader( csv_file )
+
+            for animal in curr_reader:
+                single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
+
+                index += 1
+        '''
+        
+        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
+        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+        app_script_url += userEmail + "&schoolName="
+        app_script_url += schoolName
+        
+        activate_google_script_url( difficulty, userEmail, schoolName, driver )
 
                                       
 
@@ -229,7 +237,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     
 
 
-def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
+def activate_google_script_url( difficulty, userEmail, schoolName, driver ):
     
     if difficulty == "beginner":
         
@@ -239,26 +247,26 @@ def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
     
         ''' Insert url here '''
 
-    webdriver.get( app_script_url )
+    driver.get( app_script_url )
     
     on_signin_screen = False
     
     time.sleep( 5 )
     
     # Check if the url directs to a sign-in screen 
-    try:
-        print( "finding sign-in screen" )
-        page_title = driver.find_element_by_tag_name( "title" )
+    #try:
+    print( "finding sign-in screen" )
+    page_title = driver.find_element_by_tag_name( "title" )
         
-        print( "on sign-in screen" )
+    print( "on sign-in screen" )
         
-        if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
+    if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
         
-            print( "totally was sign-in screen" )
-            on_signin_screen = True
+        print( "totally was sign-in screen" )
+        on_signin_screen = True
         
-    except:
-        print( "wasn't sign-in screen" )
+    #except:
+    #    print( "wasn't sign-in screen" )
     
     # sign into the email 
     if on_signin_screen:
@@ -300,13 +308,22 @@ def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
         submit_button.click()
         
         # Wait 2 minutes for the slideshow to be created
-        time.sleep( 150 )
+        
+        ## Let the user know 
+        print( "waiting 2.5 minutes for slideshow to be created" )
+        
+        ## wait
+        for half_minute in range( 1, 6 ):
+            time.sleep( 30 )
+            elapsed_time = 30 * half_minute
+            print( elapsed_time + " has passed" )
+            
+        print( "slideshow has been created" )
+    driver.close()
 
-    webdriver.close()
 
-
-
-
+if __name__ == "__main__":
+    biodiversity_thread( -111, 35, "beginner", "joshusttenakhongva@gmail.com", "2:00 test" )
 
 
 

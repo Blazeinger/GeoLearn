@@ -205,9 +205,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
             element.click()
 
             # Give the browser some time to catch up 
-            time.sleep( 3 )
-
-        
+            time.sleep( 2 )        
 
             # After clicking on the image, get the larger version 
             found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
