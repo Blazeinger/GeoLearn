@@ -11,7 +11,7 @@ else:
     from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
     from .biodiversity.biodiversity_results_sorter import basic_image_finder
     from .biodiversity.biodiversity_results_sorter import advanced_image_finder
-    from .enviro_log import enviro_logger
+    from .biodiversity.enviro_log import enviro_logger
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
