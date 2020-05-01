@@ -139,7 +139,7 @@ def initialize_webdriver():
 
     # Prevent the actual browser from opening
     options = Options()
-    #options.add_argument( '--headless' )
+    options.add_argument( '--headless' )
 
     logger.log( 'connecting to webdriver' )
     

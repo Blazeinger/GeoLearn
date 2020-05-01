@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from selenium import webdriver
 ## from .models import Post
 
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
@@ -117,23 +118,11 @@ def biodiversity_climate_submit( request ):
     schoolName = request.POST.get( 'schoolName' )
 
     print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
-    
-    app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-    app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-    app_script_url += userEmail + "&schoolName="
-    app_script_url += schoolName
-    
-    webdriver = initialize_webdriver()
-       
-    webdriver.get( app_script_url )
-    time.sleep( 10 )
-    webdriver.close()
-    return redirect( app_script_url )
-    
-    '''
+
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
     bio_thread.start()
-    '''
+
+    return render( request, 'Spinner.html' )
     '''
 
     # Feed the lat and long to our find animals script
@@ -183,7 +172,7 @@ def biodiversity_climate_submit( request ):
 
     return redirect( app_script_url )
     '''
-    return render( request, 'Spinner.html' )
+    
 
 
 
@@ -194,14 +183,14 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
     if difficulty == "beginner":
         
-        '''
+        
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
         assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
         chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
-        '''
-        webdriver = initialize_webdriver()
+        
+        webdriver = Firefox.webdriver()
 
         index = 0
         
@@ -220,10 +209,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        webdriver.get( app_script_url )
-        time.sleep( 5 )
-        webdriver.close()
-        return app_script_url
+        activate_google_script_url( difficulty, userEmail, schoolName, webdriver )
 
                                       
 
@@ -257,15 +243,22 @@ def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
     
     on_signin_screen = False
     
+    time.sleep( 5 )
+    
     # Check if the url directs to a sign-in screen 
     try:
+        print( "finding sign-in screen" )
         page_title = driver.find_element_by_tag_name( "title" )
-        print( "totally was sign-in screen" )
-        on_signin_screen = True
+        
+        print( "on sign-in screen" )
+        
+        if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
+        
+            print( "totally was sign-in screen" )
+            on_signin_screen = True
         
     except:
         print( "wasn't sign-in screen" )
-
     
     # sign into the email 
     if on_signin_screen:
@@ -305,8 +298,11 @@ def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
         
         ## click on the submit button 
         submit_button.click()
+        
+        # Wait 2 minutes for the slideshow to be created
+        time.sleep( 150 )
 
-
+    webdriver.close()
 
 
 

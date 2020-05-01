@@ -133,7 +133,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
                 
             
         # Find 6 historic animals
-        for placement in range( 3, 8 ):
+        for placement in range( 3, 9 ):
         
             found_animal = find_large_animal( placement, animal_list, exemplary_animals, True )
             
@@ -153,7 +153,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         
         write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
-        #images_scraper( dir_name, exemplary_animals, image_titles )
+        images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
@@ -245,7 +245,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
     write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, chosen_animals )
         
-    #images_scraper( dir_name, chosen_animals, image_titles )
+    images_scraper( dir_name, chosen_animals, image_titles )
         
     # Upload the images to the Google drive 
         
