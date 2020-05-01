@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 ## from .models import Post
+
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
@@ -242,5 +243,74 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     
 
 
-def show_user_progress( output ):
-    return render( request, 'Spinner.html' )
+def activate_google_script_url( difficulty, userEmail, schoolName, webdriver ):
+    
+    if difficulty == "beginner":
+        
+        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail=" + userEmail + "&schoolName=" + schoolName
+        
+    elif difficulty == "advanced": 
+    
+        ''' Insert url here '''
+
+    webdriver.get( app_script_url )
+    
+    on_signin_screen = False
+    
+    # Check if the url directs to a sign-in screen 
+    try:
+        page_title = driver.find_element_by_tag_name( "title" )
+        print( "totally was sign-in screen" )
+        on_signin_screen = True
+        
+    except:
+        print( "wasn't sign-in screen" )
+
+    
+    # sign into the email 
+    if on_signin_screen:
+        
+        # Fill in email
+        
+        ## find the login area 
+        text_area = driver.find_element_by_id( 'identifierId' )
+        
+        ## click on it
+        text_area.click()
+        
+        ## fill it in
+        text_area.send_keys( "geolearnweb@gmail.com" )
+        
+        ## find the submit button 
+        submit_button = driver.find_element_by_id( 'identifierNext' )
+        
+        ## click on the submit button 
+        submit_button.click()
+        
+        time.sleep( 1 )
+        
+        # Fill in the password
+        
+        ## find the text area
+        text_area = driver.find_element_by_name( 'password' )
+        
+        ## click on it
+        text_area.clear() #click()
+        
+        ## fill it in
+        text_area.send_keys( "Capstone2020" )
+        
+        ## find the submit button 
+        submit_button = driver.find_element_by_id( 'passwordNext' )
+        
+        ## click on the submit button 
+        submit_button.click()
+
+
+
+
+
+
+
+
+

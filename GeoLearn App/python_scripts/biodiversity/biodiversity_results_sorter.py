@@ -208,7 +208,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 3 historic animals
     for placement in range( 1, 4 ):
 
-        found_animal = find_large_animal( 1, animal_list, chosen_animals, True )
+        found_animal = find_large_animal( 1, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
@@ -221,7 +221,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional herbivores
     for placement in range( 1, 7 ):
 
-        found_animal = find_herbivore( 1, animal_list, chosen_animals, True )
+        found_animal = find_herbivore( 1, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
@@ -233,7 +233,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional predators
     for placement in range( 1, 7 ):
 
-        found_animal = find_predator( 1, animal_list, chosen_animals, True )
+        found_animal = find_predator( 1, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
