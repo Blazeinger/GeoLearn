@@ -15,8 +15,10 @@ from pydrive.auth import GoogleAuth
 
 if __name__ == "__main__":
     from biodiversity_db_scanner import biodiversity_db_generator
+    from enviro_log import enviro_logger
 else:
     from .biodiversity_db_scanner import biodiversity_db_generator
+    from .enviro_log import enviro_logger
 
 # constant for testing database executions 
 ROWS_TO_ACCESS = 1
@@ -27,6 +29,8 @@ SEARCH_RADIUS = 1
 
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
+
+logger = enviro_logger()
 
 def main():
 
@@ -39,14 +43,14 @@ def main():
     animal_boundaries = []
     animal_info = []
 
-    print( "beginning local db read" )
+    logger.log( "beginning local db read" )
     get_mammal_db( db_path, animal_info, animal_boundaries )                           
-    print( "finished reading database" )
+    logger.log( "finished reading database" )
 
     while getting_info:
 
         animals_within_boundaries = []
-        print( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
+        logger.log( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
         response = input()
         if response.lower() == "exit":
             getting_info = False
@@ -54,44 +58,44 @@ def main():
         elif response.lower() == "search":
 
             # Find the index of the animal we want to find
-            print( "Enter the binomial of the animal: " ) 
+            logger.log( "Enter the binomial of the animal: " ) 
             response = input()
             animal_index = find_animal_index_by_name( response, animal_info )
 
             if animal_index == 0:
-                print( "could not find animal" )
+                logger.log( "could not find animal" )
                 continue
 
             if animal_index != 0:
 
                 # Compare it to a lat long
-                print( "Enter a latitude and longitude" )
+                logger.log( "Enter a latitude and longitude" )
                 coordinates = input()
                 coordinates = coordinates.split( "," )
                         
                 longitude = float( coordinates[ 1 ] )
                 latitude = float( coordinates[ 0 ] )
 
-                print( "animal at index: " + str( animal_index ) )
+                logger.log( "animal at index: " + str( animal_index ) )
                 # Print if it was within those coordinates
                 search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
                                 
                 if not search_result:
-                    print( "it was not there" )
+                    logger.log( "it was not there" )
                     
                 else:
-                    print( "animal was on that" )
+                    logger.log( "animal was on that" )
                     
                 origin_point = Point( longitude, latitude )
                 search_area = origin_point.buffer( SEARCH_RADIUS )
 
-                print( "boundary count: " + str( len( animal_boundaries[ animal_index ] )) )
+                logger.log( "boundary count: " + str( len( animal_boundaries[ animal_index ] )) )
                                 
                 for boundary in animal_boundaries[ animal_index ]:
-                    print( "        {}".format( list(boundary.bounds) ))
-                    print( "    " + str( boundary.distance( search_area )) )
+                    logger.log( "        {}".format( list(boundary.bounds) ))
+                    logger.log( "    " + str( boundary.distance( search_area )) )
             else:
-                print( "Could not find animal" )
+                logger.log( "Could not find animal" )
 
         elif response.lower() == "hist" or response.lower() == "hist full": 
                 
@@ -102,7 +106,7 @@ def main():
                 full_output = False
                         
             # Compare it to a lat long
-            print( "Enter a latitude and longitude" )
+            logger.log( "Enter a latitude and longitude" )
             coordinates = input()
             coordinates = coordinates.split( "," )
                         
@@ -123,14 +127,14 @@ def main():
                                 
                 if animal_info[ index ][0] == "historic":
                                 
-                    print( "{} bounds: ".format( animal_info[ index ][1] ) )
+                    logger.log( "{} bounds: ".format( animal_info[ index ][1] ) )
                                         
                     for boundary in animal_boundaries[ index ]:
                                         
                         if boundary.distance( search_area ) < 30 or full_output:
                                                 
-                            print( "        {}".format( list(boundary.bounds) ))
-                            print( "    " + str( boundary.distance( search_polygon )) )
+                            logger.log( "        {}".format( list(boundary.bounds) ))
+                            logger.log( "    " + str( boundary.distance( search_polygon )) )
                             
         else:
                                 
@@ -144,20 +148,20 @@ def main():
                 
                 if difficulty.lower() == "b":
                     target_dir = "slideInfo_Bio"
-                    print( "basic presentation selected" )
+                    logger.log( "basic presentation selected" )
                     
                 elif difficulty.lower() == "a":
                     target_dir = "slideInfo_BioAdv"
-                    print( "advanced presentation selected" )
+                    logger.log( "advanced presentation selected" )
                     
                 else:
                     target_dir = "slideInfo_Bio" 
-                    print( "default selected, basic" )
+                    logger.log( "default selected, basic" )
                     
-                print( find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir ) )
+                logger.log( find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir ) )
 
             except:
-                print( "not valid input" )
+                logger.log( "not valid input" )
 	
 	
 # end main
@@ -170,9 +174,9 @@ def find_animals_script( latitude, longitude, target_dir ):
     animal_boundaries = []
     animal_info = []
 
-    print( "beginning local db read" )
+    logger.log( "beginning local db read" )
     get_mammal_db( db_path, animal_info, animal_boundaries )                                
-    print( "finished reading database" )
+    logger.log( "finished reading database" )
 
     return find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir )
                         
@@ -194,11 +198,11 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
                 animals_within_boundaries.append( animal_info[ index ] )
                                 
             if index % 500 == 0:
-                print( str(index) + " animals tested" )
+                logger.log( str(index) + " animals tested" )
 
         # Check if we couldn't find any animals in our search area
         if len( animals_within_boundaries ) == 0:
-            print( "There were no mammals in that area" )
+            logger.log( "There were no mammals in that area" )
 
         # If animals were found, write them to the csv
         else:
@@ -207,18 +211,18 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
             #if __name__ != "__main__":
             send_csv_to_drive( filename, target_dir )
             #display_mammal_information( animals_within_boundaries, descriptors )
-            print( "number of animals" )
-            print( len( animals_within_boundaries ) )
+            logger.log( "number of animals" )
+            logger.log( len( animals_within_boundaries ) )
             
-            print( filename )
+            logger.log( filename )
             assert filename != None
             
-            print( "done" )
+            logger.log( "done" )
 			
             return BASE_DIR + "/" + filename + ".csv"
                 
     except ValueError:
-        print( "Please input a valid latitude and longitude or \"Exit\" " )	
+        logger.log( "Please input a valid latitude and longitude or \"Exit\" " )	
 
 
 
@@ -239,11 +243,11 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
     # Check if the database exists
     if os.path.exists( basest_dir + db_path + 'biodiversity_mammal_db.csv' ) and os.path.exists( basest_dir + db_path + 'biodiversity_hist_db.csv' ):
 
-        print( "databases already exist" )
+        logger.log( "databases already exist" )
         
     else:
     
-        print( "generating databases" )
+        logger.log( "generating databases" )
         
         generator = biodiversity_db_generator()
         generator.generate_db_csv( read_path=trait_path, write_path=db_path, server_run=True )
@@ -267,7 +271,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
             index += 1
 
             if index % 1000 == 0:
-                print( "read in " + str( index ) + " current animals" )
+                logger.log( "read in " + str( index ) + " current animals" )
 
                 
     with open( basest_dir + db_path + "/biodiversity_hist_db.csv", encoding="utf8" ) as csvFile:
@@ -287,7 +291,7 @@ def get_mammal_db( path, animal_info, animal_boundaries ):
                         
             if index % 100 == 0:
                 
-                print( "read in " + str( index ) + " historic animals" )
+                logger.log( "read in " + str( index ) + " historic animals" )
 
         
     
@@ -357,10 +361,10 @@ def display_mammal_information( listOfMammals, descriptors ):
     for x in listOfMammals:
         for index in range( 0, len( x )):
             if index != 17:	
-            	print( " - " + descriptors[ index ], end= ": " )
-            	print( x[ index ] )
+            	logger.log( " - " + descriptors[ index ], end= ": " )
+            	logger.log( x[ index ] )
 		
-    print( "\n====================\n" )
+    logger.log( "\n====================\n" )
 
 
 
@@ -396,7 +400,7 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
             writer.writerow( mammal_info )
 
     # Print to the user that the CSV file has been printed
-    print( "done writing to CSV file" )
+    logger.log( "done writing to CSV file" )
     
     assert file_name != None
     assert file_wo_extension != None
@@ -438,7 +442,7 @@ def create_polygon( currentShape, multi ):
             # separate the x and y coordinates
             tempCoors = shape[ index ].split()
 
-            #print( str( index ) + ": " + tempCoors[ 0 ] + ", " + tempCoors[ 1 ] )
+            #logger.log( str( index ) + ": " + tempCoors[ 0 ] + ", " + tempCoors[ 1 ] )
 
             # Convert the coordaintes to floats
             latitude = float( tempCoors[ 0 ] )
@@ -514,7 +518,7 @@ def append_shape( animal_boundaries, currentShape ):
 
 def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
-    print( 'begin file upload' )
+    logger.log( 'begin file upload' )
     
     curr_dir = CURR_DIR
     
@@ -525,23 +529,23 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         # Create google account authentication objects
         gauth = GoogleAuth()
 
-        print( 'client secrets 1' )
+        logger.log( 'client secrets 1' )
         if os.path.exists( 'credentials.txt' ):
             gauth.LoadCredentialsFile( 'credentials.txt' )
 
         if gauth.credentials is None:
-            print( 'local webserver branch' )
+            logger.log( 'local webserver branch' )
             gauth.LocalWebserverAuth()
 
         elif gauth.access_token_expired:
-            print( 'refresh branch' )
+            logger.log( 'refresh branch' )
             gauth.Refresh()
 
         else:
-            print( 'authorize branch' )
+            logger.log( 'authorize branch' )
             gauth.Authorize()
 
-        print( 'client secrets 2' )
+        logger.log( 'client secrets 2' )
 
         gauth.SaveCredentialsFile( 'credentials.txt' )
 
@@ -551,23 +555,23 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         # Create google account authentication objects
         gauth = GoogleAuth()
 
-        print( 'client secrets 1' )
+        logger.log( 'client secrets 1' )
         if os.path.exists( 'biodiversity_db_&_oauth/credentials.txt' ):
             gauth.LoadCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 
         if gauth.credentials is None:
-            print( 'local webserver branch' )
+            logger.log( 'local webserver branch' )
             gauth.LocalWebserverAuth()
 
         elif gauth.access_token_expired:
-            print( 'refresh branch' )
+            logger.log( 'refresh branch' )
             gauth.Refresh()
 
         else:
-            print( 'authorize branch' )
+            logger.log( 'authorize branch' )
             gauth.Authorize()
 
-        print( 'client secrets 2' )
+        logger.log( 'client secrets 2' )
 
         gauth.SaveCredentialsFile( 'biodiversity_db_&_oauth/credentials.txt' )
 
@@ -587,18 +591,18 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         # Check if the current one is our target
         if file_object[ 'title' ] == target_folder_name:
                 
-            print( "folder found" )
+            logger.log( "folder found" )
 
             # Save the folder id
             target_folder_id = file_object[ 'id' ]
 
-    print( "folder id: " + target_folder_id )
+    logger.log( "folder id: " + target_folder_id )
 
     upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
     upload_csv.SetContentFile( fileName + '.csv' )
     upload_csv.Upload()
 
-    print( 'file uploaded' )
+    logger.log( 'file uploaded' )
 
 
 

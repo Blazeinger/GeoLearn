@@ -8,7 +8,7 @@ if __name__ == "__main__":
     from biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 else:
     from .biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
-
+    from .enviro_log import enviro_logger
 
 MASS = 16
 BINOMIAL = 1
@@ -22,6 +22,8 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "python_scripts", "" )
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
+
+logger = enviro_logger()
 
 def main():
     advanced_image_finder( 'mammal_info.csv', True, "animal_images" )
@@ -42,7 +44,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         # Sort the list of animals
         sort_results( animal_list )
 
-        print( "animal list sorted" ) 
+        logger.log( "animal list sorted" ) 
 
         # Create our list that contains exemplary animals 
         exemplary_animals = []
@@ -149,17 +151,16 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         # Initialize a list for the names of the images 
         image_names = []
         
-        write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )
+        write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
-        return basest_dir + "chosen_mammals_info.csv"
-        
-        
-        images_scraper( dir_name, exemplary_animals, image_titles )
+        #images_scraper( dir_name, exemplary_animals, image_titles )
         
         # Upload the images to the Google drive 
         
         if upload_bool:
             upload_files( image_titles, "chosen_mammals_info.csv" )
+            
+        return "chosen_mammals_info.csv"
         
 
 
@@ -183,7 +184,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Sort the list of animals
     sort_results( animal_list )
 
-    print( "animal list sorted" )
+    logger.log( "animal list sorted" )
 
     chosen_animals = []
 
@@ -220,7 +221,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional herbivores
     for placement in range( 1, 7 ):
 
-        found_animal = find_herbivore( 1, animal_list, chosen_animals )
+        found_animal = find_herbivore( 1, animal_list, chosen_animals, True )
 
         if found_animal:
 
@@ -232,7 +233,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional predators
     for placement in range( 1, 7 ):
 
-        found_animal = find_predator( 1, animal_list, chosen_animals )
+        found_animal = find_predator( 1, animal_list, chosen_animals, True )
 
         if found_animal:
 
@@ -244,7 +245,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
     write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, chosen_animals )
         
-    images_scraper( dir_name, chosen_animals, image_titles )
+    #images_scraper( dir_name, chosen_animals, image_titles )
         
     # Upload the images to the Google drive 
         
@@ -299,7 +300,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
         for animal in animal_list:
             writer.writerow( animal )
             
-     print( "done sorting csv" )
+     logger.log( "done sorting csv" )
      
      with open( chosen_csv, mode='w' ) as csv_file:
         writer = csv.writer( csv_file )
@@ -311,7 +312,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
             
             writer.writerow( row )
             
-     print( "done writing chosen mammals csv" )
+     logger.log( "done writing chosen mammals csv" )
     
 
 '''
@@ -540,19 +541,19 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
         gauth.LoadCredentialsFile( 'credentials.txt' )
 
     if gauth.credentials is None:
-        print( 'local webserver branch' )
+        logger.log( 'local webserver branch' )
         gauth.LocalWebserverAuth()
         gauth.SaveCredentialsFile( 'credentials.txt' )
 
     elif gauth.access_token_expired:
-        print( 'refresh branch' )
+        logger.log( 'refresh branch' )
         gauth.Refresh()
 
     else:
-        print( 'authorize branch' )
+        logger.log( 'authorize branch' )
         gauth.Authorize()
 
-    print( "after authorization" )
+    logger.log( "after authorization" )
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 
@@ -571,13 +572,13 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
             # Save the folder id
             target_folder_id = file_object[ 'id' ]        
 
-    print( "folder id: " + target_folder_id )
+    logger.log( "folder id: " + target_folder_id )
     
     # upload the CSV containing only the info on the chosen animals for images
     upload_csv = drive.CreateFile({'title': csv_name, 'parents': [{'id': target_folder_id }] })
     upload_csv.SetContentFile( csv_name )
     upload_csv.Upload()
-    print( "uploaded chosen_mammals csv" )
+    logger.log( "uploaded chosen_mammals csv" )
     
     # Loop through the images
     for image_name in images: 
@@ -585,7 +586,7 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
         
         #upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name )
 
-        print( image_name )
+        logger.log( image_name )
         
         if __name__ == "__main__":
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
@@ -594,13 +595,14 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
             upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
         
         upload_image.Upload()
+	
 
 def check_duplicate( animal, animal_info ):
 
     # Loop through the animal array 
     for potential_duplicate in animal_info:
     
-        #print( potential_duplicate )
+        #logger.log( potential_duplicate )
         # Check if the binomial is the same as in the array 
         if animal[ BINOMIAL ] == potential_duplicate[1][BINOMIAL]:
         

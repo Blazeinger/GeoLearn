@@ -13,12 +13,18 @@ import io
 import requests
 import os
 
+if __name__ == "__main__":
+    from enviro_log import enviro_logger
+else:
+    from .enviro_log import enviro_logger
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
+logger = enviro_logger()
 
 def main():
     while True:
-        print( "type animal name: " )
+        logger.log( "type animal name: " )
         image_scraper( input(), "animal_images", "animals" )
 
 def images_scraper( dir_name=None, image_list=None, image_names=None ):
@@ -27,7 +33,7 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     # Make sure what we name the image is a valid name
     directory_name = dir_name
 
-    print( "image scraping start" )
+    logger.log( "image scraping start" )
     
     if directory_name == None:
         directory_name = animal_search
@@ -39,7 +45,7 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     options = Options()
     options.add_argument( '--headless' )
 
-    print( 'connecting to webdriver' )
+    logger.log( 'connecting to webdriver' )
     
     # Connect our python script to our firefox browser
     driver = webdriver.Firefox( options=options )
@@ -54,7 +60,7 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
         # Loop thorugh the image list
         for image in image_list:
 
-            print( image[ 1 ][1] )
+            logger.log( image[ 1 ][1] )
             
             # Change any spaces in the search query into pluses
             image_search = correct_for_query_spaces( image[ 1 ][1] )
@@ -89,7 +95,7 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
     directory_name = dir_name
     self_initialized_driver = False
 
-    print( "image scraping start" )
+    logger.log( "image scraping start" )
     
     if animal_name == None:
         return False
@@ -133,9 +139,9 @@ def initialize_webdriver():
 
     # Prevent the actual browser from opening
     options = Options()
-    options.add_argument( '--headless' )
+    #options.add_argument( '--headless' )
 
-    print( 'connecting to webdriver' )
+    logger.log( 'connecting to webdriver' )
     
     # Connect our python script to our firefox browser
     return webdriver.Firefox( options=options )
@@ -155,7 +161,7 @@ def correct_for_query_spaces( search_query ):
 
 def retrieve_image( search_query, webdriver, dir_name, img_name ):
 
-    print( "image_scraping function start" ) 
+    logger.log( "image_scraping function start" ) 
     image_name = '' 
     
     # Variable that holds the number of images to fetch 
@@ -183,7 +189,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
     '''
     found_image_count = 0
     attempt_count = 0
-    print( "begin finding images" )
+    logger.log( "begin finding images" )
     for element in image_elements:
 
         
@@ -209,12 +215,12 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
             # find the source of the image, it's url 
             image_url = found_image.get_attribute( 'src' )
 
-            print( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
+            logger.log( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
 
             # Make sure that the image url is a valid source 
             if 'http' in image_url:
 
-                print( "successful image found" )
+                logger.log( "successful image found" )
 
                 # Download this image as a BytesIO object 
                 image_file = io.BytesIO( requests.get( image_url ).content )
@@ -225,7 +231,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
                 # Create the the name of this image we're downloaded
                 image_name = img_name + '.jpg'
 
-                print( image_name )
+                logger.log( image_name )
 
                 # Save the path that we want to save the image to
                 # The directory will be the same name as the search query 
@@ -241,7 +247,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
         # end try block
 
         except:
-            print( "couldn't find enhanced images" )
+            logger.log( "couldn't find enhanced images" )
 
         # end except block 
               
@@ -251,10 +257,10 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
     #webdriver.close()
 
     if attempt_count > 3:
-        print( "multiple attempts: " + search_query + "<=======" )
+        logger.log( "multiple attempts: " + search_query + "<=======" )
 
     else:
-        print( image_name )
+        logger.log( image_name )
     return image_name
 
 

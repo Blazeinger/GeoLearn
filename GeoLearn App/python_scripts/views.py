@@ -117,9 +117,22 @@ def biodiversity_climate_submit( request ):
 
     print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
     
-    bio_thread = threading.Thread( target=biodiversity_thread, args=( difficulty, userEmail, schoolName, ) )
-    bio_thread.start()
+    app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
+    app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+    app_script_url += userEmail + "&schoolName="
+    app_script_url += schoolName
     
+    webdriver = initialize_webdriver()
+       
+    webdriver.get( app_script_url )
+    time.sleep( 10 )
+    webdriver.close()
+    return redirect( app_script_url )
+    
+    '''
+    bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
+    bio_thread.start()
+    '''
     '''
 
     # Feed the lat and long to our find animals script
@@ -170,11 +183,10 @@ def biodiversity_climate_submit( request ):
     return redirect( app_script_url )
     '''
     return render( request, 'Spinner.html' )
-    bio_thread.join()
 
 
 
-def biodiversity_thread( difficulty, userEmail, schoolName ):
+def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
@@ -182,21 +194,17 @@ def biodiversity_thread( difficulty, userEmail, schoolName ):
     if difficulty == "beginner":
         
         '''
-        while csv_filename == None:
-            
-        '''
-        
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
-            
         assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
-        chosen_csv_name = basic_image_finder( csv_filename, True, "animal_images" )
-
+        chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
+        '''
         webdriver = initialize_webdriver()
 
         index = 0
         
+        '''
         with open( chosen_csv_name, encoding="utf8" ) as csv_file:
             curr_reader = csv.reader( csv_file )
 
@@ -204,15 +212,17 @@ def biodiversity_thread( difficulty, userEmail, schoolName ):
                 single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
 
                 index += 1
+        '''
         
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
         app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        driver.get( app_script_url )
-
-
+        webdriver.get( app_script_url )
+        time.sleep( 5 )
+        webdriver.close()
+        return app_script_url
 
                                       
 
@@ -221,7 +231,7 @@ def biodiversity_thread( difficulty, userEmail, schoolName ):
         while csv_filename == None:
             csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
 
-        advanced_image_finder( csv_filename, True, "animal_images" )
+        advanced_image_finder( True, "animal_images", csv_filename )
 
         '''
         #Insert app script url stuff here, Kaitlyn
