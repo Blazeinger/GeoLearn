@@ -11,6 +11,7 @@ else:
     from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
     from .biodiversity.biodiversity_results_sorter import basic_image_finder
     from .biodiversity.biodiversity_results_sorter import advanced_image_finder
+    from .enviro_log import enviro_logger
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
@@ -112,6 +113,10 @@ def climate_submit( request ):
 
 
 def biodiversity_climate_submit( request ):
+
+    # restart the log file 
+    logger = enviro_logger()
+    logger.restart()
 
     # Float values of longitude and latitude
     # Fetch the longitude and latitude from the form on the slides page
