@@ -548,7 +548,7 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
     if os.path.exists( credentials_path ):
         logger.log( 'found a credentials' )
         gauth.LoadCredentialsFile( credentials_path )
-        gauth.SaveCredentialsFile( credentials_path )
+        
 
     if gauth.credentials is None:
         logger.log( 'local connect to website' )
@@ -563,7 +563,8 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
         gauth.Authorize()
 
     logger.log( 'creating connection to google drive' )
-
+    
+    gauth.SaveCredentialsFile( credentials_path )
     drive = GoogleDrive( gauth )
     
     logger.log( 'connection established' )

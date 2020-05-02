@@ -550,7 +550,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     logger.log( 'creating connection to google drive' )
 
-    
+    gauth.SaveCredentialsFile( credentials_path )
 
     drive = GoogleDrive( gauth )
     
