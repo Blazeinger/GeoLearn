@@ -570,8 +570,6 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
         # Check if the current one is our target
         if file_object[ 'title' ] == target_folder_name:
-                
-            logger.log( "folder found" )
 
             # Save the folder id
             target_folder_id = file_object[ 'id' ]
