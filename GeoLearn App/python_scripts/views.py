@@ -128,7 +128,7 @@ def biodiversity_climate_submit( request ):
 
     print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
-    '''
+    
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
     bio_thread.start()
 
@@ -152,16 +152,6 @@ def biodiversity_climate_submit( request ):
 
         index = 0
         
-        '''
-        with open( chosen_csv_name, encoding="utf8" ) as csv_file:
-            curr_reader = csv.reader( csv_file )
-
-            for animal in curr_reader:
-                single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
-
-                index += 1
-        '''
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
         app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
@@ -178,13 +168,13 @@ def biodiversity_climate_submit( request ):
 
         advanced_image_finder( True, "animal_images", csv_filename )
 
-        '''
-        #Insert app script url stuff here, Kaitlyn
-        '''
+    '''
+    #Insert app script url stuff here, Kaitlyn
+    '''
 		
     print( "redirected to slideshow creation url" )
     return render( request, 'Spinner.html' )
-    
+    '''
 
 
 
@@ -196,13 +186,13 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
     if difficulty == "beginner":
         
-        '''
+        
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
         assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
         chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
-        '''
+        
         driver = webdriver.Firefox()
 
         index = 0
@@ -238,6 +228,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         '''
 		
     print( "redirected to slideshow creation url" )
+    return render( request, 'Spinner.html' )
     
     
 
@@ -321,7 +312,7 @@ def activate_google_script_url( difficulty, userEmail, schoolName, driver ):
         for half_minute in range( 1, 6 ):
             time.sleep( 30 )
             elapsed_time = 30 * half_minute
-            print( elapsed_time + " has passed" )
+            print( str( elapsed_time ) + " has passed" )
             
         print( "slideshow has been created" )
     driver.close()

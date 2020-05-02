@@ -521,62 +521,37 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     logger.log( 'begin file upload' )
     
-    curr_dir = CURR_DIR
+    client_secrets_path = BASE_DIR + "/client_secrets.json" 
+    credentials_path = BASE_DIR + "/credentials.txt"
     
-    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = CURR_DIR + "/client_secrets.json"
-
-    if __name__ == "__main__":
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = client_secrets_path
         
-        # Create google account authentication objects
-        gauth = GoogleAuth()
+    # Create google account authentication objects
+    gauth = GoogleAuth()
 
-        logger.log( 'client secrets 1' )
-        if os.path.exists( 'credentials.txt' ):
-            gauth.LoadCredentialsFile( 'credentials.txt' )
-
-        if gauth.credentials is None:
-            logger.log( 'local webserver branch' )
-            gauth.LocalWebserverAuth()
-
-        elif gauth.access_token_expired:
-            logger.log( 'refresh branch' )
-            gauth.Refresh()
-
-        else:
-            logger.log( 'authorize branch' )
-            gauth.Authorize()
-
-        logger.log( 'client secrets 2' )
-
-        gauth.SaveCredentialsFile( 'credentials.txt' )
-
-        drive = GoogleDrive( gauth )
+    logger.log( 'Looking for credentials' )
     
+    if os.path.exists( credentials_path ):
+        logger.log( 'found a credentials' )
+        gauth.LoadCredentialsFile( credentials_path )
+
+    if gauth.credentials is None:
+        logger.log( 'local connect to website' )
+        gauth.LocalWebserverAuth()
+
+    elif gauth.access_token_expired:
+        logger.log( 'refresh branch' )
+        gauth.Refresh()
+
     else:
-        # Create google account authentication objects
-        gauth = GoogleAuth()
+        logger.log( 'authorize branch' )
+        gauth.Authorize()
 
-        logger.log( 'client secrets 1' )
-        if os.path.exists( 'credentials.txt' ): # 'biodiversity_db_&_oauth/credentials.txt' ):
-            gauth.LoadCredentialsFile( 'credentials.txt' ) # 'biodiversity_db_&_oauth/credentials.txt' )
+    logger.log( 'creating connection to google drive' )
 
-        if gauth.credentials is None:
-            logger.log( 'local webserver branch' )
-            gauth.LocalWebserverAuth()
+    gauth.SaveCredentialsFile( credentials_path )
 
-        elif gauth.access_token_expired:
-            logger.log( 'refresh branch' )
-            gauth.Refresh()
-
-        else:
-            logger.log( 'authorize branch' )
-            gauth.Authorize()
-
-        logger.log( 'client secrets 2' )
-
-        gauth.SaveCredentialsFile( 'credentials.txt' ) #'biodiversity_db_&_oauth/credentials.txt' )
-
-        drive = GoogleDrive( gauth )
+    drive = GoogleDrive( gauth )
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to
