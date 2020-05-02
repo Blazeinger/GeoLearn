@@ -126,7 +126,7 @@ def biodiversity_climate_submit( request ):
     userEmail = request.POST.get( 'userEmail' )
     schoolName = request.POST.get( 'schoolName' )
 
-    print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
+    logger.log(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
     
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
@@ -192,7 +192,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
     if difficulty == "beginner":
         
-        
+        logger.log( "beginner slideshow selected" )
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
         assert csv_filename != None
 
@@ -224,6 +224,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
     elif difficulty == "advanced":
     
+        logger.log( "advanced slideshow selected" )
         while csv_filename == None:
             csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
 
