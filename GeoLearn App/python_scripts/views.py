@@ -132,12 +132,13 @@ def biodiversity_climate_submit( request ):
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
     bio_thread.start()
     
-    #bio_thread.join()
+    
     '''
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     '''
 
     return render( request, 'Spinner.html' )
+    bio_thread.join()
     '''
 
     # Feed the lat and long to our find animals script
