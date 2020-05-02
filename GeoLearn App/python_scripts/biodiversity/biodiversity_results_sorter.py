@@ -533,19 +533,26 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
 
 def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
 
-    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = CURR_DIR + "/client_secrets.json"
+    logger.log( 'begin file upload' )
+    
+    client_secrets_path = basest_dir + "/client_secrets.json" 
+    credentials_path = basest_dir + "/credentials.txt"
+    
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = client_secrets_path
+        
+    # Create google account authentication objects
+    gauth = GoogleAuth()
 
-    # connect to google drive 
-    gauth = GoogleAuth('../../biodiversity_db_&_oauth/settings.yaml' )
-    drive = GoogleDrive( gauth )
-
-    if os.path.exists( 'credentials.txt' ):
-        gauth.LoadCredentialsFile( 'credentials.txt' )
+    logger.log( 'Looking for credentials' )
+    
+    if os.path.exists( credentials_path ):
+        logger.log( 'found a credentials' )
+        gauth.LoadCredentialsFile( credentials_path )
+        gauth.SaveCredentialsFile( credentials_path )
 
     if gauth.credentials is None:
-        logger.log( 'local webserver branch' )
+        logger.log( 'local connect to website' )
         gauth.LocalWebserverAuth()
-        gauth.SaveCredentialsFile( 'credentials.txt' )
 
     elif gauth.access_token_expired:
         logger.log( 'refresh branch' )
@@ -555,7 +562,11 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
         logger.log( 'authorize branch' )
         gauth.Authorize()
 
-    logger.log( "after authorization" )
+    logger.log( 'creating connection to google drive' )
+
+    drive = GoogleDrive( gauth )
+    
+    logger.log( 'connection established' )
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 

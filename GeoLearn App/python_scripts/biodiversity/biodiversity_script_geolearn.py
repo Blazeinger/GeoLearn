@@ -538,6 +538,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
     if gauth.credentials is None:
         logger.log( 'local connect to website' )
         gauth.LocalWebserverAuth()
+        gauth.SaveCredentialsFile( credentials_path )
 
     elif gauth.access_token_expired:
         logger.log( 'refresh branch' )
@@ -549,15 +550,18 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     logger.log( 'creating connection to google drive' )
 
-    gauth.SaveCredentialsFile( credentials_path )
+    
 
     drive = GoogleDrive( gauth )
+    
+    logger.log( 'connection established' )
 
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to
     target_folder_name = target_dir
     target_folder_id = ''
 
+    logger.log( 'finding drive folder' )
     # Find the list of all of the files in the google drive
     file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
 
@@ -572,7 +576,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
             # Save the folder id
             target_folder_id = file_object[ 'id' ]
 
-    logger.log( "folder id: " + target_folder_id )
+    logger.log( "folder found. id: " + target_folder_id )
 
     upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
     upload_csv.SetContentFile( fileName + '.csv' )
