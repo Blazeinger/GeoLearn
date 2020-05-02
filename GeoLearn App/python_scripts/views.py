@@ -24,6 +24,7 @@ import time
 from django.shortcuts import redirect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+logger = enviro_logger()
 
 # Create your views here.
 '''
@@ -115,7 +116,6 @@ def climate_submit( request ):
 def biodiversity_climate_submit( request ):
 
     # restart the log file 
-    logger = enviro_logger()
     logger.restart()
 
     # Float values of longitude and latitude
