@@ -12,6 +12,7 @@ from PIL import Image
 import io
 import requests
 import os
+import time
 
 if __name__ == "__main__":
     from enviro_log import enviro_logger
@@ -68,6 +69,8 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
             # Have our webdriver connect to our crafted url
             # The url replaces the "search query" with our actual search query
             driver.get( search_url.format( search_query = image_search ))
+            
+            time.sleep( 1 )
     
             # Check that the connection to the website was successful 
             assert "Google" in driver.title
