@@ -535,7 +535,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         logger.log( 'found a credentials' )
         gauth.LoadCredentialsFile( credentials_path )
 
-    if gauth.credentials is None:
+    if gauth.credentials is None or gauth.access_token_expired:
         logger.log( 'local connect to website' )
         gauth.LocalWebserverAuth()
         gauth.SaveCredentialsFile( credentials_path )

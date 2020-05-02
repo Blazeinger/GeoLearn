@@ -128,13 +128,14 @@ def biodiversity_climate_submit( request ):
 
     print(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
 
-    '''
+    
     bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
     bio_thread.start()
     
     bio_thread.join()
     '''
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
+    '''
 
     return render( request, 'Spinner.html' )
     '''
