@@ -535,7 +535,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
         logger.log( 'found a credentials' )
         gauth.LoadCredentialsFile( credentials_path )
 
-    if gauth.credentials is None or gauth.access_token_expired:
+    if gauth.credentials is None:# or gauth.access_token_expired:
         logger.log( 'local connect to website' )
         gauth.LocalWebserverAuth()
         gauth.SaveCredentialsFile( credentials_path )
@@ -551,7 +551,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
     logger.log( 'creating connection to google drive' )
 
     gauth.SaveCredentialsFile( credentials_path )
-    os.chmod( credentials_path, 0o777)
+    #os.chmod( credentials_path, 0o777 )
 
     drive = GoogleDrive( gauth )
     
