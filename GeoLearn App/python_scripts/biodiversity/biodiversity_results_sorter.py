@@ -153,7 +153,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         # Initialize a list for the names of the images 
         image_names = []
         
-        write_csvs( basest_dir + "sorted_mammal_info.csv", basest_dir +  "/chosen_mammals_info.csv", animal_list, exemplary_animals )        
+        write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
         images_scraper( dir_name, exemplary_animals, image_titles )
         
