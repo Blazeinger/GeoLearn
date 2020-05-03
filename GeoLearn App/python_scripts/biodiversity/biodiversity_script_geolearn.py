@@ -210,7 +210,7 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
             
             if __name__ != "__main__":
-            	send_csv_to_drive( CURR_DIR + "/" + filename, target_dir )
+            	send_csv_to_drive( BASE_DIR + "/" + filename, filename, target_dir )
             #display_mammal_information( animals_within_boundaries, descriptors )
             logger.log( "number of animals" )
             logger.log( len( animals_within_boundaries ) )
@@ -517,7 +517,7 @@ def append_shape( animal_boundaries, currentShape ):
 			
 			
 
-def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
+def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_Bio" ):
 
     logger.log( 'begin file upload' )
     
@@ -577,7 +577,7 @@ def send_csv_to_drive( fileName, target_dir="slideInfo_Bio" ):
 
     logger.log( "folder found. id: " + target_folder_id )
 
-    upload_csv = drive.CreateFile({ fileName: fileName + '.csv', 'parents': [{'id': target_folder_id }] })
+    upload_csv = drive.CreateFile({ 'title': fileAlias + '.csv', 'parents': [{'id': target_folder_id }] })
     upload_csv.SetContentFile( fileName + '.csv' )
     upload_csv.Upload()
 
