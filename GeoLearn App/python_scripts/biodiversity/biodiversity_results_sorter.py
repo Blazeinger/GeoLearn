@@ -153,7 +153,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         # Initialize a list for the names of the images 
         image_names = []
         
-        write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
+        write_csvs( basest_dir + "/sorted_mammal_info.csv", basest_dir +  "/chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
         images_scraper( dir_name, exemplary_animals, image_titles )
         
@@ -297,6 +297,8 @@ def find_dobble_images( amount, animal_info, image_titles ):
 def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
 
      with open( sort_csv, mode='w', encoding='utf8' ) as csv_file: 
+     
+        os.chmod( sort_csv, 0o777)
         writer = csv.writer( csv_file )
         
         for animal in animal_list:
@@ -305,6 +307,8 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
      logger.log( "done sorting csv" )
      
      with open( chosen_csv, mode='w', encoding='utf8' ) as csv_file:
+     
+        os.chmod( chosen_csv, 0o777)
         writer = csv.writer( csv_file )
         
         for chosen_animal in chosen_animals:
