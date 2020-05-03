@@ -298,7 +298,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
 
      with open( basest_dir + "/" + sort_csv, mode='w', encoding='utf8' ) as csv_file: 
      
-        os.chmod( sort_csv, 0o777)
+        os.chmod( basest_dir + "/" + sort_csv, 0o777)
         writer = csv.writer( csv_file )
         
         for animal in animal_list:
@@ -308,7 +308,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
      
      with open( basest_dir + "/" + chosen_csv, mode='w', encoding='utf8' ) as csv_file:
      
-        os.chmod( chosen_csv, 0o777)
+        os.chmod( basest_dir + "/" + chosen_csv, 0o777)
         writer = csv.writer( csv_file )
         
         for chosen_animal in chosen_animals:
