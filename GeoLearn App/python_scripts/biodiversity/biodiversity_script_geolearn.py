@@ -542,6 +542,8 @@ def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_Bio" ):
 
     elif gauth.access_token_expired:
         logger.log( 'refresh branch' )
+        os.chmod( credentials_path, 0o777 )
+        
         gauth.Refresh()
 
     else:
@@ -551,7 +553,7 @@ def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_Bio" ):
     logger.log( 'creating connection to google drive' )
 
     gauth.SaveCredentialsFile( credentials_path )
-    #os.chmod( credentials_path, 0o777 )
+    
 
     drive = GoogleDrive( gauth )
     
