@@ -140,10 +140,26 @@ def initialize_webdriver():
 
     logger.log( 'connecting to webdriver' )
     
-    # Connect our python script to our firefox browser
-    return webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log' )
+    successful_connection = False
+    attempts = 0
+    
+    while not successful_connection:
+    
+        try:
+            # Connect our python script to our firefox browser
+            driver = webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log' )
+            logger.log( "successful webdriver connection" )
+            
+        except:
+        
+            assert attempts < 3
+            
+            time.sleep( 10 )
+            logger.log( "waiting 10 seconds to test connection" )
+            attempts += 1
+            successful_connection = True
 
-
+    return driver
 
 
 
