@@ -41,15 +41,9 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
         
     # Create our google image search url template 
     search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
-
-    # Prevent the actual browser from opening
-    options = Options()
-    options.add_argument( '--headless' )
-
-    logger.log( 'connecting to webdriver' )
     
     # Connect our python script to our firefox browser
-    driver = webdriver.Firefox( options=options )
+    driver = initialize_webdriver()
 
     if image_list != None and image_names != None:
 
@@ -147,7 +141,7 @@ def initialize_webdriver():
     logger.log( 'connecting to webdriver' )
     
     # Connect our python script to our firefox browser
-    return webdriver.Firefox( options=options )
+    return webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log' )
 
 
 
