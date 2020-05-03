@@ -149,6 +149,8 @@ def initialize_webdriver():
             # Connect our python script to our firefox browser
             driver = webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log' )
             logger.log( "successful webdriver connection" )
+            successful_connection = True 
+            return driver
             
         except:
         
@@ -157,9 +159,8 @@ def initialize_webdriver():
             time.sleep( 10 )
             logger.log( "waiting 10 seconds to test connection" )
             attempts += 1
-            successful_connection = True
 
-    return driver
+    
 
 
 
