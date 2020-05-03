@@ -210,7 +210,7 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
             
             if __name__ != "__main__":
-            	send_csv_to_drive( BASE_DIR + "/" + filename, target_dir )
+            	send_csv_to_drive( CURR_DIR + "/" + filename, target_dir )
             #display_mammal_information( animals_within_boundaries, descriptors )
             logger.log( "number of animals" )
             logger.log( len( animals_within_boundaries ) )
@@ -382,7 +382,7 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
     # Add the date and time to ensure that the file names are unique
     file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
 
-    file_name = BASE_DIR + "/" + file_wo_extension + ".csv" 
+    file_name = file_wo_extension + ".csv" 
 
     with open( file_name, mode='w', encoding="utf8" ) as csv_file:
         os.chmod(file_name, 0o777)
