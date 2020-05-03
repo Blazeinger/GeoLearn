@@ -296,7 +296,7 @@ def find_dobble_images( amount, animal_info, image_titles ):
         
 def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
 
-     with open( sort_csv, mode='w', encoding='utf8' ) as csv_file: 
+     with open( basest_dir + "/" + sort_csv, mode='w', encoding='utf8' ) as csv_file: 
      
         os.chmod( sort_csv, 0o777)
         writer = csv.writer( csv_file )
@@ -306,7 +306,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
             
      logger.log( "done sorting csv" )
      
-     with open( chosen_csv, mode='w', encoding='utf8' ) as csv_file:
+     with open( basest_dir + "/" + chosen_csv, mode='w', encoding='utf8' ) as csv_file:
      
         os.chmod( chosen_csv, 0o777)
         writer = csv.writer( csv_file )
@@ -594,7 +594,7 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
     
     # upload the CSV containing only the info on the chosen animals for images
     upload_csv = drive.CreateFile({'title': csv_name, 'parents': [{'id': target_folder_id }] })
-    upload_csv.SetContentFile( csv_name )
+    upload_csv.SetContentFile( basest_dir + "/" + csv_name )
     upload_csv.Upload()
     logger.log( "uploaded chosen_mammals csv" )
     
