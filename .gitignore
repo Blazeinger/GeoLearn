@@ -10,6 +10,7 @@ log_output.txt
 credentials.txt
 
 credentials.txt
+geckodriver.log
 *.jpg
 README.md~
 db.sqlite3

@@ -41,11 +41,13 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
         
     # Create our google image search url template 
     search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
-    
-    # Connect our python script to our firefox browser
-    driver = initialize_webdriver()
 
-    try: 
+    try:
+    
+        # Connect our python script to our firefox browser
+        driver = initialize_webdriver()
+
+        #driver.set_page_load_timeout(300)
 
         if image_list != None and image_names != None:
 
