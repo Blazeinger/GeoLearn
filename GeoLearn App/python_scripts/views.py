@@ -193,11 +193,14 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     if difficulty == "beginner":
         
         logger.log( "beginner slideshow selected" )
+        
+        
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
         assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
         chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
+        
         
         driver = webdriver.Firefox()
 

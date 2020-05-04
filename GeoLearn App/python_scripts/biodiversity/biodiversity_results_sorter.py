@@ -610,7 +610,7 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
             
         else:
-            upload_image.SetContentFile( "python_scripts/biodiversity/animal_images/" + image_name + ".jpg")
+            upload_image.SetContentFile( basest_dir + "/" + image_name + ".jpg")
         
         upload_image.Upload()
 	

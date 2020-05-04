@@ -45,88 +45,99 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     # Connect our python script to our firefox browser
     driver = initialize_webdriver()
 
+<<<<<<< HEAD
     driver.set_page_load_timeout(300)
 
     if image_list != None and image_names != None:
+=======
+    try: 
+>>>>>>> 7638a7ec6d7185f0460c68ac1c0475c5c196cbbb
 
-        # Create a list of the image names that were found successfully
-        successful_list = []
+        if image_list != None and image_names != None:
 
-        index = 0
+            # Create a list of the image names that were found successfully
+            successful_list = []
 
-        # Loop thorugh the image list
-        for image in image_list:
+            index = 0
 
-            logger.log( image[ 1 ][1] )
-            
-            # Change any spaces in the search query into pluses
-            image_search = correct_for_query_spaces( image[ 1 ][1] )
-    
-            # Have our webdriver connect to our crafted url
-            # The url replaces the "search query" with our actual search query
-            driver.get( search_url.format( search_query = image_search ))
-            
-            time.sleep( 1 )
-    
-            # Check that the connection to the website was successful 
-            assert "Google" in driver.title
-            assert "No results found." not in driver.page_source
-            
-            successful_list.append( retrieve_image( image[ 1 ][1], driver, directory_name, image_names[ index ] ))
+            # Loop thorugh the image list
+            for image in image_list:
 
-            index += 1
+                logger.log( image[ 1 ][1] )
+                
+                # Change any spaces in the search query into pluses
+                image_search = correct_for_query_spaces( image[ 1 ][1] )
+        
+                # Have our webdriver connect to our crafted url
+                # The url replaces the "search query" with our actual search query
+                driver.get( search_url.format( search_query = image_search ))
+                
+                time.sleep( 1 )
+        
+                # Check that the connection to the website was successful 
+                assert "Google" in driver.title
+                assert "No results found." not in driver.page_source
+                
+                successful_list.append( retrieve_image( image[ 1 ][1], driver, directory_name, image_names[ index ] ))
 
+                index += 1
+
+            driver.close()
+
+            return successful_list
+        
+    except:
+        logger.log( "images scraper crash" )
         driver.close()
-
-        return successful_list
-
-    driver.close()
-
-    ''' Retreive the URLs for the images we're searching for '''
-    #return retrieve_image_urls( animal_search, driver, directory_name, image_name  )
 
 
 
 
 def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=None ):
-    # Make sure that the directory we create and save to is a valid name
-    # Make sure what we name the image is a valid name
-    directory_name = dir_name
-    self_initialized_driver = False
 
-    logger.log( "image scraping start" )
-    
-    if animal_name == None:
-        return False
+    try:
+        # Make sure that the directory we create and save to is a valid name
+        # Make sure what we name the image is a valid name
+        directory_name = dir_name
+        self_initialized_driver = False
+
+        logger.log( "image scraping start" )
         
-    if directory_name == None:
-        directory_name = animal_search
-        
-    if driver == None:
-        self_initialized_driver = True 
-        driver = initailize_webdriver()
-        
-    if image_name == None: 
-        image_name = animal_name
-        
-    # Change any spaces in the search query into pluses
-    image_search = correct_for_query_spaces( animal_name )
-    
-    # Create our google image search url template 
-    search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
-    
-    # Have our webdriver connect to our crafted url
-    # The url replaces the "search query" with our actual search query
-    driver.get( search_url.format( search_query = image_search ))
-    
-    # Check that the connection to the website was successful 
-    assert "Google" in driver.title
-    assert "No results found." not in driver.page_source
+        if animal_name == None:
+            return False
             
-    retrieve_image( image_search, driver, directory_name, image_name )
-    
-    if self_initialized_driver:
+        if directory_name == None:
+            directory_name = animal_search
+            
+        if driver == None:
+            self_initialized_driver = True 
+            driver = initailize_webdriver()
+            
+        if image_name == None: 
+            image_name = animal_name
+            
+        # Change any spaces in the search query into pluses
+        image_search = correct_for_query_spaces( animal_name )
+        
+        # Create our google image search url template 
+        search_url = "https://www.google.co.in/search?q={search_query}&source=lnms&tbm=isch"
+        
+        # Have our webdriver connect to our crafted url
+        # The url replaces the "search query" with our actual search query
+        driver.get( search_url.format( search_query = image_search ))
+        
+        # Check that the connection to the website was successful 
+        assert "Google" in driver.title
+        assert "No results found." not in driver.page_source
+                
+        retrieve_image( image_search, driver, directory_name, image_name )
+        
+        if self_initialized_driver:
+            driver.close()
+            
+    except:
         driver.close()
+        logger.log( "single image scraper crash" )
         
     
 
@@ -152,7 +163,7 @@ def initialize_webdriver():
             logger.log( "waiting 10 seconds to test connection" )
             
             # Connect our python script to our firefox browser
-            driver = webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log' )
+            driver = webdriver.Firefox( options=options, log_path=basest_dir + '/geckodriver.log', executable_path='/usr/bin/geckodriver' )
             
             logger.log( "successful webdriver connection" )
             successful_connection = True 
@@ -179,105 +190,113 @@ def correct_for_query_spaces( search_query ):
 
 def retrieve_image( search_query, webdriver, dir_name, img_name ):
 
-    logger.log( "image_scraping function start" ) 
-    image_name = '' 
-    
-    # Variable that holds the number of images to fetch 
-    number_of_images_to_fetch = 1
-    index = 0
+    try:
 
-    # Scroll down the webpage to load more images
-    scroll_down( webdriver )
-
-    time.sleep( 5 )
-
-    # Save all of the html image elements from our google search
-    # 'rg_i' is the class name that the images have 
-    image_elements = webdriver.find_elements_by_class_name( 'rg_i' )
-
-    # Check if the directory that we want to put our iamges in already exists
-    if not os.path.exists( BASE_DIR + "/biodiversity/" + dir_name ):
-    
-       # If not, make that directory 
-        os.mkdir( BASE_DIR + "/biodiversity/" + dir_name )
-
-    ''' 
-    Loop through the image elements gathered and translate them to 
-    URLs and then to actual images 
-    '''
-    found_image_count = 0
-    attempt_count = 0
-    logger.log( "begin finding images" )
-    for element in image_elements:
-
+        logger.log( "image_scraping function start" ) 
+        image_name = '' 
         
-        attempt_count += 1 
+        # Variable that holds the number of images to fetch 
+        number_of_images_to_fetch = 1
+        index = 0
+
+        # Scroll down the webpage to load more images
+        scroll_down( webdriver )
+
+        time.sleep( 5 )
+
+        # Save all of the html image elements from our google search
+        # 'rg_i' is the class name that the images have 
+        image_elements = webdriver.find_elements_by_class_name( 'rg_i' )
         
-        try:
+        target_dir = basest_dir + "/" + dir_name
 
-            # Check if you've downloaded all the images you want
-            if found_image_count == number_of_images_to_fetch:
-                break
+        # Check if the directory that we want to put our iamges in already exists
+        if not os.path.exists( target_dir ):
+        
+           # If not, make that directory 
+            os.mkdir( target_dir )
 
-            # Click on the image you want to download 
-            element.click()
+        ''' 
+        Loop through the image elements gathered and translate them to 
+        URLs and then to actual images 
+        '''
+        found_image_count = 0
+        attempt_count = 0
+        logger.log( "begin finding images" )
+        for element in image_elements:
 
-            # Give the browser some time to catch up 
-            time.sleep( 2 )        
+            
+            attempt_count += 1 
+            
+            try:
 
-            # After clicking on the image, get the larger version 
-            found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
+                # Check if you've downloaded all the images you want
+                if found_image_count == number_of_images_to_fetch:
+                    break
 
-            # find the source of the image, it's url 
-            image_url = found_image.get_attribute( 'src' )
+                # Click on the image you want to download 
+                element.click()
 
-            logger.log( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
+                # Give the browser some time to catch up 
+                time.sleep( 2 )        
 
-            # Make sure that the image url is a valid source 
-            if 'http' in image_url:
+                # After clicking on the image, get the larger version 
+                found_image = webdriver.find_element_by_class_name( 'n3VNCb' )
 
-                logger.log( "successful image found" )
+                # find the source of the image, it's url 
+                image_url = found_image.get_attribute( 'src' )
 
-                # Download this image as a BytesIO object 
-                image_file = io.BytesIO( requests.get( image_url ).content )
+                logger.log( "attempt " + str( attempt_count ) + ": " + image_url[0:10]  )
 
-                # Convert our BytesIO object into an actual image
-                image = Image.open( image_file ).convert( 'RGB' )
+                # Make sure that the image url is a valid source 
+                if 'http' in image_url:
 
-                # Create the the name of this image we're downloaded
-                image_name = img_name + '.jpg'
+                    logger.log( "successful image found" )
 
-                logger.log( image_name )
+                    # Download this image as a BytesIO object 
+                    image_file = io.BytesIO( requests.get( image_url ).content )
 
-                # Save the path that we want to save the image to
-                # The directory will be the same name as the search query 
-                image_path = BASE_DIR + "/biodiversity/" + dir_name + '/' + image_name
+                    # Convert our BytesIO object into an actual image
+                    image = Image.open( image_file ).convert( 'RGB' )
 
-                # Save the image 
-                image.save( image_path, 'JPEG', quality=85 )
+                    # Create the the name of this image we're downloaded
+                    image_name = img_name + '.jpg'
 
-                found_image_count += 1
+                    logger.log( image_name )
 
-            # endif statement
+                    # Save the path that we want to save the image to
+                    # The directory will be the same name as the search query 
+                    image_path = target_dir + '/' + image_name
 
-        # end try block
+                    # Save the image 
+                    image.save( image_path, 'JPEG', quality=85 )
 
-        except:
-            logger.log( "couldn't find enhanced images" )
+                    found_image_count += 1
 
-        # end except block 
-              
-    # End for loop  loop
+                # endif statement
 
-    # close the web browser
-    #webdriver.close()
+            # end try block
 
-    if attempt_count > 3:
-        logger.log( "multiple attempts: " + search_query + "<=======" )
+            except:
+                logger.log( "couldn't find enhanced images" )
 
-    else:
-        logger.log( image_name )
-    return image_name
+            # end except block 
+                  
+        # End for loop  loop
+
+        # close the web browser
+        #webdriver.close()
+
+        if attempt_count > 3:
+            logger.log( "multiple attempts: " + search_query + "<=======" )
+
+        else:
+            logger.log( image_name )
+        return image_name
+        
+    except:
+        logger.log( "retrieve image crash" )
+        webdriver.close()
 
 
 
