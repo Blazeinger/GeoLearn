@@ -134,6 +134,10 @@ def biodiversity_climate_submit( request ):
     
     
     '''
+    
+    driver = initialize_webdriver()
+    return render( request, 'Spinner.html' )
+    
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
 
@@ -200,6 +204,8 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
         # Now, filter the animals to find which pictures we need to find
         #basic_image_finder( True, "animal_images", csv_filename )
+        
+        '''
         target_dir = BASE_DIR + "/python_scripts/biodiversity" 
         target_dir = target_dir.replace( "/", "//" )
 
@@ -207,7 +213,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         print( target )
 
         run([sys.executable, target, 'True', "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
-        
+        '''
         logger.log( "trying to webdrive for google script url" )
         driver = initialize_webdriver()
         logger.log( "successfully web drove" )
