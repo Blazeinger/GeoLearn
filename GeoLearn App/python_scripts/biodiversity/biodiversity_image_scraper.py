@@ -24,9 +24,11 @@ basest_dir = BASE_DIR.replace( "/python_scripts", "" )
 logger = enviro_logger()
 
 def main():
-    while True:
-        logger.log( "type animal name: " )
-        image_scraper( input(), "animal_images", "animals" )
+    
+    driver = initialize_webdriver()
+    
+    
+    single_image_scraper( "sonic the hedgehog", "sonic_hedgehog", "animal_images", driver )
 
 def images_scraper( dir_name=None, image_list=None, image_names=None ):
 
