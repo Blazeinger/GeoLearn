@@ -7,7 +7,7 @@ test.csv
 chosen_mammals_info.csv
 animals/ not/ found.csv
 log_output.txt
-
+credentials.txt
 
 credentials.txt
 *.jpg

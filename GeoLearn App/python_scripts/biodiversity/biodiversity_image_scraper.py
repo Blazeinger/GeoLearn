@@ -2,7 +2,7 @@
 # sudo apt-get install firefox-geckodriver
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 
 # pip3 install Pillow
@@ -142,8 +142,8 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
 def initialize_webdriver():
 
     # Prevent the actual browser from opening
-    options = Options()
-    options.add_argument( '--headless' )
+    options = FirefoxOptions()
+    options.headless = True
 
     logger.log( 'connecting to webdriver' )
     
