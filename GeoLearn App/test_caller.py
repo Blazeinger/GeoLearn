@@ -3,7 +3,7 @@ import sys
 from subprocess import run,PIPE
 
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
-TARGET_DIR = CURR_DIR.replace( "/", "//" )  + "//GeoLearn App" 
+TARGET_DIR = CURR_DIR.replace( "/", "//" )  + "//python_scripts" 
 
 print( TARGET_DIR + "//test.py" )
 
