@@ -26,9 +26,13 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 logger = enviro_logger()
 
-def main():
-    basic_image_finder( True, "animal_images", "mammal_info.csv" )
-    #advanced_image_finder( True, "animal_images", 'mammal_info.csv' )
+def main( upload_bool, dir_name, csv_name, difficulty ):
+
+    if difficulty == "beginner":
+        basic_image_finder( upload_bool, dir_name, csv_name )
+        
+    elif difficulty == "advanced":
+        advanced_image_finder( upload_bool, dir_name, csv_name )
     
 def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 

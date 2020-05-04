@@ -23,12 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
 logger = enviro_logger()
 
-def main():
+def main( dir_name, image_list, images_names ):    
     
     driver = initialize_webdriver()
     
-    
-    single_image_scraper( "sonic the hedgehog", "sonic_hedgehog", "animal_images", driver )
+    single_image_scraper( "sonic the hedgehog", "sahnic", "animal_images", driver )
 
 def images_scraper( dir_name=None, image_list=None, image_names=None ):
 

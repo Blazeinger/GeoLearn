@@ -199,8 +199,14 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
-        chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
-        
+        #basic_image_finder( True, "animal_images", csv_filename )
+        target_dir = BASE_DIR + "/biodiversity" 
+        target_dir = target_dir.replace( "/", "//" )
+
+        target = target_dir + "//biodiversity_results_sorter.py" 
+        print( target )
+
+        run([sys.executable, target, True, "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
         
         driver = webdriver.Firefox()
 
