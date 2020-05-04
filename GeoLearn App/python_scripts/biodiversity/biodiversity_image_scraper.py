@@ -45,6 +45,8 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
     # Connect our python script to our firefox browser
     driver = initialize_webdriver()
 
+    driver.set_page_load_timeout(300)
+
     if image_list != None and image_names != None:
 
         # Create a list of the image names that were found successfully
