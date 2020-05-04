@@ -209,7 +209,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         run([sys.executable, target, 'True', "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
         
         logger.log( "trying to webdrive for google script url" )
-        driver = webdriver.Firefox()
+        driver = initialize_webdriver()
         logger.log( "successfully web drove" )
 
         index = 0
