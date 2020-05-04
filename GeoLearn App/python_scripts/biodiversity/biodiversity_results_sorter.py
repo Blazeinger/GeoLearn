@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+import sys
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
@@ -26,13 +27,25 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 logger = enviro_logger()
 
-def main( upload_bool, dir_name, csv_name, difficulty ):
+def main():
+
+    upload_bool = sys.argv[1]
+    dir_name = sys.argv[2] 
+    csv_name = sys.argv[3]
+    difficulty = sys.argv[4]
+
+    if upload_bool == "True":
+        upload = True
+    else:
+        upload = False
 
     if difficulty == "beginner":
-        basic_image_finder( upload_bool, dir_name, csv_name )
+        logger.log( "beginner results chosen" )
+        basic_image_finder( upload, dir_name, csv_name )
         
     elif difficulty == "advanced":
-        advanced_image_finder( upload_bool, dir_name, csv_name )
+        logger.log( "advanced results chosen" )
+        advanced_image_finder( upload, dir_name, csv_name )
     
 def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
@@ -67,10 +80,10 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         
         
         # Find the smallest animal
-        exemplary_animals.append(( image_titles[2], animal_list[ len( animal_list)-1 ] ))
+        exemplary_animals.append(( image_titles[2], find_smallest_animal( 1, animal_list, exemplary_animals ) ))
 
         # Find the second smallest animal
-        exemplary_animals.append(( image_titles[3], animal_list[ len( animal_list ) - 2 ] ))
+        exemplary_animals.append(( image_titles[3], find_smallest_animal( 1, animal_list, exemplary_animals ) ))
         
 
         # Find the largest predator
@@ -537,7 +550,37 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
         
 
     return found_animal
+    
+    
+def find_smallest_animal( placement, animal_list, exemplary_animals, historic=False ):
+    
+    found_animal = False
+    placement_counter = placement
+    
+    for index in range( 1, len( animal_list ) + 1):
+    
+        reverse_index = -1 * index
+        
+        if historic:
+        
+            if animal_list[reverse_index][ 0 ] == 'historic' or animal_list[reverse_index][5] == 'Extinct':
             
+                placement_counter -= 1
+                
+                if placement_counter == 0:
+                
+                    found_animal = animal_list[reverse_index] 
+                    
+        else:
+            if animal_list[reverse_index][0] != 'historic' and animal_list[reverse_index][5] != 'Extinct' and not check_duplicate( animal_list[reverse_index], exemplary_animals ):
+                
+                placement_counter -= 1
+                
+                if placement_counter == 0:
+                
+                    found_animal = animal_list[reverse_index]
+    return found_animal        
+     
 
 def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
 

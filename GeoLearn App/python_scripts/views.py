@@ -200,15 +200,17 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
         # Now, filter the animals to find which pictures we need to find
         #basic_image_finder( True, "animal_images", csv_filename )
-        target_dir = BASE_DIR + "/biodiversity" 
+        target_dir = BASE_DIR + "/python_scripts/biodiversity" 
         target_dir = target_dir.replace( "/", "//" )
 
         target = target_dir + "//biodiversity_results_sorter.py" 
         print( target )
 
-        run([sys.executable, target, True, "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
+        run([sys.executable, target, 'True', "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
         
+        logger.log( "trying to webdrive for google script url" )
         driver = webdriver.Firefox()
+        logger.log( "successfully web drove" )
 
         index = 0
         
@@ -244,7 +246,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         '''
 		
     print( "redirected to slideshow creation url" )
-    return render( request, 'Spinner.html' )
+    #return render( request, 'Spinner.html' )
     
     
 

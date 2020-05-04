@@ -14,16 +14,16 @@ import requests
 import os
 import time
 
-if __name__ == "__main__":
+try:
     from enviro_log import enviro_logger
-else:
+except:
     from .enviro_log import enviro_logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
 logger = enviro_logger()
 
-def main( dir_name, image_list, images_names ):    
+def main():    
     
     driver = initialize_webdriver()
     
