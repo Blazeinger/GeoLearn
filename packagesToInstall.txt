@@ -1,0 +1,36 @@
+Things to install for testing/running; Linux Ubuntu.
+
+Webdriver and image scraping
+============================
+pip3 install selenium
+sudo apt-get install firefox-geckodriver
+
+Processing the images
+================================= 
+pip3 install Pillow
+
+Accessing the SQL server 
+====================================
+pip3 install mysql-connector
+
+Creating and analyzing the shape files
+====================================== 
+pip3 install shapely
+
+Accessing the chosen Google Drive
+=================================
+pip3 install pydrive
+
+Install Mozilla Firefox because the webdriver that gets the images online only works with Firefox
+=================================================================================================
+sudo apt-get install firefox
+
+Video conversion. *Only necessary for Climate Change Pres.*
+=========================================================
+pip3 install ffmpy
+sudo apt install ffmpeg pip3 install ffmpy
+
+Install this for earth engine api. *Only necessary for Climate Change Pres.*
+==================================
+first -> pip3 install earthengine-api
+then -> earthengine authenticate
