@@ -70,11 +70,6 @@ def disease( request ):
 	return render( request, 'disease.html' )
 
 
-
-
-
-
-
 def biodiversity_submit( request ):
         
 	# Fetch the longitude and latitude from the form on the slides page 
@@ -92,11 +87,6 @@ def biodiversity_submit( request ):
 	return render( request, 'Slides.html', {'message': output} )
 
 
-
-
-
-
-
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
 	lng = request.POST.get('long') 
@@ -107,10 +97,6 @@ def climate_submit( request ):
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
 	return render( request, 'Slides.html', {'message': out.stdout} )
-
-
-
-
 
 
 def biodiversity_climate_submit( request ):
@@ -135,6 +121,7 @@ def biodiversity_climate_submit( request ):
     
     '''
     
+    print("begin webdriver initialize")
     driver = initialize_webdriver()
     return render( request, 'Spinner.html' )
     

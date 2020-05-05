@@ -3,6 +3,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from pyvirtualdisplay import Display
 import time
 
 # pip3 install Pillow
@@ -143,10 +144,20 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
 
 
 def initialize_webdriver():
+    #import tempfile
+
+    #profile = tempfile.mkdtemp( ".selenium" )
 
     # Prevent the actual browser from opening
-    options = FirefoxOptions()
-    options.headless = True
+    options = webdriver.FirefoxOptions()
+    options.binary_location = '/usr/bin/firefox'
+    options.add_argument( 'headless' )
+    #options.headless = e
+    #options.add_argument( '--no-sandbox' )
+    options.add_argument( '--mute-audio' )
+
+    display = Display(visible=0, size=(800, 600))
+    display.start()
 
     logger.log( 'connecting to webdriver' )
     
@@ -172,8 +183,7 @@ def initialize_webdriver():
             attempts += 1
             logger.log( "attempts to connect webdriver: " + str( attempts ) )
 
-    
-
+    display.stop()
 
 
 def correct_for_query_spaces( search_query ):
