@@ -151,7 +151,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         basic_image_finder( True, "animal_images", csv_filename )
         
         logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver( False )
+        driver = initialize_webdriver()
         logger.log( "successfully web drove" )
         
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
