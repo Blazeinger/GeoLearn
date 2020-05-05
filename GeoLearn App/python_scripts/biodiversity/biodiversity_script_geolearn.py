@@ -25,60 +25,80 @@ ROWS_TO_ACCESS = 1
 	
 # The size of the area that we want to search for 
 # 1 about equals 70 miles  (69.4)
-SEARCH_RADIUS = 1
+SEARCH_RADIUS = 0.5
 
+# The path to where the file is, biodiversity
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
+
+# The path to the GeoLearn App directory
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
 
-
+# Logger to write commandline output to a text file for server testing
 logger = enviro_logger()
 
 def main():
 
+    # Path to the csv databases 
     db_path = ""
         
     # Our boolean that maintains the main loop 
     getting_info = True
 
+    # Initialize lists that will contain the animal information
     descriptors = []
     animal_boundaries = []
     animal_info = []
 
+    # Retrieve the database information from the local CSV databases
     logger.log( "beginning local db read" )
     get_mammal_db( db_path, animal_info, animal_boundaries )                           
     logger.log( "finished reading database" )
 
+    # While running this as a main, allow the user to keep inputting values
     while getting_info:
 
+        # Create an empty list that will contain all the animals close to the search area
         animals_within_boundaries = []
+        
+        # As the user for a latitude and longitude
         logger.log( "Enter latitude and longitude (comma separated) or \"exit\" to exit: " )
         response = input()
+        
+        # Check if the user wants to exit the program 
         if response.lower() == "exit":
             getting_info = False
-
+        
+        # Check user wants to search for a specific animal for testing purposes
         elif response.lower() == "search":
 
-            # Find the index of the animal we want to find
+            # Ask the user for the animal they want to search for
             logger.log( "Enter the binomial of the animal: " ) 
             response = input()
+            
+            # Find the index of the animal we want to find
             animal_index = find_animal_index_by_name( response, animal_info )
 
+            # If 0 is returned as the animal index, there was no match for the input binomial 
             if animal_index == 0:
                 logger.log( "could not find animal" )
                 continue
 
+            # Otherwise, we have the index for the animal we're searching for
             if animal_index != 0:
 
-                # Compare it to a lat long
+                # Ask the user for coordinates
                 logger.log( "Enter a latitude and longitude" )
                 coordinates = input()
                 coordinates = coordinates.split( "," )
                         
+                # Convert the coordinates to workable values
                 longitude = float( coordinates[ 1 ] )
                 latitude = float( coordinates[ 0 ] )
 
+                # Print the index the animal was found at in the database
                 logger.log( "animal at index: " + str( animal_index ) )
-                # Print if it was within those coordinates
+                
+                # Check if the animal we're searching for is within the coordinate we've searched for
                 search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
                                 
                 if not search_result:

@@ -143,6 +143,7 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
 
 
 
+
 def initialize_webdriver():
     #import tempfile
 

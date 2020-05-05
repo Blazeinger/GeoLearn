@@ -3,7 +3,12 @@ from selenium import webdriver
 #from pyvirtualdisplay import Display
 
 import time
-from python_scripts.biodiversity.enviro_log import enviro_logger
+try:
+    from python_scripts.biodiversity.enviro_log import enviro_logger
+
+except:
+    from biodiversity.enviro_log import enviro_logger
+from biodiversity.biodiversity_image_scraper import initialize_webdriver
 
 
 logger = enviro_logger()
@@ -23,12 +28,19 @@ time.sleep( 5 )
 
 attempts = 3
 while( attempts > 0 ):
+<<<<<<< HEAD
 #	try:
 		driver = webdriver.Firefox( options=cmd_options, executable_path = '/usr/bin/geckodriver' )
 		executor_url = driver.command_executor._url
 		session_id = driver.session_id
 		driver.get("http://www.google.com/")
 
+=======
+	try:
+		#driver = webdriver.Firefox(options=cmd_options, executable_path = '/usr/bin/geckodriver' )
+		driver = initialize_webdriver()
+		driver.get("https://www.google.com/")
+>>>>>>> 9128e2d8c6c530fa162ea636e49147a0fc74dcef
 		logger.log (driver.title)
 		logger.log(executor_url)
 		logger.log( session_id )

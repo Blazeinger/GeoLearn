@@ -237,7 +237,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
             chosen_animals.append(( image_name, found_animal ))
 
-    # Find 6 additional herbivores
+    # Find 6 additional historic herbivores
     for placement in range( 1, 7 ):
 
         found_animal = find_herbivore( 1, animal_list, chosen_animals, historic=True )
@@ -249,7 +249,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
             image_titles.append( image_name )
             chosen_animals.append(( image_name, found_animal ))
 
-    # Find 6 additional predators
+    # Find 6 additional historic predators
     for placement in range( 1, 7 ):
 
         found_animal = find_predator( 1, animal_list, chosen_animals, historic=True )
@@ -280,13 +280,23 @@ def find_dobble_images( amount, animal_info, image_titles ):
 
     index = 0
     
+    round_trip = False
+    
     for dobble_image_count in range( 0, amount ):
+    
+        duplicate_check = True
+    
+        if index == ( len( animal_info ) - 1 ):
+                    
+            index = 0
+            
+            round_trip = True
         
+        
+        print( str( index ) + "/" + str( len( animal_info )) )
         animal = animal_info[ index ]
             
-        duplicate_check = True
-            
-        while( duplicate_check ):
+        while( duplicate_check and not round_trip ):
             
             if check_duplicate( animal, dobble_animals ):
                     
@@ -304,9 +314,7 @@ def find_dobble_images( amount, animal_info, image_titles ):
 
         index += 1
 
-        if index == len( animal_info ):
-                    
-            index = 0
+        
         
     return dobble_animals
         
@@ -415,6 +423,57 @@ def create_list_from_csv( csv_file ):
 
     # Return the list
     return animal_list
+    
+    
+    
+
+
+'''
+find template( amount_to_find, animal_list, exemplary_animals, historic, diet ):
+    
+    Create a list of creatures to be found
+    
+    Create a blank list of duplicates
+    
+    Create a variable to keep count of new animals added 
+    
+    Create the list of creatures 
+        
+        Define the chosen animal template
+        
+        Check if it's historic
+        
+            Check if it's the type of animal we want (diet)
+            
+                Check if the animal is a duplicate
+                
+                    Add it to the duplicate list
+                
+                otherwise
+                
+                    Add it to the list we're going to return 
+        
+        Otherwise, it's current
+        
+            Check if it's the type of animal we want (diet)
+            
+                Check if the animal is a duplicate
+                
+                    Add it to the duplicate list 
+                
+                Othwise
+                
+                    Add it to the list we're going to return 
+        
+    Purge duplicates if we need to 
+    
+    Return them to be extended upon
+'''
+    
+    
+    
+    
+    
 
 def find_predator( placement, animal_list, exemplary_animals, historic=False ):
 
@@ -425,7 +484,7 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
     
         if historic:
         
-            if animal[0] == "historic" or animal[5] == "Extinct":# and not check_duplicate( animal, exemplary_animals ):
+            if animal[0] == "historic":# and not check_duplicate( animal, exemplary_animals ):
             
                 if animal[ DIET ] == "carnivore":
             
@@ -437,7 +496,7 @@ def find_predator( placement, animal_list, exemplary_animals, historic=False ):
                         
         else:
 
-            if animal[ 0 ] != "historic" and animal[5] != "Extinct": 
+            if animal[ 0 ] != "historic": 
 
                 # Check if the animal is a predator
                 if animal[ DIET ] == "carnivore" and not check_duplicate( animal, exemplary_animals ):
@@ -459,7 +518,7 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
     
         if historic:
         
-            if animal[0] == "historic" or animal[5] == "Extinct": #and not check_duplicate( animal, exemplary_animals ):
+            if animal[0] == "historic": #and not check_duplicate( animal, exemplary_animals ):
             
                 if animal[ DIET ] == "herbivore":
             
@@ -471,7 +530,7 @@ def find_herbivore( placement, animal_list, exemplary_animals, historic=False ):
                         
         else:
     
-            if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            if animal[ 0 ] != "historic" and not check_duplicate( animal, exemplary_animals ):
             
                 if animal[ DIET ] == "herbivore":
                 
@@ -489,7 +548,7 @@ def find_non_predator( placement, animal_list, exemplary_animals, historic=False
     
         if historic:
         
-            if animal[ 0 ] != "historic" and animal[5] != "Extinct": # and not check_duplicate( animal, exemplary_animals ):
+            if animal[ 0 ] != "historic": # and not check_duplicate( animal, exemplary_animals ):
         
                 if animal[ DIET ] == "herbivore" or animal[ DIET ] == "omnivore":
                 
@@ -501,7 +560,7 @@ def find_non_predator( placement, animal_list, exemplary_animals, historic=False
                         
         else:
             
-            if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+            if animal[ 0 ] != "historic" and not check_duplicate( animal, exemplary_animals ):
         
                 if animal[ DIET ] == "herbivore" or animal[ DIET ] == "omnivore":
                 
@@ -526,7 +585,7 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
             if historic:
                 
                 # Check if the animal is historic
-                if animal[ 0 ] == "historic" or animal[5] == "Extinct": # and not check_duplicate( animal, exemplary_animals ):
+                if animal[ 0 ] == "historic": # and not check_duplicate( animal, exemplary_animals ):
 
                     placement_counter -= 1
                     
@@ -538,7 +597,7 @@ def find_large_animal( placement, animal_list, exemplary_animals, historic=False
             else:
 
                 # Check if the animal is historic
-                if animal[ 0 ] != "historic" and animal[5] != "Extinct" and not check_duplicate( animal, exemplary_animals ):
+                if animal[ 0 ] != "historic" and not check_duplicate( animal, exemplary_animals ):
 
                     placement_counter -= 1
                     
@@ -563,7 +622,7 @@ def find_smallest_animal( placement, animal_list, exemplary_animals, historic=Fa
         
         if historic:
         
-            if animal_list[reverse_index][ 0 ] == 'historic' or animal_list[reverse_index][5] == 'Extinct':
+            if animal_list[reverse_index][ 0 ] == 'historic':
             
                 placement_counter -= 1
                 
@@ -572,7 +631,7 @@ def find_smallest_animal( placement, animal_list, exemplary_animals, historic=Fa
                     found_animal = animal_list[reverse_index] 
                     
         else:
-            if animal_list[reverse_index][0] != 'historic' and animal_list[reverse_index][5] != 'Extinct' and not check_duplicate( animal_list[reverse_index], exemplary_animals ):
+            if animal_list[reverse_index][0] != 'historic' and not check_duplicate( animal_list[reverse_index], exemplary_animals ):
                 
                 placement_counter -= 1
                 
@@ -657,7 +716,7 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
             upload_image.SetContentFile( "animal_images/" + image_name + ".jpg")
             
         else:
-            upload_image.SetContentFile( basest_dir + "/" + image_name + ".jpg")
+            upload_image.SetContentFile( basest_dir + '/animal_images/'+ image_name + ".jpg")
         
         upload_image.Upload()
 	
