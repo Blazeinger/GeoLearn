@@ -1,32 +1,3 @@
-Things to install for Biodiversity
+This is the main branch for the EnviroSlides application developed by team GeoLearn for Capstone 2020. Code currently on the Amazon EC2 instance. Please contact Dr. Chris Doughty at the SICCS building at Northern Arizona University for further information.
 
-     These are for the webdriver and image scraping
-pip3 install selenium
-	sudo apt-get install firefox-geckodriver
-
-     This is for processing the images 
-pip3 install Pillow
-
-     This is for accessing the sql server 
-pip3 install mysql-connector
-
-     This is for creating and analyzing the shape files 
-pip3 install shapely
-
-     This is for accessing the chosen Google Drive
-pip3 install pydrive
-
-     install Mozilla Firefox because the webdriver that gets the images online only works with Firefox
-
-	install this for the Chrome Driver
-pip3 install chromedriver-py
-
-pip3 install ffmpy
-
-	install this for video conversion
-	
-sudo apt install ffmpeg pip3 install ffmpy
-
-	install this for earth engine code
-pip3 install earthengine-api
-->earthengine authenticate
+The documents and more info can be found on our [team website](https://www.cefns.nau.edu/capstone/projects/CS/2020/GeoLearn-S20/index.html)
