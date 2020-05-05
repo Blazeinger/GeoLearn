@@ -3,15 +3,12 @@ from django.http import HttpResponse
 from selenium import webdriver
 ## from .models import Post
 
-if __name__ == "__main__":
-    True
 
-else:
-    from .biodiversity.biodiversity_script_geolearn import find_animals_script
-    from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
-    from .biodiversity.biodiversity_results_sorter import basic_image_finder
-    from .biodiversity.biodiversity_results_sorter import advanced_image_finder
-    from .biodiversity.enviro_log import enviro_logger
+from .biodiversity.biodiversity_script_geolearn import find_animals_script
+from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
+from .biodiversity.biodiversity_results_sorter import basic_image_finder
+from .biodiversity.biodiversity_results_sorter import advanced_image_finder
+from .biodiversity.enviro_log import enviro_logger
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
@@ -69,12 +66,6 @@ def about( request ):
 def disease( request ):
 	return render( request, 'disease.html' )
 
-
-
-
-
-
-
 def biodiversity_submit( request ):
         
 	# Fetch the longitude and latitude from the form on the slides page 
@@ -91,12 +82,6 @@ def biodiversity_submit( request ):
 	output = csv_filename 
 	return render( request, 'Slides.html', {'message': output} )
 
-
-
-
-
-
-
 def climate_submit( request ):
 	lat = request.POST.get('lat') 
 	lng = request.POST.get('long') 
@@ -107,11 +92,6 @@ def climate_submit( request ):
 	#time_lapse(lat, lng)
 	output = "climate change script run successfully"
 	return render( request, 'Slides.html', {'message': out.stdout} )
-
-
-
-
-
 
 def biodiversity_climate_submit( request ):
 
@@ -129,11 +109,7 @@ def biodiversity_climate_submit( request ):
     logger.log(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
     
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
-    return render( request, 'Spinner.html' )
-    
-    
-
-
+    return render( request, 'Spinner.html' )   
 
 def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
     
@@ -158,9 +134,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( app_script_url, driver )
-
-                                      
+        activate_google_script_url( app_script_url, driver )                    
 
     elif difficulty == "advanced":
     
@@ -181,9 +155,6 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         activate_google_script_url( app_script_url, driver )
 		
     print( "redirected to slideshow creation url" )
-    
-    
-
 
 def activate_google_script_url( app_script_url, driver ):
 
@@ -266,9 +237,6 @@ def activate_google_script_url( app_script_url, driver ):
     finally:
         driver.close()
 
-
-if __name__ == "__main__":
-    biodiversity_thread( -111, 35, "beginner", "joshusttenakhongva@gmail.com", "2:00 test" )
 
 
 
