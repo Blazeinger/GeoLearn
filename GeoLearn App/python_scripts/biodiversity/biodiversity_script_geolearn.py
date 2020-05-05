@@ -25,7 +25,7 @@ ROWS_TO_ACCESS = 1
 	
 # The size of the area that we want to search for 
 # 1 about equals 70 miles  (69.4)
-SEARCH_RADIUS = 1
+SEARCH_RADIUS = 0.5
 
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )

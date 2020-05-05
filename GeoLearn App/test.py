@@ -2,6 +2,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium import webdriver
 import time
 from biodiversity.enviro_log import enviro_logger
+from biodiversity.biodiversity_image_scraper import initialize_webdriver
 
 
 logger = enviro_logger()
@@ -17,7 +18,8 @@ time.sleep( 10 )
 attempts = 3
 while( attempts > 0 ):
 	try:
-		driver = webdriver.Firefox(options=cmd_options, executable_path = '/usr/bin/geckodriver' )
+		#driver = webdriver.Firefox(options=cmd_options, executable_path = '/usr/bin/geckodriver' )
+		driver = initialize_webdriver()
 		driver.get("https://www.google.com/")
 		logger.log (driver.title)
 

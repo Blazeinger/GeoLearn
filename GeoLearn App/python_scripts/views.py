@@ -127,64 +127,11 @@ def biodiversity_climate_submit( request ):
     schoolName = request.POST.get( 'schoolName' )
 
     logger.log(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
-
-    '''
-    bio_thread = threading.Thread( target=biodiversity_thread, args=( longitude, latitude, difficulty, userEmail, schoolName, ) )
-    #bio_thread.start()
-    
-    
-    '''
-    
-    driver = initialize_webdriver()
-    return render( request, 'Spinner.html' )
     
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
-    
-
     return render( request, 'Spinner.html' )
-    bio_thread.join()
-    '''
-
-    # Feed the lat and long to our find animals script
-    # Now, we have the filename of the csv that contains the animal data
-    csv_filename = None
-
-    if difficulty == "beginner":
-        
-        
-        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
-        assert csv_filename != None
-
-        # Now, filter the animals to find which pictures we need to find
-        chosen_csv_name = basic_image_finder( True, "animal_images", csv_filename )
-        
-        driver = webdriver.Firefox()
-
-        index = 0
-        
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
-        
-        activate_google_script_url( difficulty, userEmail, schoolName, driver )
-
-                                      
-
-    elif difficulty == "advanced":
     
-        while csv_filename == None:
-            csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
-
-        advanced_image_finder( True, "animal_images", csv_filename )
-
-    '''
-    #Insert app script url stuff here, Kaitlyn
-    '''
-		
-    print( "redirected to slideshow creation url" )
-    return render( request, 'Spinner.html' )
-    '''
+    
 
 
 
@@ -198,74 +145,47 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         logger.log( "beginner slideshow selected" )
         
-        
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
-        assert csv_filename != None
 
         # Now, filter the animals to find which pictures we need to find
-        #basic_image_finder( True, "animal_images", csv_filename )
+        basic_image_finder( True, "animal_images", csv_filename )
         
-        '''
-        target_dir = BASE_DIR + "/python_scripts/biodiversity" 
-        target_dir = target_dir.replace( "/", "//" )
-
-        target = target_dir + "//biodiversity_results_sorter.py" 
-        print( target )
-
-        run([sys.executable, target, 'True', "animal_images", csv_filename, difficulty],  shell=False, stdout=PIPE)
-        '''
         logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver()
+        driver = initialize_webdriver( False )
         logger.log( "successfully web drove" )
-
-        index = 0
         
-        '''
-        with open( chosen_csv_name, encoding="utf8" ) as csv_file:
-            curr_reader = csv.reader( csv_file )
-
-            for animal in curr_reader:
-                single_image_scraper( animal[2], animal[0], "animal_images", webdriver )
-
-                index += 1
-        '''
-        
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHt"
-        app_script_url += "Kbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( difficulty, userEmail, schoolName, driver )
+        activate_google_script_url( app_script_url, driver )
 
                                       
 
     elif difficulty == "advanced":
     
         logger.log( "advanced slideshow selected" )
-        while csv_filename == None:
-            csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioAdv" )
+        
+        csv_filename = find_animals_script( latitude, longitude, 'slideInfo_BioAdv' )
 
         advanced_image_finder( True, "animal_images", csv_filename )
-
-        '''
-        #Insert app script url stuff here, Kaitlyn
-        '''
+        
+        logger.log( "trying to webdrive for google script url" )
+        driver = initialize_webdriver()
+        logger.log( "successfully web drove" )
+        
+        app_script_url = "https://script.google.com/macros/s/AKfycbx0Kd8n0uDVH0WIJ1PUiDRjK958hZbXrtXMUVJ7j74g/dev?userEmail="
+        app_script_url += userEmail + "&schoolName="
+        app_script_url += schoolName
+        
+        activate_google_script_url( app_script_url, driver )
 		
     print( "redirected to slideshow creation url" )
-    #return render( request, 'Spinner.html' )
     
     
 
 
-def activate_google_script_url( difficulty, userEmail, schoolName, driver ):
-    
-    if difficulty == "beginner":
-        
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail=" + userEmail + "&schoolName=" + schoolName
-        
-    elif difficulty == "advanced": 
-    
-        ''' Insert url here '''
+def activate_google_script_url( app_script_url, driver ):
 
     driver.get( app_script_url )
     
@@ -274,72 +194,77 @@ def activate_google_script_url( difficulty, userEmail, schoolName, driver ):
     time.sleep( 5 )
     
     # Check if the url directs to a sign-in screen 
-    #try:
-    print( "finding sign-in screen" )
-    page_title = driver.find_element_by_tag_name( "title" )
-        
-    print( "on sign-in screen" )
-        
-    if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
-        
-        print( "totally was sign-in screen" )
-        on_signin_screen = True
-        
-    #except:
-    #    print( "wasn't sign-in screen" )
-    
-    # sign into the email 
-    if on_signin_screen:
-        
-        # Fill in email
-        
-        ## find the login area 
-        text_area = driver.find_element_by_id( 'identifierId' )
-        
-        ## click on it
-        text_area.click()
-        
-        ## fill it in
-        text_area.send_keys( "geolearnweb@gmail.com" )
-        
-        ## find the submit button 
-        submit_button = driver.find_element_by_id( 'identifierNext' )
-        
-        ## click on the submit button 
-        submit_button.click()
-        
-        time.sleep( 1 )
-        
-        # Fill in the password
-        
-        ## find the text area
-        text_area = driver.find_element_by_name( 'password' )
-        
-        ## click on it
-        text_area.clear() #click()
-        
-        ## fill it in
-        text_area.send_keys( "Capstone2020" )
-        
-        ## find the submit button 
-        submit_button = driver.find_element_by_id( 'passwordNext' )
-        
-        ## click on the submit button 
-        submit_button.click()
-        
-        # Wait 2 minutes for the slideshow to be created
-        
-        ## Let the user know 
-        print( "waiting 2.5 minutes for slideshow to be created" )
-        
-        ## wait
-        for half_minute in range( 1, 6 ):
-            time.sleep( 30 )
-            elapsed_time = 30 * half_minute
-            print( str( elapsed_time ) + " has passed" )
+    try:
+        print( "finding sign-in screen" )
+        page_title = driver.find_element_by_tag_name( "title" )
             
-        print( "slideshow has been created" )
-    driver.close()
+        print( "on sign-in screen" )
+            
+        if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
+            
+            print( "totally was sign-in screen" )
+            on_signin_screen = True
+            
+    except:
+        print( "not on the sign-in screen" )
+        
+    try:    
+        # sign into the email 
+        if on_signin_screen:
+            
+            time.sleep( 5 )
+            
+            # Fill in email
+            
+            ## find the login area 
+            text_area = driver.find_element_by_id( 'identifierId' )
+            
+            ## click on it
+            text_area.click()
+            
+            ## fill it in
+            text_area.send_keys( "geolearnweb@gmail.com" )
+            
+            ## find the submit button 
+            submit_button = driver.find_element_by_id( 'identifierNext' )
+            
+            ## click on the submit button 
+            submit_button.click()
+            
+            time.sleep( 5 )
+            
+            # Fill in the password
+            
+            ## find the text area
+            text_area = driver.find_element_by_name( 'password' )
+            
+            ## click on it
+            text_area.clear() #click()
+            
+            ## fill it in
+            text_area.send_keys( "Capstone2020" )
+            
+            ## find the submit button 
+            submit_button = driver.find_element_by_id( 'passwordNext' )
+            
+            ## click on the submit button 
+            submit_button.click()
+            
+            # Wait 2 minutes for the slideshow to be created
+            
+            ## Let the user know 
+            print( "waiting 3 minutes for slideshow to be created" )
+            
+            ## wait
+            for half_minute in range( 1, 7 ):
+                time.sleep( 30 )
+                elapsed_time = 30 * half_minute
+                print( str( elapsed_time ) + " has passed" )
+                
+            print( "slideshow has been created" )
+            
+    finally:
+        driver.close()
 
 
 if __name__ == "__main__":

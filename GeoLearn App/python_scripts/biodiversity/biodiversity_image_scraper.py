@@ -142,7 +142,7 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
 
 
 
-def initialize_webdriver():
+def initialize_webdriver( headless_bool=True):
 
     # Prevent the actual browser from opening
     options = FirefoxOptions()
