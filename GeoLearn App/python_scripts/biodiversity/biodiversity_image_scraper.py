@@ -46,7 +46,7 @@ def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
 
     logger.log( "opening csv" )
     # Open the csv file 
-    with open( chosen_csv, encoding='utf8' ) as csv_file:
+    with open( basest_dir + "/" + chosen_csv, encoding='utf8' ) as csv_file:
 
         
         animal_reader = csv.reader( csv_file, delimiter=',' )
