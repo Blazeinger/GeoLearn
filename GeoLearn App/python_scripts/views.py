@@ -99,6 +99,12 @@ def biodiversity_climate_submit( request ):
     # restart the log file 
     logger.restart()
 
+    latitude = float( request.POST.get( 'Latitude' ) )
+    longitude = float( request.POST.get( 'Longitude' ) )
+    difficulty = request.POST.get( 'difficulty' )
+    userEmail = request.POST.get( 'userEmail' )
+    schoolName = request.POST.get( 'schoolName' )
+
     app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
     return redirect( app_script_url ) 
