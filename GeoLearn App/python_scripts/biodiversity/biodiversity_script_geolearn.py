@@ -101,28 +101,39 @@ def main():
                 # Check if the animal we're searching for is within the coordinate we've searched for
                 search_result = checkCoordinates_in_animalInfo( longitude, latitude, animal_boundaries[ animal_index ], SEARCH_RADIUS )
                                 
+                # Tell the user if the animal was found in that location or not 
                 if not search_result:
                     logger.log( "it was not there" )
                     
                 else:
                     logger.log( "animal was on that" )
                     
+                # Manually create a search area polygon that we can use to find the distance between the search area and the animal boundary
                 origin_point = Point( longitude, latitude )
+                # Make the search area radius the same as the regular search radius
                 search_area = origin_point.buffer( SEARCH_RADIUS )
 
+                # Let the user know how many boundaries the animal has 
                 logger.log( "boundary count: " + str( len( animal_boundaries[ animal_index ] )) )
                                 
+                # For every boundary that the animal has, print the distance between it and the search area
+                # Loop through each individual boundary and print the values
                 for boundary in animal_boundaries[ animal_index ]:
                     logger.log( "        {}".format( list(boundary.bounds) ))
                     logger.log( "    " + str( boundary.distance( search_area )) )
+                    
+            # Otherwise, the animal could not be found
             else:
                 logger.log( "Could not find animal" )
 
+        # Check if the user wants to check the historic animal information 
         elif response.lower() == "hist" or response.lower() == "hist full": 
                 
+            # Check if the user wants the full historic information
             if response.lower() == "hist full":
                 full_output = True
                 
+            # Otherwise, assume they want only the historic info around the search area
             else:
                 full_output = False
                         
@@ -144,37 +155,49 @@ def main():
             # intersects with an animal's polygon object that represents its habitat
             search_polygon = Polygon( list( search_area.exterior.coords ) )
 
+            # Loop through all the animals
             for index in range( len( animal_info )):
                                 
+                # Make sure they're all historic 
                 if animal_info[ index ][0] == "historic":
                                 
+                    # Let the user know the name of the animal 
                     logger.log( "{} bounds: ".format( animal_info[ index ][1] ) )
                                         
+                    # Loop through the boundaries for the animal 
                     for boundary in animal_boundaries[ index ]:
                                         
+                        # Print the distance between the search area and the boundary if it's less than 30 or if we want all the information
                         if boundary.distance( search_area ) < 30 or full_output:
                                                 
                             logger.log( "        {}".format( list(boundary.bounds) ))
                             logger.log( "    " + str( boundary.distance( search_polygon )) )
-                            
+        
+        # Otherwise, assume we're running normally and checking animals within the search area
         else:
-                                
+            
+            # Be able to take in invalid input without crashing when running as main 
             try:
+            
+                # Take the users' response and convert it to latitude and longitude
                 response = response.split( "," )
                         
                 latitude = float( response[ 0 ] )
                 longitude = float( response[ 1 ] )
                 
-                difficulty = input( "(b)asic or (a)dvanced?: " )
+                # Determine the difficulty of the slideshow, so we know which google drive folder to upload to
+                difficulty = input( "(b)eginner or (a)dvanced?: " )
                 
+                # Change the target google drive directory based on input and let the user know
                 if difficulty.lower() == "b":
                     target_dir = "slideInfo_Bio"
-                    logger.log( "basic presentation selected" )
+                    logger.log( "beginner presentation selected" )
                     
                 elif difficulty.lower() == "a":
                     target_dir = "slideInfo_BioAdv"
                     logger.log( "advanced presentation selected" )
                     
+                # If invalid input, do the beginner presentation by default
                 else:
                     target_dir = "slideInfo_Bio" 
                     logger.log( "default selected, basic" )

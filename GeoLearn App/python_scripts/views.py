@@ -5,7 +5,6 @@ from selenium import webdriver
 
 
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
-from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
 from .biodiversity.biodiversity_results_sorter import advanced_image_finder
 from .biodiversity.enviro_log import enviro_logger
@@ -108,14 +107,25 @@ def biodiversity_climate_submit( request ):
 
     logger.log(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
     
-    biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
-    return render( request, 'Spinner.html' )   
+    app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
+    
+    return redirect( app_script_url ) 
+    
+    
+    
+     
 
 def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
     
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
+    
+    app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+    app_script_url += userEmail + "&schoolName="
+    app_script_url += schoolName
+       
+    return app_script_url
 
     if difficulty == "beginner":
         
@@ -126,15 +136,11 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
-        logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver( False )
-        logger.log( "successfully web drove" )
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( app_script_url, driver )                    
+        return app_script_url
 
     elif difficulty == "advanced":
     
@@ -144,17 +150,18 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
         advanced_image_finder( True, "animal_images", csv_filename )
         
-        logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver()
-        logger.log( "successfully web drove" )
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbx0Kd8n0uDVH0WIJ1PUiDRjK958hZbXrtXMUVJ7j74g/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( app_script_url, driver )
-		
-    print( "redirected to slideshow creation url" )
+        return app_script_url
+        
+        
+        
+        
+        
+        
+        
 
 def activate_google_script_url( app_script_url, driver ):
 
