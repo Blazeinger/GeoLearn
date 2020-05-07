@@ -6,10 +6,10 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
 if __name__ == "__main__":
-    from biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
+    from biodiversity_image_scraper import images_scraper
     from enviro_log import enviro_logger
 else:
-    from .biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
+    from .biodiversity_image_scraper import images_scraper
     from .enviro_log import enviro_logger
 
 MASS = 16
@@ -172,7 +172,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         
         write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
-        images_scraper( dir_name, exemplary_animals, image_titles )
+        images_scraper( "chosen_mammals_info.csv" )
         
         # Upload the images to the Google drive 
         
@@ -227,7 +227,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 3 historic animals
     for placement in range( 1, 4 ):
 
-        found_animal = find_large_animal( 1, animal_list, chosen_animals, historic=True )
+        found_animal = find_large_animal( placement, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
@@ -240,7 +240,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional historic herbivores
     for placement in range( 1, 7 ):
 
-        found_animal = find_herbivore( 1, animal_list, chosen_animals, historic=True )
+        found_animal = find_herbivore( placement, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
@@ -252,7 +252,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
     # Find 6 additional historic predators
     for placement in range( 1, 7 ):
 
-        found_animal = find_predator( 1, animal_list, chosen_animals, historic=True )
+        found_animal = find_predator( placement, animal_list, chosen_animals, historic=True )
 
         if found_animal:
 
@@ -264,7 +264,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
     write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, chosen_animals )
         
-    images_scraper( dir_name, chosen_animals, image_titles )
+    images_scraper( "chosen_mammals_info.csv" )
         
     # Upload the images to the Google drive 
         

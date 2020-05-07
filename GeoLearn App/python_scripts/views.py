@@ -7,7 +7,6 @@ from google_images_download import google_images_download
 import getpass
 
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
-from .biodiversity.biodiversity_image_scraper import images_scraper, single_image_scraper, initialize_webdriver
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
 from .biodiversity.biodiversity_results_sorter import advanced_image_finder
 from .biodiversity.enviro_log import enviro_logger
@@ -100,47 +99,13 @@ def biodiversity_climate_submit( request ):
     # restart the log file 
     logger.restart()
 
-    '''
-    # Float values of longitude and latitude
-    # Fetch the longitude and latitude from the form on the slides page
-    latitude = float( request.POST.get( 'Latitude' ) )
-    longitude = float( request.POST.get( 'Longitude' ) )
-    difficulty = request.POST.get( 'difficulty' )
-    userEmail = request.POST.get( 'userEmail' )
-    schoolName = request.POST.get( 'schoolName' )
-
-    logger.log(f"Diff: {difficulty}, Email: {userEmail}, School: {schoolName}")
+    app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
-    result = requests.get( "https://www.google.com/" )
-
-    logger.log( result.status_code )
+    return redirect( app_script_url ) 
     
-    return render( request, 'Spinner.html' )
     
-    biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
-    '''
-
-    response = google_images_download.googleimagesdownload()
-
-    logger.log( "base dir is: "  + BASE_DIR )    
-    logger.log( 'The user is: ' + getpass.getuser() )
-    query = 'herbert' 
-    system_query = '\ '.join( query.split() )
-
-    arguments = {"keywords": query, "limit":1, "print_urls":True, "format":"jpg", "output_directory": BASE_DIR, "image_directory": "animal_images" }
-
-    if not os.path.exists( 'downloads' ):
-        os.system( 'sudo mkdir downloads' )
-        logger.log( 'making downloads' )
-
-    if not os.path.exists( 'downloads/' + system_query ):
-        os.system( 'sudo mkdir downloads ' + system_query )
-        logger.log( 'made search directory' )
-
-    paths = response.download(arguments)
-
-
-    return render( request, 'Spinner.html' )   
+    
+     
 
 def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName ):
     
@@ -157,15 +122,11 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
-        logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver( False )
-        logger.log( "successfully web drove" )
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( app_script_url, driver )                    
+        return app_script_url
 
     elif difficulty == "advanced":
     
@@ -175,17 +136,18 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
         advanced_image_finder( True, "animal_images", csv_filename )
         
-        logger.log( "trying to webdrive for google script url" )
-        driver = initialize_webdriver()
-        logger.log( "successfully web drove" )
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbx0Kd8n0uDVH0WIJ1PUiDRjK958hZbXrtXMUVJ7j74g/dev?userEmail="
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
-        activate_google_script_url( app_script_url, driver )
-		
-    print( "redirected to slideshow creation url" )
+        return app_script_url
+        
+        
+        
+        
+        
+        
+        
 
 def activate_google_script_url( app_script_url, driver ):
 

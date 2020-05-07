@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from pyvirtualdisplay import Display
 import time
+from google_images_download import google_images_download
 
 # pip3 install Pillow
 from PIL import Image
@@ -14,6 +15,7 @@ import io
 import requests
 import os
 import time
+import csv
 
 try:
     from enviro_log import enviro_logger
@@ -24,11 +26,85 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
 logger = enviro_logger()
 
+BINOMIAL = 2
+TITLE = 0
+
 def main():    
     
-    driver = initialize_webdriver()
+    images_scraper( "chosen_mammals_info.csv" )
     
-    single_image_scraper( "sonic the hedgehog", "sahnic", "animal_images", driver )
+    
+    
+    
+    
+
+def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
+
+    logger.log( "creating image downloader" )
+    # Create the image downloader
+    downloader = google_images_download.googleimagesdownload()
+
+    logger.log( "opening csv" )
+    # Open the csv file 
+    with open( chosen_csv, encoding='utf8' ) as csv_file:
+
+        
+        animal_reader = csv.reader( csv_file, delimiter=',' )
+    
+        # Loop through the animals 
+        for animal in animal_reader:
+
+            logger.log( "downloading " + animal[ BINOMIAL ] )
+            # Download the image of the animal
+            image_path = find_animal_image( animal[ BINOMIAL ], downloader )
+        
+            # Rename the image to its title 
+            rename_image( image_path, animal[ TITLE ] )
+            
+
+
+
+
+def find_animal_image( search_query, downloader ):
+    
+    # Create the arguments
+    arguments = { "keywords": search_query,
+                  "limit": 1,
+                  "print_urls": True,
+                  "format": 'jpg',
+                  'output_directory': basest_dir,
+                  'image_directory': 'animal_images',
+                  'no_numbering': '-nn' }
+    
+    # download the arguments
+    image_json = downloader.download( arguments )
+
+    image_path = image_json[0][search_query][0]
+    
+    # return the path of the image
+    return image_path
+    
+
+
+
+
+
+def rename_image( image_path, new_name ):
+
+    # Run the cmd command to rename the image to the desired image
+    os.rename( image_path, basest_dir + "/animal_images/" + new_name + ".jpg" )
+
+
+
+
+
+
+
+
+
+
+
+'''
 
 def images_scraper( dir_name=None, image_list=None, image_names=None ):
 
@@ -224,10 +300,7 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
            # If not, make that directory 
             os.mkdir( target_dir )
 
-        ''' 
-        Loop through the image elements gathered and translate them to 
-        URLs and then to actual images 
-        '''
+
         found_image_count = 0
         attempt_count = 0
         logger.log( "begin finding images" )
@@ -309,16 +382,13 @@ def retrieve_image( search_query, webdriver, dir_name, img_name ):
 
 
 
-'''
-Method that scrolls down the webpage to load more images
-'''
 def scroll_down( webdriver ):
     value = 0
     for i in range( 1 ):
         webdriver.execute_script( "scrollBy( 0, " + str(value) + ");" )
         value += 500
         time.sleep( .3 )
-
+'''
 
 if __name__ == "__main__":
     main()
