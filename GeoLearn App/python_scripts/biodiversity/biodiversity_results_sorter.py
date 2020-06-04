@@ -5,10 +5,10 @@ import sys
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-if __name__ == "__main__":
+try:
     from biodiversity_image_scraper import images_scraper
     from enviro_log import enviro_logger
-else:
+except:
     from .biodiversity_image_scraper import images_scraper
     from .enviro_log import enviro_logger
 
@@ -172,11 +172,13 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         
         write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, exemplary_animals )        
         
-        images_scraper( "chosen_mammals_info.csv" )
+        
         
         # Upload the images to the Google drive 
         
         if upload_bool:
+        
+            images_scraper( "chosen_mammals_info.csv" )
             upload_files( image_titles, "chosen_mammals_info.csv" )
             
         return "chosen_mammals_info.csv"

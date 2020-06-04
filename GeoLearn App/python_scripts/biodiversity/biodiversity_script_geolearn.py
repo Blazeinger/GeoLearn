@@ -13,11 +13,14 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-if __name__ == "__main__":
+try:
     from biodiversity_db_scanner import biodiversity_db_generator
+    from biodiversity_results_sorter import basic_image_finder, advanced_image_finder
     from enviro_log import enviro_logger
-else:
+ 
+except:
     from .biodiversity_db_scanner import biodiversity_db_generator
+    from .biodiversity_results_sorter import write_csvs
     from .enviro_log import enviro_logger
 
 # constant for testing database executions 
@@ -172,6 +175,21 @@ def main():
                                                 
                             logger.log( "        {}".format( list(boundary.bounds) ))
                             logger.log( "    " + str( boundary.distance( search_polygon )) )
+                            
+        elif response.lower() == "sort":
+            
+            logger.log( "(b)eginner or (a)dvanced?: " )
+            difficulty = input()
+            
+            if difficulty.lower() == 'b' or difficulty.lower() == "beginner":
+                basic_image_finder( False, 'animal_images', 'mammal_info.csv' )
+                
+            elif difficulty.lower() == 'a' or difficulty.lower() == 'advanced':
+                advanced_image_finder( False, 'animal_images', 'mammal_info.csv' )
+            
+            else:
+                logger.log( "invalid difficulty" )
+            
         
         # Otherwise, assume we're running normally and checking animals within the search area
         else:
