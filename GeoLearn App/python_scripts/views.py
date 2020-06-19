@@ -128,9 +128,13 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
+        app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
+        app_script_url = "userEmail=" + userEmail
+        app_script_url = "$schoolName=" + schoolName 
+        
+        #app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+        #app_script_url += userEmail + "&schoolName="
+        #app_script_url += schoolName
         
         return app_script_url
 
