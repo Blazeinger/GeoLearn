@@ -31,6 +31,7 @@ except:
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
+IMAGES_DIR = basest_dir + '/animal_images/' 
 logger = enviro_logger()
 
 BINOMIAL = 2
@@ -49,7 +50,7 @@ def wikipedia_download_image( target_image ):
     # Check the whole name first 
     image_search_url = 'https://en.wikipedia.org/wiki/{search_query}'.format( search_query = correct_for_query_spaces( target_image ))
     
-    print( image_search_url )
+    #print( image_search_url )
     
     page_found = False
     
@@ -84,7 +85,7 @@ def wikipedia_download_image( target_image ):
     while image_not_found:
         image_elements = images_class[index].find( 'img' )
         index += 1
-        print( image_elements )
+        #print( image_elements )
         
         if not image_elements.get( 'alt' ) in WIKIPEDIA_IMAGE_TO_AVOID:
             image_not_found = False
@@ -122,22 +123,20 @@ def wikipedia_scrape( target_image_url, num ):
     
     image = Image.open( image_file ).convert( 'RGB' )
     
-    image_name = 'example_' + str( num )
+    image_name = 'most_recent_animal'
     
-    print( image_name )
-    
-    image_path = 'animal_images/' + image_name + '.jpg' 
+    image_path = IMAGES_DIR + image_name + '.jpg' 
     
     image.save( image_path, 'JPEG', quality = 85 )
     
-    return image_path 
+    return image_name
     
     
     
 
-def use_image_not_found( image_title, default_path = 'default.png' ):
+def use_image_not_found( image_title, default_path = BASE_DIR + '/biodiversity/default.png' ):
     
-    copy_path = 'animal_images/' + image_title
+    copy_path = IMAGES_DIR + image_title
     
     # Create a copy of the default image and name it the image title 
     copyfile( default_path, copy_path )
@@ -166,19 +165,18 @@ def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
             # Try finding an image of the animal 
             try:
             
-                image_path = wikipedia_download_image( animal[BINOMIAL] )
-                print( image_path )
-                print( animal[TITLE] )
-                os.rename( image_path, 'animal_images/' + animal[BINOMIAL] + '.jpg' )
-                
-                # Save the image as its title
-                rename_image( image_path, animal[TITLE] )
+                image_name = wikipedia_download_image( animal[BINOMIAL] )
+                print( animal[BINOMIAL] )
+                print( animal[TITLE] )                
                 
             # If that all fails, use a default image
             except:
             
                 # Create a copy of the default image and rename it 
-                image_path = use_image_not_found( animal[BINOMIAL] )
+                image_name = use_image_not_found( animal[BINOMIAL] )
+                
+            # Save the image as its title
+                rename_image( image_name, animal[TITLE] )
             
             
     
@@ -212,13 +210,10 @@ def find_animal_image( search_query, downloader ):
 
 
 
-def rename_image( image_path, new_name ):
-
-    print( image_path )
-    print( new_name )
+def rename_image( image_name, new_name ):
 
     # Run the cmd command to rename the image to the desired image
-    os.rename( image_path, basest_dir + "/animal_images/" + new_name + ".jpg" )
+    os.rename( IMAGES_DIR + image_name + '.jpg', IMAGES_DIR + new_name + ".jpg" )
 
 
 

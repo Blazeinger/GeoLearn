@@ -123,7 +123,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         logger.log( "beginner slideshow selected" )
         
-        csv_filename = "/home/joshus/Capstone/django_website/GeoLearn/GeoLearn App/mammal_info.csv" #find_animals_script( latitude, longitude, "slideInfo_Bio" )
+        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
         
         print( csv_filename )
 

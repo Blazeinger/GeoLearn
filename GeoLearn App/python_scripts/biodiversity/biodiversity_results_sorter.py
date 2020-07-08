@@ -286,39 +286,76 @@ def find_dobble_images( amount, animal_info, image_titles ):
     
     for dobble_image_count in range( 0, amount ):
     
-        duplicate_check = True
-    
-        if index == ( len( animal_info ) - 1 ):
-                    
-            index = 0
-            
-            round_trip = True
+        suitable_animal_found = False
         
-        
+        # Print the animal we are on and amount of animals we can choose from 
         print( str( index ) + "/" + str( len( animal_info )) )
+        
+        # Save the current animal we're looking at
         animal = animal_info[ index ]
             
-        while( duplicate_check and not round_trip ):
+        # Searching for a suitable animal
+        while( not suitable_animal_found ):
+               
+            if not round_trip:
             
-            if check_duplicate( animal, dobble_animals ):
+                # Otherwise, check if this animal is historic
+                if check_historic( animal ):
                     
-                index += 1
+                    # If so, move onto the next animal 
+                    index += 1
+                    animal = animal_info[ index ]
                     
-                animal = animal_info[ index ]
+                else:
                     
+                    # Check if the animal is already in the dobble list
+                    if check_duplicate( animal, dobble_animals ):
+                    
+                        # If so, move onto the next animal 
+                        index += 1
+                        animal = animal_info[ index ]
+                        
+                    else: 
+                    
+                        # If not, then this is a suitable animal 
+                        suitable_animal_found = True
+                        
+                        
+            # Now we have looked through all the animals
+            # and we haven't found enough for dobble
+            # Now we're allowing duplicates and historic animals 
             else:
+                
+                # If we have gone thorugh all the animals and haven't found a suitable list of dobble animals, then we will accept duplicates and historic animals
+                suitable_animal_found = True
+                
+            # Check if we have gone around all of the animals we can choose
+            if index == ( len( animal_info ) - 1 ):
                     
-                duplicate_check = False
+                # If so, restart our search
+                index = 0
+   
+                # Allow duplicates and historic animals 
+                round_trip = True      
 
+
+        # Add the animal to our dobble list 
         dobble_animals.append( ( "Dobble_" + str( (dobble_image_count ) ), animal_info[ index ] ) )
 
+        # Save the title of the animal
         image_titles.append( "Dobble_" + str( (dobble_image_count ) ) )
 
+        # Move onto the next animal 
         index += 1
 
         
         
     return dobble_animals
+
+
+def check_historic( animal ):
+
+    return animal[0] == 'historic'
         
         
 def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
