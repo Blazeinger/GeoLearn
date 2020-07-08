@@ -134,14 +134,14 @@ def wikipedia_scrape( target_image_url, num ):
     
     
 
-def use_image_not_found( image_title, default_path = BASE_DIR + '/biodiversity/default.png' ):
+def use_image_not_found( image_title, fill_image_path = BASE_DIR + '/biodiversity/default.jpg' ):
     
     copy_path = IMAGES_DIR + image_title
     
     # Create a copy of the default image and name it the image title 
-    copyfile( default_path, copy_path )
+    copyfile( fill_image_path, copy_path )
     
-    return copy_path
+    return fill_image_path
     
     
     
@@ -167,7 +167,10 @@ def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
             
                 image_name = wikipedia_download_image( animal[BINOMIAL] )
                 print( animal[BINOMIAL] )
-                print( animal[TITLE] )                
+                print( animal[TITLE] ) 
+                
+                # Save the image as its title
+                rename_valid_image( image_name, animal[TITLE] )               
                 
             # If that all fails, use a default image
             except:
@@ -175,8 +178,8 @@ def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
                 # Create a copy of the default image and rename it 
                 image_name = use_image_not_found( animal[BINOMIAL] )
                 
-            # Save the image as its title
-                rename_image( image_name, animal[TITLE] )
+                # Rename the image as its title
+                os.rename( IMAGES_DIR + animal[BINOMIAL], IMAGES_DIR + animal[TITLE] + '.jpg' )
             
             
     
@@ -210,7 +213,7 @@ def find_animal_image( search_query, downloader ):
 
 
 
-def rename_image( image_name, new_name ):
+def rename_valid_image( image_name, new_name ):
 
     # Run the cmd command to rename the image to the desired image
     os.rename( IMAGES_DIR + image_name + '.jpg', IMAGES_DIR + new_name + ".jpg" )

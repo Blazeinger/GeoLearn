@@ -12,7 +12,9 @@ credentials.txt
 credentials.txt
 geckodriver.log
 *.jpg
+!default.jpg
 *.png
+!default.png
 README.md~
 db.sqlite3
 *.cpython-36.pyc
