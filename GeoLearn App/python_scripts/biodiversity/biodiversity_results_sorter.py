@@ -680,7 +680,7 @@ def find_smallest_animal( placement, animal_list, exemplary_animals, historic=Fa
     return found_animal        
      
 
-def upload_files( images, csv_name, target_drive_dir='slideInfo_Bio' ):
+def upload_files( images, csv_name, target_drive_dir='slideInfo_BioBasic' ):
 
     logger.log( 'begin file upload' )
     
