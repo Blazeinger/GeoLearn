@@ -3,9 +3,11 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from pyvirtualdisplay import Display
 import time
+
 from google_images_download import google_images_download
+
+from bs4 import BeautifulSoup
 
 # pip3 install Pillow
 from PIL import Image
@@ -13,9 +15,14 @@ from PIL import Image
 # These should just be from Python
 import io
 import requests
+import urllib.request
+from urllib.request import urlopen
+import shutil
+from shutil import copyfile
 import os
 import time
 import csv
+import re
 
 try:
     from enviro_log import enviro_logger
@@ -24,42 +31,159 @@ except:
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
+IMAGES_DIR = basest_dir + '/animal_images/' 
 logger = enviro_logger()
 
 BINOMIAL = 2
 TITLE = 0
+WIKIPEDIA_IMAGE_TO_AVOID = ['']
 
 def main():    
     
     images_scraper( "chosen_mammals_info.csv" )
     
     
+
+def wikipedia_download_image( target_image ):
+    
+    ### Get a response from the wikipedia link
+    # Check the whole name first 
+    image_search_url = 'https://en.wikipedia.org/wiki/{search_query}'.format( search_query = correct_for_query_spaces( target_image ))
+    
+    #print( image_search_url )
+    
+    page_found = False
+    
+    # Loop thought different wikipedia searches to see if the page exists 
+    while not page_found:
+        
+        # Create the response for the search 
+        response = requests.get( image_search_url )
+    
+        ### Create the beautiful soup object
+        soup = BeautifulSoup( response.text, 'html.parser' )
+    
+        ### Find the image   
+        # Find the a tag elements with the class 'image' 
+        images_class = soup.find_all( 'a', {'class': 'image'} )
+        
+        # Check if the page exists 
+        if not images_class[0].find( 'img' ).get( 'alt' ) == 'Wiktionary-logo-v2.svg':
+            page_found = True
+            
+        else:
+            # Load a wiki page with only the first part of the binomial 
+            image_search_url = 'https://en.wikipedia.org/wiki/{search_query}'.format( search_query = target_image.split()[0] )
+    
+    #print( image_parent )
+    
+    # Loop through the image class to find the image we want 
+    index = 0
+    image_not_found = True
+    image_info = []
+    
+    while image_not_found:
+        image_elements = images_class[index].find( 'img' )
+        index += 1
+        #print( image_elements )
+        
+        if not image_elements.get( 'alt' ) in WIKIPEDIA_IMAGE_TO_AVOID:
+            image_not_found = False
+            
+            
+    
+    # Find its child that contains the image 
+    print( 'getting elements' )
+    image_info.append( 'https:' + str( image_elements.get( 'src' )))
+    
+    # Get its source 
+    index = 0
+    
+    for image_url in image_info:
+    
+        #print( image_url )
+        
+        #try:
+            #image = requests.get( image_url )
+             
+        return wikipedia_scrape( image_url, index )
+            #print( 'succeeded' )
+            
+        #except:
+            #print( 'failed' )
+        
+        index += 1
+        
+    
+def wikipedia_scrape( target_image_url, num ):
+    
+    ### Rename the image locally
+    
+    image_file = io.BytesIO( requests.get( target_image_url ).content )
+    
+    image = Image.open( image_file ).convert( 'RGB' )
+    
+    image_name = 'most_recent_animal'
+    
+    image_path = IMAGES_DIR + image_name + '.jpg' 
+    
+    image.save( image_path, 'JPEG', quality = 85 )
+    
+    return image_name
     
     
     
+
+def use_image_not_found( image_title, fill_image_path = BASE_DIR + '/biodiversity/default.jpg' ):
+    
+    copy_path = IMAGES_DIR + image_title
+    
+    # Create a copy of the default image and name it the image title 
+    copyfile( fill_image_path, copy_path )
+    
+    return fill_image_path
+    
+    
+    
+
 
 def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
 
-    logger.log( "creating image downloader" )
-    # Create the image downloader
-    downloader = google_images_download.googleimagesdownload()
-
-    logger.log( "opening csv" )
-    # Open the csv file 
-    with open( basest_dir + "/" + chosen_csv, encoding='utf8' ) as csv_file:
-
-        
-        animal_reader = csv.reader( csv_file, delimiter=',' )
+    # Open the file 
+    logger.log( "opening chosen mammals file" )
     
-        # Loop through the animals 
-        for animal in animal_reader:
-
-            logger.log( "downloading " + animal[ BINOMIAL ] )
-            # Download the image of the animal
-            image_path = find_animal_image( animal[ BINOMIAL ], downloader )
+    # Loop through each animal 
+    with open( basest_dir + '/' + chosen_csv, encoding='utf8' ) as csv_file:
+    
+        animal_reader = csv.reader( csv_file, delimiter = ',' )
         
-            # Rename the image to its title 
-            rename_image( image_path, animal[ TITLE ] )
+        for animal in animal_reader:
+    
+    # Get the image of the animal 
+            logger.log( 'downloading ' + animal[BINOMIAL] )
+            
+            # Try finding an image of the animal 
+            try:
+            
+                image_name = wikipedia_download_image( animal[BINOMIAL] )
+                print( animal[BINOMIAL] )
+                print( animal[TITLE] ) 
+                
+                # Save the image as its title
+                rename_valid_image( image_name, animal[TITLE] )               
+                
+            # If that all fails, use a default image
+            except:
+            
+                # Create a copy of the default image and rename it 
+                image_name = use_image_not_found( animal[BINOMIAL] )
+                
+                # Rename the image as its title
+                os.rename( IMAGES_DIR + animal[BINOMIAL], IMAGES_DIR + animal[TITLE] + '.jpg' )
+            
+            
+    
+    
             
 
 
@@ -89,10 +213,10 @@ def find_animal_image( search_query, downloader ):
 
 
 
-def rename_image( image_path, new_name ):
+def rename_valid_image( image_name, new_name ):
 
     # Run the cmd command to rename the image to the desired image
-    os.rename( image_path, basest_dir + "/animal_images/" + new_name + ".jpg" )
+    os.rename( IMAGES_DIR + image_name + '.jpg', IMAGES_DIR + new_name + ".jpg" )
 
 
 
@@ -106,7 +230,7 @@ def rename_image( image_path, new_name ):
 
 '''
 
-def images_scraper( dir_name=None, image_list=None, image_names=None ):
+def old_images_scraper( dir_name=None, image_list=None, image_names=None ):
 
     # Make sure that the directory we create and save to is a valid name
     # Make sure what we name the image is a valid name
@@ -166,10 +290,9 @@ def images_scraper( dir_name=None, image_list=None, image_names=None ):
 
 
 
-
 def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=None ):
 
-    try:
+    #try:
         # Make sure that the directory we create and save to is a valid name
         # Make sure what we name the image is a valid name
         directory_name = dir_name
@@ -181,14 +304,17 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
             return False
             
         if directory_name == None:
-            directory_name = animal_search
+            directory_name = 'animal_images'
             
+        # Please insert a webdriver. Using this method is insanely slow
         if driver == None:
             self_initialized_driver = True 
-            driver = initailize_webdriver()
+            driver = initialize_webdriver()
             
         if image_name == None: 
             image_name = animal_name
+            
+        logger.log( "all objects for downloading created" )
             
         # Change any spaces in the search query into pluses
         image_search = correct_for_query_spaces( animal_name )
@@ -204,16 +330,18 @@ def single_image_scraper( animal_name, image_name=None, dir_name=None, driver=No
         assert "Google" in driver.title
         assert "No results found." not in driver.page_source
                 
+        logger.log( "retrieving image" )
+        
         retrieve_image( image_search, driver, directory_name, image_name )
         
         if self_initialized_driver:
             driver.close()
             
-    except:
-        driver.close()
-        logger.log( "single image scraper crash" )
+    #except:
+        #driver.close()
+     #   logger.log( "---> single image scraper crash" )
         
-    
+'''
 
 
 
@@ -233,8 +361,8 @@ def initialize_webdriver():
     #options.add_argument( '--no-sandbox' )
     options.add_argument( '--mute-audio' )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     logger.log( 'connecting to webdriver' )
     
@@ -265,7 +393,7 @@ def initialize_webdriver():
 
 def correct_for_query_spaces( search_query ):
     temp_query = search_query.split()
-    return '+'.join( temp_query )
+    return '_'.join( temp_query )
     
     
     
@@ -388,7 +516,7 @@ def scroll_down( webdriver ):
         webdriver.execute_script( "scrollBy( 0, " + str(value) + ");" )
         value += 500
         time.sleep( .3 )
-'''
+
 
 if __name__ == "__main__":
     main()

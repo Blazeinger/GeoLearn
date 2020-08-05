@@ -13,11 +13,14 @@ from datetime import datetime
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
-if __name__ == "__main__":
+try:
     from biodiversity_db_scanner import biodiversity_db_generator
+    from biodiversity_results_sorter import basic_image_finder, advanced_image_finder
     from enviro_log import enviro_logger
-else:
+ 
+except:
     from .biodiversity_db_scanner import biodiversity_db_generator
+    from .biodiversity_results_sorter import write_csvs
     from .enviro_log import enviro_logger
 
 # constant for testing database executions 
@@ -172,6 +175,21 @@ def main():
                                                 
                             logger.log( "        {}".format( list(boundary.bounds) ))
                             logger.log( "    " + str( boundary.distance( search_polygon )) )
+                            
+        elif response.lower() == "sort":
+            
+            logger.log( "(b)eginner or (a)dvanced?: " )
+            difficulty = input()
+            
+            if difficulty.lower() == 'b' or difficulty.lower() == "beginner":
+                basic_image_finder( False, 'animal_images', 'mammal_info.csv' )
+                
+            elif difficulty.lower() == 'a' or difficulty.lower() == 'advanced':
+                advanced_image_finder( False, 'animal_images', 'mammal_info.csv' )
+            
+            else:
+                logger.log( "invalid difficulty" )
+            
         
         # Otherwise, assume we're running normally and checking animals within the search area
         else:
@@ -190,7 +208,7 @@ def main():
                 
                 # Change the target google drive directory based on input and let the user know
                 if difficulty.lower() == "b":
-                    target_dir = "slideInfo_Bio"
+                    target_dir = "slideInfo_BioBasic"
                     logger.log( "beginner presentation selected" )
                     
                 elif difficulty.lower() == "a":
@@ -199,7 +217,7 @@ def main():
                     
                 # If invalid input, do the beginner presentation by default
                 else:
-                    target_dir = "slideInfo_Bio" 
+                    target_dir = "slideInfo_BioBasic" 
                     logger.log( "default selected, basic" )
                     
                 logger.log( find_animals( descriptors, animal_info, animal_boundaries, longitude, latitude, target_dir ) )
@@ -560,7 +578,7 @@ def append_shape( animal_boundaries, currentShape ):
 			
 			
 
-def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_Bio" ):
+def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_BioBasic" ):
 
     logger.log( 'begin file upload' )
     
@@ -605,18 +623,42 @@ def send_csv_to_drive( fileName, fileAlias, target_dir="slideInfo_Bio" ):
     target_folder_name = target_dir
     target_folder_id = ''
 
-    logger.log( 'finding drive folder' )
-    # Find the list of all of the files in the google drive
-    file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
+    logger.log( 'finding drive folder: ' + target_dir )
 
-    # Loop through all of the files in the
-    for file_object in file_list:
+    folder_not_found = True
+    
+    while( folder_not_found ):
 
-        # Check if the current one is our target
-        if file_object[ 'title' ] == target_folder_name:
+        # Find the list of all of the files in the google drive
+        file_list = drive.ListFile({ 'q': "'root' in parents and trashed=false"}).GetList()
 
-            # Save the folder id
-            target_folder_id = file_object[ 'id' ]
+        # Loop through all of the files in the
+        for file_object in file_list:
+
+            # Check if the current one is our target
+            if file_object[ 'title' ] == target_folder_name:
+
+                # Save the folder id
+                target_folder_id = file_object[ 'id' ]
+                
+                # Exit the while loop
+                folder_not_found = False
+                
+        # Check if the folder was found
+        if target_folder_id == '':
+        
+            logger.log( 'folder not found. Creating one' )
+            
+            # Create the folder we want
+            folder = drive.CreateFile( 
+                {'title': target_folder_name, 
+                'mimeType': 'application/vnd.google-apps.folder' } )
+            
+            # Upload the folder to the drive 
+            folder.Upload()
+            
+            # The loop will go again, but now it will find the folder
+            
 
     logger.log( "folder found. id: " + target_folder_id )
 

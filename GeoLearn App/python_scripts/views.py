@@ -22,6 +22,9 @@ import time
 from django.shortcuts import redirect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPT_DIR = BASE_DIR + '/python_scripts/'
+BIO_DIR = SCRIPT_DIR + 'biodiversity/' 
+
 logger = enviro_logger()
 
 # Create your views here.
@@ -118,19 +121,32 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
+    
+    print( BASE_DIR )
 
     if difficulty == "beginner":
         
         logger.log( "beginner slideshow selected" )
         
-        csv_filename = find_animals_script( latitude, longitude, "slideInfo_Bio" )
+        csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
+        
+        #print( csv_filename )
 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
-        app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
+        # Delete the credentials for the user
+        os.remove( BASE_DIR + '/credentials.txt' )
+        
+        
+        app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
+        app_script_url += "userEmail=" + userEmail
+        app_script_url += "&schoolName=" + schoolName 
+        
+        logger.log( "going to " + app_script_url )
+        #app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
+        #app_script_url += userEmail + "&schoolName="
+        #app_script_url += schoolName
         
         return app_script_url
 
@@ -155,86 +171,10 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         
 
-def activate_google_script_url( app_script_url, driver ):
+#def delete_credentials():
+    
 
-    driver.get( app_script_url )
-    
-    on_signin_screen = False
-    
-    time.sleep( 5 )
-    
-    # Check if the url directs to a sign-in screen 
-    try:
-        print( "finding sign-in screen" )
-        page_title = driver.find_element_by_tag_name( "title" )
-            
-        print( "on sign-in screen" )
-            
-        if page_title.get_attribute( "innerHTML" ) == 'Google Drive: Sign-in':
-            
-            print( "totally was sign-in screen" )
-            on_signin_screen = True
-            
-    except:
-        print( "not on the sign-in screen" )
-        
-    try:    
-        # sign into the email 
-        if on_signin_screen:
-            
-            time.sleep( 5 )
-            
-            # Fill in email
-            
-            ## find the login area 
-            text_area = driver.find_element_by_id( 'identifierId' )
-            
-            ## click on it
-            text_area.click()
-            
-            ## fill it in
-            text_area.send_keys( "geolearnweb@gmail.com" )
-            
-            ## find the submit button 
-            submit_button = driver.find_element_by_id( 'identifierNext' )
-            
-            ## click on the submit button 
-            submit_button.click()
-            
-            time.sleep( 5 )
-            
-            # Fill in the password
-            
-            ## find the text area
-            text_area = driver.find_element_by_name( 'password' )
-            
-            ## click on it
-            text_area.clear() #click()
-            
-            ## fill it in
-            text_area.send_keys( "Capstone2020" )
-            
-            ## find the submit button 
-            submit_button = driver.find_element_by_id( 'passwordNext' )
-            
-            ## click on the submit button 
-            submit_button.click()
-            
-            # Wait 2 minutes for the slideshow to be created
-            
-            ## Let the user know 
-            print( "waiting 3 minutes for slideshow to be created" )
-            
-            ## wait
-            for half_minute in range( 1, 7 ):
-                time.sleep( 30 )
-                elapsed_time = 30 * half_minute
-                print( str( elapsed_time ) + " has passed" )
-                
-            print( "slideshow has been created" )
-            
-    finally:
-        driver.close()
+
 
 
 

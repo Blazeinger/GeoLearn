@@ -8,12 +8,18 @@ from shapely.geometry import Point
 from datetime import datetime
 import os
 
+try:
+    from enviro_log import enviro_logger
+except:
+    from .enviro_log import enviro_logger
 
 DB_FILE_NAME = "biodiversity_mammal_db.csv"
 HIST_FILE_NAME = "biodiversity_hist_db.csv" 
 
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
+
+logger = enviro_logger()
 
 # Class that connects to the biodiversity database and creates a 
 # local CSV file that contains all the information. 

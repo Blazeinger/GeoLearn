@@ -10,7 +10,9 @@ except:
 logger = enviro_logger()
 logger.restart()
 
-result = requests.get( "https://www.google.com/" )
-logger.log( result.status_code )
+app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail=joshusttenakhongva@gmail.com&schoolName=requestTest"
 
-logger.log( "went all the way through" )
+result = str( requests.get( app_script_url ).content).split( '\\n' )
+
+for line in result:
+	print( line )
