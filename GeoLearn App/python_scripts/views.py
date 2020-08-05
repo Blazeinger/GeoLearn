@@ -22,6 +22,9 @@ import time
 from django.shortcuts import redirect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPT_DIR = BASE_DIR + '/python_scripts/'
+BIO_DIR = SCRIPT_DIR + 'biodiversity/' 
+
 logger = enviro_logger()
 
 # Create your views here.
@@ -118,6 +121,8 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     # Feed the lat and long to our find animals script
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
+    
+    print( BASE_DIR )
 
     if difficulty == "beginner":
         
@@ -129,6 +134,10 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
+        
+        # Delete the credentials for the user
+        os.remove( BASE_DIR + '/credentials.txt' )
+        
         
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
@@ -162,14 +171,8 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         
 
-def activate_google_script_url( app_script_url, driver ):
-    return True
+#def delete_credentials():
     
-
-
-
-def test( request ):
-    return HttpResponse( 'test' )
 
 
 
