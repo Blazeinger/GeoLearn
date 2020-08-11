@@ -5,6 +5,8 @@ import requests
 ## from .models import Post
 from google_images_download import google_images_download
 import getpass
+from pydrive.auth import GoogleAuth
+from datetime import datetime
 
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
@@ -123,6 +125,30 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     csv_filename = None
     
     print( BASE_DIR )
+    
+    credentials_path = BASE_DIR + '/credentials.txt' 
+
+    # Check for credentials 
+    if os.path.isfile( credentials_path ):
+    
+        logger.log( "credentials exist" )
+        
+        # Check the time that the credentials were saved
+        if 
+        
+            # if it was less than 30 minutes ago, return page that tells user that the website is being used. 
+        
+        # Otherwise, delete the credentials and redirect to credentials asking page
+        
+    # If there are no credentials
+    else:
+    
+        # Save the time that the credential were saved
+        save_credentials_time()
+        
+        # If there are no credentials, redirect to the page to ask for credentials
+        ask_for_credentials()
+        
 
     if difficulty == "beginner":
         
@@ -137,7 +163,6 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         # Delete the credentials for the user
         os.remove( BASE_DIR + '/credentials.txt' )
-        
         
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
@@ -167,6 +192,34 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         
         
+        
+def ask_for_credentials():
+
+    logger.log( 'Asking user for credentials' )
+    
+    client_secrets_path = BASE_DIR + "/client_secrets.json" 
+    
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = client_secrets_path
+        
+    # Create google account authentication objects
+    gauth = GoogleAuth()
+    return gauth.GetAuthUrl()
+    
+    
+def save_credentials_time():
+
+    with open( BASE_DIR + '/save_credentials_time.txt', mode='w', encoding='utf8' ) as text_file:
+    
+        now = datetime.now()
+        
+        text_file.write( now.strftime( '%d/%m/%Y %H:%M:%S' ) )
+        
+        
+def check_save_time():
+    
+    with open( BASE_DIR + '/save_credentials_time.txt', mode='r', encoding='utf8' ) as text_file:
+    
+        time = text_file.read()
         
         
         
