@@ -718,6 +718,15 @@ def upload_files( images, csv_name, target_drive_dir='slideInfo_BioBasic' ):
     
     logger.log( 'connection established' )
 
+    # Upload the template files to the user
+    if target_drive_dir == 'slideInfo_BioBasic':
+        upload_template = drive.CreateFile({ 'title': 'TEMPLATE_bio_bas' })
+        upload_template.SetContentFile( basest_dir + '/TEMPLATE_bio_bas.pptx' )
+        upload_template.Upload()
+    
+    #else if target_drive_dir == 'slideInfo_BioAdv': 
+        
+
     ''' Find the name of the folder we want to upload to '''
     # Define the folder we want to upload to 
     target_folder_name = target_drive_dir
