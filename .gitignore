@@ -8,6 +8,7 @@ chosen_mammals_info.csv
 animals/ not/ found.csv
 log_output.txt
 credentials.txt
+save_credentials_time.txt
 
 geckodriver.log
 *.jpg
