@@ -5,6 +5,8 @@ import requests
 ## from .models import Post
 from google_images_download import google_images_download
 import getpass
+from pydrive.auth import GoogleAuth
+from datetime import datetime, timedelta
 
 from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
@@ -18,12 +20,16 @@ import os
 import threading
 import csv
 import time
+import math
 
 from django.shortcuts import redirect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT_DIR = BASE_DIR + '/python_scripts/'
 BIO_DIR = SCRIPT_DIR + 'biodiversity/' 
+CRED_TIME_PATH = BASE_DIR + '/save_credentials_time.txt'
+CRED_PATH = BASE_DIR + '/credentials.txt' 
+CRED_TIMEOUT = timedelta( minutes = 30 )
 
 logger = enviro_logger()
 
@@ -69,6 +75,9 @@ def about( request ):
 	
 def disease( request ):
 	return render( request, 'disease.html' )
+	
+def auth_redirect( request ):
+    return redirect( ask_for_credentials() )
 
 def biodiversity_submit( request ):
         
@@ -107,7 +116,49 @@ def biodiversity_climate_submit( request ):
     difficulty = request.POST.get( 'difficulty' )
     userEmail = request.POST.get( 'userEmail' )
     schoolName = request.POST.get( 'schoolName' )
+    authCode = request.POST.get( 'authCode' )
+    
+    # First, check if there is an authcode input
+    try:
+        input_auth_code( authCode )
+    
+    except:
+        return redirect( ask_for_credentials() )
 
+    # Check for credentials 
+    if os.path.isfile( CRED_PATH ):
+    
+        logger.log( "credentials exist" )
+        
+        # Check the time that the credentials were saved
+        if check_cred_timeout(): 
+        
+            # If it did timeout, delete the credentials and redirect to credentials asking page
+            return redirect( ask_for_credentials() )
+            
+        '''
+        else:
+        
+            # Otherwise, it was less than 30 minutes ago, return page that tells user that the website is being used. 
+            time_remaining = CRED_TIMEOUT - get_cred_time_remaining() 
+            minutes_remaining = math.ceil( time_remaining.seconds / 60 )
+                
+            response_string = "The website it currently in use. It will be available in {} minutes".format( minutes_remaining )
+            
+            return HttpResponse( response_string )
+            
+        '''
+        
+    # If there are no credentials or authcode
+    else:
+    
+        # Save the time that the credential were saved
+        save_credentials_time()
+        
+        # If there are no credentials, redirect to the page to ask for credentials
+        return redirect( ask_for_credentials() )
+
+    # If the credentials are all setup within the timeout time, run the program normally
     app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
     return redirect( app_script_url ) 
@@ -122,7 +173,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
     # Now, we have the filename of the csv that contains the animal data
     csv_filename = None
     
-    print( BASE_DIR )
+    print( BASE_DIR )        
 
     if difficulty == "beginner":
         
@@ -138,7 +189,6 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Delete the credentials for the user
         os.remove( BASE_DIR + '/credentials.txt' )
         
-        
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
         app_script_url += "&schoolName=" + schoolName 
@@ -147,6 +197,8 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         #app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
         #app_script_url += userEmail + "&schoolName="
         #app_script_url += schoolName
+        
+        delete_credentials()
         
         return app_script_url
 
@@ -162,17 +214,87 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         app_script_url += userEmail + "&schoolName="
         app_script_url += schoolName
         
+        delete_credentials()
+        
         return app_script_url
         
         
         
         
         
-        
-        
+def ask_for_credentials():
 
-#def delete_credentials():
+    logger.log( 'Asking user for credentials' )
     
+    client_secrets_path = BASE_DIR + "/client_secrets.json" 
+    
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = client_secrets_path
+        
+    # Create google account authentication objects
+    gauth = GoogleAuth()
+    return gauth.GetAuthUrl()
+    
+def input_auth_code( code ):
+    logger.log( 'checking auth code' )
+    
+    client_secrets_path = BASE_DIR + "/client_secrets.json" 
+    
+    GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = client_secrets_path
+        
+    # Create google account authentication objects
+    gauth = GoogleAuth()
+    
+    # Input the auth code
+    gauth.Auth( code )
+    
+    # Save the credentials if they're valid
+    gauth.SaveCredentialsFile( CRED_PATH )
+    
+    save_credentials_time()
+    
+    logger.log( 'credentials saved and validated' )
+    
+def save_credentials_time():
+
+    with open( CRED_TIME_PATH, mode='w', encoding='utf8' ) as text_file:
+    
+        now = datetime.now()
+        
+        text_file.write( now.strftime( '%d/%m/%Y %H:%M:%S' ) )
+        
+        
+def get_cred_time_remaining():
+    
+    with open( CRED_TIME_PATH, mode='r', encoding='utf8' ) as text_file:
+    
+        # Get the time that the credentials were saved and convert to a time datatype
+        read_datetime = text_file.read()
+        
+        # Convert it to a datetime object 
+        date, time = read_datetime.split()
+        
+        date = date.split( '/' )
+        time = time.split( ':' )
+        
+        for index in range( 0, 3 ):
+            date[index] = int( date[index] )
+            time[index] = int( time[index] )
+            
+        read_datetime = datetime( date[2], date[1], date[0], time[0], time[1], time[2] )
+       
+        return datetime.now() - read_datetime
+       
+def check_cred_timeout():
+
+    return get_cred_time_remaining() > CRED_TIMEOUT
+
+def delete_credentials():
+    if os.path.exists( CRED_PATH ):
+        os.remove( CRED_PATH )
+        logger.log( 'credentials deleted' )
+        
+    else:
+        logger.log( 'credentials not deleted' )
 
 
 
