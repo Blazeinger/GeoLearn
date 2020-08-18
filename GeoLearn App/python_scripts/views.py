@@ -180,42 +180,48 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         logger.log( "beginner slideshow selected" )
         
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
-        
-        #print( csv_filename )
 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
-        # Delete the credentials for the user
-        os.remove( BASE_DIR + '/credentials.txt' )
-        
+        # Create the URL for the Google App Script to contain the parameters
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
         app_script_url += "&schoolName=" + schoolName 
         
-        logger.log( "going to " + app_script_url )
-        #app_script_url = "https://script.google.com/macros/s/AKfycbwiCl5ILpsHtKbr6sK3fupy575qN2GAr1MsPp6EI4c/dev?userEmail="
-        #app_script_url += userEmail + "&schoolName="
-        #app_script_url += schoolName
+        # Let the logger know that the url has been created, and the program is being redirected there. 
+        logger.log( "going to app script url" )
         
+        # Delete the user's Google Drive credentials
         delete_credentials()
         
+        # Return the url to the creation script
         return app_script_url
 
+
+    # Check if the slideshow selected is an advanced slideshow
     elif difficulty == "advanced":
     
         logger.log( "advanced slideshow selected" )
         
+        # Find the animals in that area
         csv_filename = find_animals_script( latitude, longitude, 'slideInfo_BioAdv' )
 
+        # Find the images for the slideshow and upload them to the user's Google Drive
         advanced_image_finder( True, "animal_images", csv_filename )
         
-        app_script_url = "https://script.google.com/macros/s/AKfycbx0Kd8n0uDVH0WIJ1PUiDRjK958hZbXrtXMUVJ7j74g/dev?userEmail="
-        app_script_url += userEmail + "&schoolName="
-        app_script_url += schoolName
+        # Craft the creation script url with the parameters
+        app_script_url = "https://script.google.com/macros/s/AKfycbxDf3BPsgdZK_mn-2v5vc6TljEb8rtjpM0Qptb8wcw4VIaeB8GV/exec?"
+        app_script_url += 'userEmail=' + userEmail
+        app_script_url += '&schoolName=' + schoolName 
         
+        # Let the logger know that the url has been created, and the program is being redirected there. 
+        logger.log( "going to app script url" )
+        
+        # Delete the user's credentials 
         delete_credentials()
         
+        # Redirect the user to the app creation script url 
         return app_script_url
         
         
