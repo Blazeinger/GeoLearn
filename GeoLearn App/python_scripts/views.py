@@ -21,12 +21,17 @@ import threading
 import csv
 import time
 import math
+import shutil
+import threading
 
 from django.shortcuts import redirect
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT_DIR = BASE_DIR + '/python_scripts/'
 BIO_DIR = SCRIPT_DIR + 'biodiversity/' 
+SLIDESHOW_DIR = BASE_DIR + '/slideshows/' 
+TEMPLATES_DIR = SLIDESHOW_DIR + 'templates/' 
+
 CRED_TIME_PATH = BASE_DIR + '/save_credentials_time.txt'
 CRED_PATH = BASE_DIR + '/credentials.txt' 
 CRED_TIMEOUT = timedelta( minutes = 30 )
@@ -118,6 +123,10 @@ def biodiversity_climate_submit( request ):
     schoolName = request.POST.get( 'schoolName' )
     authCode = request.POST.get( 'authCode' )
     
+    generate_slideshow( difficulty )
+    
+    return HttpResponse( difficulty )
+    
     # First, check if there is an authcode input
     try:
         input_auth_code( authCode )
@@ -135,19 +144,6 @@ def biodiversity_climate_submit( request ):
         
             # If it did timeout, delete the credentials and redirect to credentials asking page
             return redirect( ask_for_credentials() )
-            
-        '''
-        else:
-        
-            # Otherwise, it was less than 30 minutes ago, return page that tells user that the website is being used. 
-            time_remaining = CRED_TIMEOUT - get_cred_time_remaining() 
-            minutes_remaining = math.ceil( time_remaining.seconds / 60 )
-                
-            response_string = "The website it currently in use. It will be available in {} minutes".format( minutes_remaining )
-            
-            return HttpResponse( response_string )
-            
-        '''
         
     # If there are no credentials or authcode
     else:
@@ -164,6 +160,8 @@ def biodiversity_climate_submit( request ):
     return redirect( app_script_url ) 
     
     
+
+
     
      
 
@@ -223,9 +221,71 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         # Redirect the user to the app creation script url 
         return app_script_url
+
+
+def generate_slideshow( difficulty ):
+
+    bio_adv = '/biodiversity_advanced.pptx'
+    bio_basic = '/biodiversity_basic.pptx' 
+
+    # Check which difficulty template we're using ##
+    if difficulty == 'advanced': 
+        template_path = TEMPLATES_DIR + 'TEMPLATE_bio_adv.pptx' 
+        file_path = bio_adv
+    
+    else: # Our default is beginner
+        template_path = TEMPLATES_DIR + 'TEMPLATE_bio_bas.pptx'
+        file_path = bio_basic
         
+    # Define the directory we want to copy our template to ##
+    current_thread = threading.currentThread().getName()
+    target_directory = SLIDESHOW_DIR + current_thread
+    file_path = target_directory + file_path 
+    
+    # Check if there is already a template there and delete it 
+    check_and_delete_slideshows( target_directory, [ bio_adv, bio_basic ] )
+    
+    # Copy the slideshow template file ##
+    
+    # If our target directory doesn't exist, create it
+    if not os.path.exists( target_directory ):
+        os.mkdir( target_directory )
         
+    shutil.copyfile( template_path, file_path )   
+    
+    # Open the template copy ##
+    
+    
+    
+    # Fill text ##
+    
+    # Fill images ##
+    
+    # Save slideshow ## 
+    
+    
+    
+    # Save the slideshow there
+    
+    # Return slideshow file path ##
+    return True
+    
+def check_and_delete_slideshows( directory, files ):
+
+    for slideshow in files: 
+        if os.path.exists( directory + slideshow ):
+            os.remove( directory + slideshow )
         
+def download_bio_slideshow( file_path = SLIDESHOW_DIR + 'example_download.txt' ): 
+    
+    # Create the HTTPResponse
+    with open( file_path, encoding='utf8' ) as download_file: 
+        response = HttpResponse( download_file, content_type='application/vnd.openxmlformats-officedocument.presentationm1.presentation' )
+        response['Content-Disposition'] = 'attachement; filename="{}"'.format( file_path ) 
+    
+    # Return the HTTPResponse
+    return response
+    
         
         
 def ask_for_credentials():
