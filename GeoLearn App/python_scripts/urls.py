@@ -26,5 +26,6 @@ urlpatterns = [
 	#url( r'combined_output', views.test, name='test' ), 
 	url( r'combined_output', views.biodiversity_climate_submit, name="combined_output" ),
 	url( r'auth_redirect', views.auth_redirect, name='auth_redirect' ),
+	url( r'download_bio_slideshow', views.download_bio_slideshow, name='download_bio_slideshow' ), 
 	
 ]
