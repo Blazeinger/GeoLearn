@@ -146,7 +146,7 @@ def biodiversity_climate_submit( request ):
     
     return download_bio_slideshow( slideshow_path, file_name )
     
-    '''
+    
     # First, check if there is an authcode input
     try:
         input_auth_code( authCode )
@@ -178,7 +178,7 @@ def biodiversity_climate_submit( request ):
     app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
     return redirect( app_script_url ) 
-    '''
+    
     
 
 
@@ -197,10 +197,10 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         logger.log( "beginner slideshow selected" )
         
-        csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
+        #csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
 
         # Now, filter the animals to find which pictures we need to find
-        basic_image_finder( True, "animal_images", csv_filename )
+        #basic_image_finder( True, "animal_images", csv_filename )
         
         # Create the URL for the Google App Script to contain the parameters
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
@@ -263,7 +263,9 @@ def generate_slideshow( template_path, file_name ):
     
     # Open the template copy ##
     
-    
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Move all these functions to different py files, Jackass!!
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     # Fill text ##
     
