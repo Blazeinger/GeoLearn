@@ -1,0 +1,170 @@
+checking auth code
+credentials saved and validated
+credentials exist
+beginner slideshow selected
+beginning local db read
+databases already exist
+read in 1000 current animals
+read in 2000 current animals
+read in 3000 current animals
+read in 4000 current animals
+read in 5000 current animals
+read in 6000 current animals
+read in 7000 current animals
+read in 7100 historic animals
+read in 7200 historic animals
+read in 7300 historic animals
+finished reading database
+0 animals tested
+500 animals tested
+1000 animals tested
+1500 animals tested
+2000 animals tested
+2500 animals tested
+3000 animals tested
+3500 animals tested
+4000 animals tested
+4500 animals tested
+5000 animals tested
+5500 animals tested
+6000 animals tested
+6500 animals tested
+7000 animals tested
+done writing to CSV file
+begin file upload
+Looking for credentials
+found a credentials
+authorize branch
+creating connection to google drive
+connection established
+finding drive folder: slideInfo_BioBasic
+folder not found. Creating one
+folder found. id: 1y233-as7tswP-LDns2ysXrLgsANo60ar
+file uploaded
+number of animals
+76
+mammal_info
+done
+animal list sorted
+done sorting csv
+done writing chosen mammals csv
+opening chosen mammals file
+downloading Ursus americanus
+downloading Odocoileus virginianus
+downloading Sorex nanus
+downloading Notiosorex crawfordi
+downloading Lynx rufus
+downloading Lontra canadensis
+downloading Mammuthus columbi
+downloading Paramylodon harlani
+downloading Antilocapra americana
+downloading Castor canadensis
+downloading Canis latrans
+downloading Erethizon dorsatum
+downloading Arctodus simus
+downloading Panthera atrox
+downloading Ursus americanus
+downloading Ursus americanus
+downloading Urocyon cinereoargenteus
+downloading Lepus californicus
+downloading Mephitis mephitis
+downloading Taxidea taxus
+downloading Conepatus leuconotus
+downloading Vulpes macrotis
+downloading Arcdownloading Panthera atrox
+downloading Equus semiplicatus
+downloading Tapirus copei
+downloading Ursus americanus
+downloading Odocoileus virginianus
+downloading Antilocapra americana
+downloading Castor canadensis
+downloading Canis latrans
+downloading Lynx rufus
+downloading Lontra canadensis
+downloading Taxidea taxus
+downloading Erethizon dorsatum
+downloading Nasua narica
+downloading Urocyon cinereoargenteus
+downloading Conepatus leuconotus
+downloading Lepus californicus
+downloading Mephitis mephitis
+downloading Vulpes macrotis
+downloading Cynomys gunnisoni
+downloading Sylvilagus audubonii
+downloading Mustela nigripes
+downloading Sylvilagus nuttallii
+downloading Sciurus arizonensis
+downloading Sciurus aberti
+downloading Spilogale gracilis
+downloading Neotoma cinerea
+downloading Neotoma albigula
+downloading Neotoma mexicana
+downloading Tamiasciurus hudsonicus
+downloading Neotoma devia
+downloading Neotoma lepida
+begin file upload
+Looking for credentials
+found a credentials
+authorize branch
+creating connection to google drive
+connection established
+folder id: 1y233-as7tswP-LDns2ysXrLgsANo60ar
+uploaded chosen_mammals csv
+largest_animal
+second_largest_animal
+smallest_animal
+second_smallest_animal
+largest_predator
+second_largest_predator
+largest_past_animal
+second_largest_past_animal
+large_herbivore
+second_largest_herbivore
+largest_non-predator
+second_largest_non-predator
+largest_historic_predator
+second_largest_historic_predator
+largest_historic_non-predator
+second_largest_historic_non-predator
+large_herbivores_1
+large_herbivores_2
+large_herbivores_3
+large_predators_1
+large_predators_2
+large_predators_3
+historic_1
+historic_2
+historic_3
+historic_4
+historic_5
+historic_6
+Dobble_0
+Dobble_1
+Dobble_2
+Dobble_3
+Dobble_4
+Dobble_5
+Dobble_6
+Dobble_7
+Dobble_8
+Dobble_9
+Dobble_10
+Dobble_11
+Dobble_12
+Dobble_13
+Dobble_14
+Dobble_15
+Dobble_16
+Dobble_17
+Dobble_18
+Dobble_19
+Dobble_20
+Dobble_21
+Dobble_22
+Dobble_23
+Dobble_24
+Dobble_25
+Dobble_26
+Dobble_27
+going to app script url
+credentials deleted
