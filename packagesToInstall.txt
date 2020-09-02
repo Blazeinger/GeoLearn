@@ -34,3 +34,11 @@ Install this for earth engine api. *Only necessary for Climate Change Pres.*
 ==================================
 first -> pip3 install earthengine-api
 then -> earthengine authenticate
+
+Install this for beautiful soup, the HTML parser that downloads the images
+===================================
+pip3 install bs4
+
+Install this for the powerpoint editing
+=======================================
+pip3 install python-pptx
