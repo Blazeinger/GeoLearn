@@ -38,3 +38,4 @@ then -> earthengine authenticate
 Install this for beautiful soup, the HTML parser that downloads the images
 ===================================
 pip3 install bs4
+

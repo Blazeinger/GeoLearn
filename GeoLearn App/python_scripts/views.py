@@ -184,6 +184,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, "animal_images", csv_filename )
         
+<<<<<<< HEAD
         # Create the URL for the Google App Script to contain the parameters
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
@@ -191,6 +192,11 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         # Let the logger know that the url has been created, and the program is being redirected there. 
         logger.log( "going to app script url" )
+=======
+        logger.log( "trying to webdrive for google script url" )
+        driver = initialize_webdriver()
+        logger.log( "successfully web drove" )
+>>>>>>> 760ae629f5368ca846b7e7755c0cad50f3d0a157
         
         # Delete the user's Google Drive credentials
         delete_credentials()
