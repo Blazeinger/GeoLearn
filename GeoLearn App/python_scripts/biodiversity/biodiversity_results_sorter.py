@@ -24,6 +24,7 @@ NON_PREDATOR_ORDERS = [ "PROTURA", "EMBIOPTERA", "ZORAPTERA", "ISOPTERA", "MALLO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "python_scripts", "" )
 CURR_DIR = os.path.dirname(os.path.realpath(__file__))
+SLIDESHOW_DIR = basest_dir + 'slideshows/' 
 
 logger = enviro_logger()
 
@@ -179,7 +180,7 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         if upload_bool:
         
             images_scraper( "chosen_mammals_info.csv" )
-            upload_files( image_titles, "chosen_mammals_info.csv" )
+            #upload_files( image_titles, "chosen_mammals_info.csv" )
             
         return "chosen_mammals_info.csv"
         
@@ -274,6 +275,17 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         upload_files( image_titles, "chosen_mammals_info.csv", "slideInfo_BioAdv" )
 
     
+def write_json_basic( exemplary_animals ):
+    # Create the JSON file 
+    
+    # 
+    return True
+
+def write_json_adv( exemplary_animals ):
+    return True
+    
+def create_json_template():
+    return True
         
         
 def find_dobble_images( amount, animal_info, image_titles ):
@@ -360,7 +372,9 @@ def check_historic( animal ):
         
 def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
 
-     with open( basest_dir + "/" + sort_csv, mode='w', encoding='utf8' ) as csv_file: 
+     our_dir = SLIDESHOW_DIR + "/" + threading.currentThread().getName() + "/"
+
+     with open( our_dir + sort_csv, mode='w', encoding='utf8' ) as csv_file: 
      
         #os.chmod( basest_dir + "/" + sort_csv, 0o777)
         writer = csv.writer( csv_file )
@@ -370,7 +384,7 @@ def write_csvs( sort_csv, chosen_csv, animal_list, chosen_animals ):
             
      logger.log( "done sorting csv" )
      
-     with open( basest_dir + "/" + chosen_csv, mode='w', encoding='utf8' ) as csv_file:
+     with open( our_dir + chosen_csv, mode='w', encoding='utf8' ) as csv_file:
      
         #os.chmod( basest_dir + "/" + chosen_csv, 0o777)
         writer = csv.writer( csv_file )
@@ -509,6 +523,8 @@ find template( amount_to_find, animal_list, exemplary_animals, historic, diet ):
     Return them to be extended upon
 '''
     
+
+
     
     
     

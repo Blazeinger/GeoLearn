@@ -28,14 +28,15 @@ import threading
 
 from django.shortcuts import redirect
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SCRIPT_DIR = BASE_DIR + '/python_scripts/'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
+SCRIPT_DIR = BASE_DIR + 'python_scripts/'
 BIO_DIR = SCRIPT_DIR + 'biodiversity/' 
-SLIDESHOW_DIR = BASE_DIR + '/slideshows/' 
-TEMPLATES_DIR = SLIDESHOW_DIR + 'templates/' 
+SLIDESHOW_DIR = BASE_DIR + 'slideshows/' 
+TEMPLATES_DIR = SLIDESHOW_DIR + 'templates/'
+IMAGES_DIR = BASE_DIR + 'animal_images/'
 
-CRED_TIME_PATH = BASE_DIR + '/save_credentials_time.txt'
-CRED_PATH = BASE_DIR + '/credentials.txt' 
+CRED_TIME_PATH = BASE_DIR + 'save_credentials_time.txt'
+CRED_PATH = BASE_DIR + 'credentials.txt' 
 CRED_TIMEOUT = timedelta( minutes = 30 )
 
 BIO_ADV_NAME = '/biodiversity_advanced.pptx'
@@ -140,13 +141,15 @@ def biodiversity_climate_submit( request ):
     logger.log( template_path )
     logger.log( file_name )
     
-    slideshow_path = generate_slideshow( template_path, file_name )
+    biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
+    
+    slideshow_path = generate_slideshow( template_path, file_name, schoolName )
     
     logger.log( slideshow_path )
     
     return download_bio_slideshow( slideshow_path, file_name )
     
-    
+    '''
     # First, check if there is an authcode input
     try:
         input_auth_code( authCode )
@@ -178,7 +181,7 @@ def biodiversity_climate_submit( request ):
     app_script_url = biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
     return redirect( app_script_url ) 
-    
+    '''
     
 
 
@@ -197,11 +200,12 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         logger.log( "beginner slideshow selected" )
         
-        #csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
+        csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
 
         # Now, filter the animals to find which pictures we need to find
-        #basic_image_finder( True, "animal_images", csv_filename )
+        basic_image_finder( True, SLIDESHOW_DIR + "/" +  threading.currentThread().getName() + "/animal_images", csv_filename )
         
+        '''
         # Create the URL for the Google App Script to contain the parameters
         app_script_url = "https://script.google.com/macros/s/AKfycbyKIAeXKYtMA4pdbBwpVWvZ_EqcElhQX9tJml9Xjbha_KhYMlw/exec?"
         app_script_url += "userEmail=" + userEmail
@@ -215,6 +219,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         
         # Return the url to the creation script
         return app_script_url
+        '''
 
 
     # Check if the slideshow selected is an advanced slideshow
@@ -243,7 +248,7 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         return app_script_url
 
 
-def generate_slideshow( template_path, file_name ):
+def generate_slideshow( template_path, file_name, school_name, chosen_info=BASE_DIR + 'chosen_mammals_info.csv' ):
         
     # Define the directory we want to copy our template to ##
     current_thread = threading.currentThread().getName()
@@ -262,19 +267,24 @@ def generate_slideshow( template_path, file_name ):
     shutil.copyfile( template_path, file_path )   
     
     # Open the template copy ##
+    presentation = Presentation( file_path )
     
-    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Move all these functions to different py files, Jackass!!
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-    # Fill text ##
-    
-    # Fill images ##
-    
-    # Save slideshow ## 
     
     # Return slideshow file path ##
     return file_path
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 def check_and_delete_slideshows( directory, files ):
 

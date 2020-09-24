@@ -2,6 +2,7 @@ import mysql.connector
 import csv
 import sys
 import os
+import threading
 
 # pip3 install shapely
 from shapely.geometry import Polygon
@@ -35,6 +36,7 @@ CURR_DIR = os.path.dirname(os.path.realpath(__file__))
 
 # The path to the GeoLearn App directory
 BASE_DIR = CURR_DIR.replace( "/python_scripts/biodiversity", "" )
+SLIDE_DIR = BASE_DIR + "/slideshows" 
 
 # Logger to write commandline output to a text file for server testing
 logger = enviro_logger()
@@ -270,8 +272,8 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
         else:
             filename = write_mammal_info_to_csv( animals_within_boundaries, descriptors, latitude, longitude )
             
-            if __name__ != "__main__":
-            	send_csv_to_drive( BASE_DIR + "/" + filename, filename, target_dir )
+            #if __name__ != "__main__":
+            	#send_csv_to_drive( BASE_DIR + "/" + filename, filename, target_dir )
             #display_mammal_information( animals_within_boundaries, descriptors )
             logger.log( "number of animals" )
             logger.log( len( animals_within_boundaries ) )
@@ -281,7 +283,7 @@ def find_animals( descriptors, animal_info, animal_boundaries, longitude, latitu
             
             logger.log( "done" )
 			
-            return BASE_DIR + "/" + filename + ".csv"
+            return SLIDE_DIR + "/" + threading.currentThread().getName() + "/" + filename + ".csv"
                 
     except ValueError:
         logger.log( "Please input a valid latitude and longitude or \"Exit\" " )	
@@ -443,7 +445,7 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
     # Add the date and time to ensure that the file names are unique
     file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
 
-    file_name = BASE_DIR + "/" + file_wo_extension + ".csv" 
+    file_name = SLIDE_DIR + "/" + threading.currentThread().getName() + "/" + file_wo_extension + ".csv" 
 
     with open( file_name, mode='w', encoding="utf8" ) as csv_file:
         #os.chmod(file_name, 0o777)
