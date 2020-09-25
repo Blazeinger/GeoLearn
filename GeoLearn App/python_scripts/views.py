@@ -14,6 +14,7 @@ from .biodiversity.biodiversity_script_geolearn import find_animals_script
 from .biodiversity.biodiversity_results_sorter import basic_image_finder
 from .biodiversity.biodiversity_results_sorter import advanced_image_finder
 from .biodiversity.enviro_log import enviro_logger
+from .biodiversity.slideshow_creator import slideshow_creator
 
 #from .climate_change.time_lapse import time_lapse
 from subprocess import run,PIPE
@@ -141,6 +142,12 @@ def biodiversity_climate_submit( request ):
     logger.log( template_path )
     logger.log( file_name )
     
+    current_thread = threading.currentThread().getName()
+    target_directory = SLIDESHOW_DIR + current_thread
+    # If our target directory doesn't exist, create it
+    if not os.path.exists( target_directory ):
+        os.mkdir( target_directory )
+    
     biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName )
     
     slideshow_path = generate_slideshow( template_path, file_name, schoolName )
@@ -201,6 +208,8 @@ def biodiversity_thread( longitude, latitude, difficulty, userEmail, schoolName 
         logger.log( "beginner slideshow selected" )
         
         csv_filename = find_animals_script( latitude, longitude, "slideInfo_BioBasic" )
+        
+        print( "here" )
 
         # Now, filter the animals to find which pictures we need to find
         basic_image_finder( True, SLIDESHOW_DIR + "/" +  threading.currentThread().getName() + "/animal_images", csv_filename )
@@ -263,12 +272,15 @@ def generate_slideshow( template_path, file_name, school_name, chosen_info=BASE_
     # If our target directory doesn't exist, create it
     if not os.path.exists( target_directory ):
         os.mkdir( target_directory )
-        
+    
     shutil.copyfile( template_path, file_path )   
     
     # Open the template copy ##
     presentation = Presentation( file_path )
     
+    creator = slideshow_creator( 'basic', school_name, target_directory )
+    
+    creator.create_slideshow()
     
     # Return slideshow file path ##
     return file_path

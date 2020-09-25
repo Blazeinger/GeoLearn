@@ -2,6 +2,7 @@ import csv
 import os
 import random
 import sys
+import threading
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
@@ -178,8 +179,11 @@ def basic_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
         # Upload the images to the Google drive 
         
         if upload_bool:
-        
-            images_scraper( "chosen_mammals_info.csv" )
+            
+            csv_location = SLIDESHOW_DIR + threading.currentThread().getName() + "/chosen_mammals_info.csv"
+            target_dir = SLIDESHOW_DIR + threading.currentThread().getName() + "/animal_images/"
+            
+            images_scraper( csv_location, target_dir )
             #upload_files( image_titles, "chosen_mammals_info.csv" )
             
         return "chosen_mammals_info.csv"
@@ -267,7 +271,7 @@ def advanced_image_finder( upload_bool, dir_name, csv_name="mammal_info" ):
 
     write_csvs( "sorted_mammal_info.csv", "chosen_mammals_info.csv", animal_list, chosen_animals )
         
-    images_scraper( "chosen_mammals_info.csv" )
+    images_scraper( "chosen_mammals_info.csv", threading.currentThread().getName() )
         
     # Upload the images to the Google drive 
         

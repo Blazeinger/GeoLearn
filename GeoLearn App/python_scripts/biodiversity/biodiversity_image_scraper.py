@@ -23,6 +23,7 @@ import os
 import time
 import csv
 import re
+import threading
 
 try:
     from enviro_log import enviro_logger
@@ -31,7 +32,9 @@ except:
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 basest_dir = BASE_DIR.replace( "/python_scripts", "" )
-IMAGES_DIR = basest_dir + '/animal_images/' 
+SLIDES_DIR = basest_dir + "/slideshows/"
+DEFAULT_IMAGE = SLIDES_DIR + "templates/default.jpg"
+
 logger = enviro_logger()
 
 BINOMIAL = 2
@@ -44,7 +47,7 @@ def main():
     
     
 
-def wikipedia_download_image( target_image ):
+def wikipedia_download_image( target_image, images_dir ):
     
     ### Get a response from the wikipedia link
     # Check the whole name first 
@@ -106,7 +109,7 @@ def wikipedia_download_image( target_image ):
         #try:
             #image = requests.get( image_url )
              
-        return wikipedia_scrape( image_url, index )
+        return wikipedia_scrape( image_url, index, images_dir )
             #print( 'succeeded' )
             
         #except:
@@ -115,7 +118,7 @@ def wikipedia_download_image( target_image ):
         index += 1
         
     
-def wikipedia_scrape( target_image_url, num ):
+def wikipedia_scrape( target_image_url, num, images_dir ):
     
     ### Rename the image locally
     
@@ -125,35 +128,40 @@ def wikipedia_scrape( target_image_url, num ):
     
     image_name = 'most_recent_animal'
     
-    image_path = IMAGES_DIR + image_name + '.jpg' 
+    image_path = images_dir + image_name + '.jpg' 
     
     image.save( image_path, 'JPEG', quality = 85 )
     
-    return image_name
+    return image_path
     
     
     
 
-def use_image_not_found( image_title, fill_image_path = BASE_DIR + '/biodiversity/default.jpg' ):
+def use_image_not_found( image_title, images_dir ):
     
-    copy_path = IMAGES_DIR + image_title
+    copy_path = images_dir + image_title
     
     # Create a copy of the default image and name it the image title 
-    copyfile( fill_image_path, copy_path )
+    copyfile( DEFAULT_IMAGE, copy_path )
     
-    return fill_image_path
+    return copy_path
     
     
     
 
 
-def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
+def images_scraper( chosen_csv, target_dir ):
 
     # Open the file 
     logger.log( "opening chosen mammals file" )
+
+    images_dir = target_dir
+
+    if not os.path.exists( images_dir ):
+        os.mkdir( images_dir )
     
     # Loop through each animal 
-    with open( basest_dir + '/' + chosen_csv, encoding='utf8' ) as csv_file:
+    with open( chosen_csv, encoding='utf8' ) as csv_file:
     
         animal_reader = csv.reader( csv_file, delimiter = ',' )
         
@@ -165,21 +173,22 @@ def images_scraper( chosen_csv="chosen_mammals_info.csv" ):
             # Try finding an image of the animal 
             try:
             
-                image_name = wikipedia_download_image( animal[BINOMIAL] )
+                image_path = wikipedia_download_image( animal[BINOMIAL], images_dir )
                 print( animal[BINOMIAL] )
                 print( animal[TITLE] ) 
                 
                 # Save the image as its title
-                rename_valid_image( image_name, animal[TITLE] )               
+                rename_valid_image( images_dir, image_path, animal[TITLE]  )               
                 
             # If that all fails, use a default image
             except:
             
+                print( "no image found" )
                 # Create a copy of the default image and rename it 
-                image_name = use_image_not_found( animal[BINOMIAL] )
+                image_name = use_image_not_found( animal[BINOMIAL], images_dir )
                 
                 # Rename the image as its title
-                os.rename( IMAGES_DIR + animal[BINOMIAL], IMAGES_DIR + animal[TITLE] + '.jpg' )
+                os.rename( images_dir + animal[BINOMIAL], images_dir + animal[TITLE] + '.jpg' )
             
             
     
@@ -213,10 +222,12 @@ def find_animal_image( search_query, downloader ):
 
 
 
-def rename_valid_image( image_name, new_name ):
+def rename_valid_image( images_dir, image_path, new_name ):
 
     # Run the cmd command to rename the image to the desired image
-    os.rename( IMAGES_DIR + image_name + '.jpg', IMAGES_DIR + new_name + ".jpg" )
+    os.rename( image_path, images_dir + new_name + ".jpg" )
+
+    print( images_dir + new_name + '.jpg' )
 
 
 

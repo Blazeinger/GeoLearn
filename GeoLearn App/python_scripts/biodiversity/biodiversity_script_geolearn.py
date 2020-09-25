@@ -443,9 +443,14 @@ def write_mammal_info_to_csv( listOfMammals, descriptors, latitude, longitude ):
 
     # Create CSV file name
     # Add the date and time to ensure that the file names are unique
-    file_wo_extension = "mammal_info" #_" + str( latitude ) + '_' + str( longitude )
+    file_wo_extension = "mammal_info" 
+
+    print( "before thread check" )
+    print( threading.currentThread().getName() )
 
     file_name = SLIDE_DIR + "/" + threading.currentThread().getName() + "/" + file_wo_extension + ".csv" 
+    
+    print( file_name )
 
     with open( file_name, mode='w', encoding="utf8" ) as csv_file:
         #os.chmod(file_name, 0o777)

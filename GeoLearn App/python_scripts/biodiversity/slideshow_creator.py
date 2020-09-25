@@ -377,7 +377,7 @@ class slideshow_creator:
                 True   
        
         # Save it 
-        pres.save( 'output.pptx' )
+        pres.save( self.slideshow_path )
         
     
     def create_advanced_slideshow_json( self ):
